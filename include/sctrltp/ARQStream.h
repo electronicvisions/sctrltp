@@ -66,6 +66,8 @@ public:
 private:
 	std::string name;
 	std::string rip;
+	int const max_wait_for_completion_upon_destruction_in_ms;
+
 #ifdef NCSIM
 // NCSIM-based testmodes want it public
 public:

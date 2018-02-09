@@ -1,10 +1,12 @@
 #ifndef NCSIM
 // this is NOT for NCSIM
 
+#include <chrono>
 #include <iostream>
 #include <string>
 #include <stdexcept>
 #include <sstream>
+#include <thread>
 
 extern "C"{
 #include "sctrltp/us_sctp_if.h"
@@ -51,6 +53,7 @@ ARQStream::ARQStream(
 		bool reset) :
 	name(name),
 	rip(rip),
+	max_wait_for_completion_upon_destruction_in_ms(500),
 	pimpl(new ARQStreamImpl(name, rip, reset))
 {}
 
@@ -58,14 +61,51 @@ ARQStream::ARQStream(
 ARQStream::ARQStream(std::string const name, bool reset) :
 	name(name),
 	rip(name),
+	max_wait_for_completion_upon_destruction_in_ms(500),
 	pimpl(new ARQStreamImpl(name, name, reset))
 {}
 
 
 ARQStream::~ARQStream() {
 	STATIC_ASSERT(sizeof(__u64) == sizeof(uint64_t));
+
+	// ECM (2018-02-14): send one last packet to flush (there's no dedicated tear down)
+	{
+		packet curr_pck;
+		curr_pck.pid = PTYPE_FLUSH;
+		curr_pck.len = 1;
+		curr_pck.pdu[0] = 0;
+		// trigger send directly
+		send(curr_pck, Mode::FLUSH);
+	}
+
+	// ECM (2018-02-09): flush may throw, catch it and log error (related to bug #2731)
+	bool catched_exception = false;
+	try {
+		flush();
+		auto start_of_flush = std::chrono::steady_clock::now();
+		while (!all_packets_sent()) {
+			auto waited_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+					std::chrono::steady_clock::now() - start_of_flush).count();
+			if (waited_in_ms > max_wait_for_completion_upon_destruction_in_ms) {
+				throw std::runtime_error("Wait for completion of transfer timed out");
+			} else {
+				using namespace std::chrono_literals;
+				std::this_thread::sleep_for(50ms);
+			}
+		}
+	} catch (std::exception const& e) {
+		catched_exception = true;
+		std::cerr << "ARQStream::~ARQStream: " << e.what() << std::endl;
+	}
+
+	// ECM (2018-02-12): let's clean up in any case but abort if exception was handled above
 	delete pimpl;
 	pimpl = NULL;
+
+	if (catched_exception) {
+		abort();
+	}
 }
 
 
