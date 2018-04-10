@@ -1,0 +1,74 @@
+#pragma once
+
+/** \brief Headerfile for Packethandling in SCTP
+ *	Implements some short but necessary funcs to de/encapsulate packetcontents
+*/
+
+
+#include <linux/types.h>
+#define MTU	              1500
+#define MIN_PACKET_SIZE     12
+
+#define ETH_HEADER_SIZE	    14 /*in bytes*/
+#define ARQ_HEADER_SIZE     12 /*in bytes*/
+#define TYPLEN_SIZE          4 /*in bytes*/
+
+/*Constraints of hardware*/
+#define MAX_WINSIZ SEDIT
+#define MAX_NRFRAMES     65536   /*Maximum number of frames in buffer equals maximum SEQ number+1*/
+
+/* static define checks below */
+#if MAX_WINSIZ * 2 >= MAX_NRFRAMES
+	#error "reduce window size to max. seq number / 2 => ((MAX_NRFRAMES-1)/2)!"
+#endif
+
+#define UDP_DATA_PORT     1234
+#define UDP_RESET_PORT    0xaffe
+
+#define PTYPE_LOOPBACK    0x0f0f /* loopback data */
+#define PTYPE_DUMMYDATA0  0x0000
+#define PTYPE_DUMMYDATA1  0x0001
+#define PTYPE_ARQSTAT     0x0002
+/* FIXME: more PTYPES here... enum unroll maybe? */
+
+#define PDU_SIZE          (MTU - ETH_HEADER_SIZE - ARQ_HEADER_SIZE)
+#define WORD_SIZE         8 /*64-bit words!*/
+#define MAX_PDUWORDS    176 /* could be (PDU_SIZE/8)? */
+
+struct arq_frame {
+	__u32   ACK;                /*Acknowledge to packet with sequenceno = ACK (other direction)*/
+	__u32   SEQ;                /*Sequencenumber*/
+	__u32   VALID;              /*Single valid bit (yes, unpacked to 32 bits ;))*/
+	__u16   PTYPE;              /*Type of packet (called "packet id" in docs)*/
+	__u16   LEN;                /*Length (64-bit words)*/
+	__u64   COMMANDS[MAX_PDUWORDS];
+}__attribute__ ((packed));
+
+void parse_mac (char *in, __u8 *out);
+void print_mac (const char *prefix, __u8 *mac);
+
+/**** FUNCS USED BY SCTP LAYER ****/
+
+/*SCTPREQ_* These funtions are used by the sending side of the layer*/
+
+struct arq_frame *sctpreq_get_ptr (struct arq_frame *packet);
+
+void sctpreq_set_header (struct arq_frame *packet, __u16 PTYPE, __u16 LEN);
+
+/*seq valid bit will be set too!!*/
+void sctpreq_set_seq (struct arq_frame *packet, __u32 SEQ);
+
+void sctpreq_set_ack (struct arq_frame *packet, __u32 ACK);
+
+/*get length in words*/
+__u16 sctpreq_get_len (struct arq_frame *packet);
+
+/*get size in bytes*/
+__u32 sctpreq_get_size (struct arq_frame *packet);
+
+__u32 sctpreq_get_ack (struct arq_frame *packet);
+__u32 sctpreq_get_seq (struct arq_frame *packet);
+
+__u16 sctpreq_get_typ (struct arq_frame *packet);
+
+void *sctpreq_get_pload (struct arq_frame *packet);

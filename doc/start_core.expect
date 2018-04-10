@@ -1,0 +1,59 @@
+#!/usr/bin/expect -f #<---insert here your expect program location
+
+proc start_test {} {
+	set timestamp [clock format [clock seconds]]
+	puts stderr "#### starting test ($timestamp)"
+	# login might take a while...
+	set timeout 10
+	spawn ssh AMTHost1
+	expect "root@AMTHost1:~"
+	send "su mueller\r"
+	expect "mueller@AMTHost1:/root"
+	send "cd\r"
+	expect "mueller@AMTHost1:~"
+	send "cd symap2ic_bench/symap2ic\r"
+	send ". bootstrap.sh.UHEI\r"
+	send "cd bin\r"
+	expect "mueller@AMTHost1:~/symap2ic_bench/symap2ic/bin"
+	# allow slow NFS operation :)
+	set timeout 10
+	send "cat /proc/interrupts\r"
+	send "./sctp_test_core test\r"
+	expect -re "(tx words|rx rate)"
+	# this might take a lot longer if app layer cannot push frames!
+	set timeout 60
+	expect {
+		"sent avg = " {
+			exit 0
+		}
+		"recv avg = " {
+			exit 0
+		}
+		timeout {
+			exit 11
+		}
+	}
+}
+
+
+# timeout for starting up the core...
+set timestamp [clock format [clock seconds]]
+puts stderr "#### starting core ($timestamp)"
+set timeout 10
+spawn ssh AMTHost1
+expect "root@AMTHost1:~"
+send "cd /home/mueller/symap2ic_bench/symap2ic/bin\r"
+expect "root@AMTHost1:/home/mueller/symap2ic_bench/symap2ic/bin"
+send "ls -l; md5sum start_core; ./start_core test 192.168.1.125 192.168.1.19 1\r"
+expect {
+	"TX UP" { [start_test] }
+	"ERROR: Failed to create new shared mem object" {
+		send "rm /dev/shm/test\r"
+		sleep 1
+		send "killall start_core\r"
+		sleep 1
+		send "ls -l; md5sum start_core; ./start_core test 192.168.1.125 192.168.1.19 1\r"
+		expect "TX UP" { start_test }
+	}
+}
+expect eof

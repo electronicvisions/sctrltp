@@ -1,0 +1,2202 @@
+#### DEBUGLOGFILE is /tmp/tmp.ux1JMS5EP6
+#### SWEEPTMPFILE is /tmp/tmp.3JgVLlOcXd
+#### WINDOW_SIZE is 2016, ACK_DELAY is 2419us, PACKET_SIZE is 5 (Mo 20. Jan 17:32:46 CET 2014)
+interrupt rate = 148313.75 +/- 7861.25intr/s
+interrupt2 rate = 70618.80 +/- 1253.05intr/s
+packet rate = 321884.59 +/- 44316.47pckts/s
+sent avg = 12.278923 +/- 1.690539MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 4596us, PACKET_SIZE is 5 (Mo 20. Jan 17:33:10 CET 2014)
+interrupt rate = 145234.87 +/- 1240.10intr/s
+interrupt2 rate = 71641.30 +/- 505.35intr/s
+packet rate = 280367.00 +/- 4712.65pckts/s
+sent avg = 10.695152 +/- 0.179773MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 6773us, PACKET_SIZE is 5 (Mo 20. Jan 17:33:34 CET 2014)
+interrupt rate = 143127.21 +/- 9573.17intr/s
+interrupt2 rate = 71568.88 +/- 709.70intr/s
+packet rate = 282170.26 +/- 3827.93pckts/s
+sent avg = 10.763941 +/- 0.146024MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 8950us, PACKET_SIZE is 5 (Mo 20. Jan 17:33:58 CET 2014)
+interrupt rate = 106754.78 +/- 4869.96intr/s
+interrupt2 rate = 67864.67 +/- 761.48intr/s
+packet rate = 223347.69 +/- 11570.80pckts/s
+sent avg = 8.520038 +/- 0.441391MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 11127us, PACKET_SIZE is 5 (Mo 20. Jan 17:34:23 CET 2014)
+interrupt rate = 85885.31 +/- 3546.40intr/s
+interrupt2 rate = 68070.12 +/- 729.74intr/s
+packet rate = 179745.51 +/- 746.56pckts/s
+sent avg = 6.856747 +/- 0.028479MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 13304us, PACKET_SIZE is 5 (Mo 20. Jan 17:34:47 CET 2014)
+interrupt rate = 81617.65 +/- 12572.58intr/s
+interrupt2 rate = 26942.30 +/- 33369.17intr/s
+packet rate = 150679.17 +/- 505.25pckts/s
+sent avg = 5.747954 +/- 0.019274MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 15481us, PACKET_SIZE is 5 (Mo 20. Jan 17:35:11 CET 2014)
+interrupt rate = 56803.71 +/- 5035.51intr/s
+interrupt2 rate = 69332.50 +/- 1515.13intr/s
+packet rate = 129634.86 +/- 885.16pckts/s
+sent avg = 4.945178 +/- 0.033766MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 17658us, PACKET_SIZE is 5 (Mo 20. Jan 17:35:36 CET 2014)
+interrupt rate = 50433.37 +/- 4751.00intr/s
+interrupt2 rate = 69280.08 +/- 1993.12intr/s
+packet rate = 113689.03 +/- 77.64pckts/s
+sent avg = 4.336892 +/- 0.002962MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 19835us, PACKET_SIZE is 5 (Mo 20. Jan 17:36:00 CET 2014)
+interrupt rate = 45501.62 +/- 4078.16intr/s
+interrupt2 rate = 68951.81 +/- 1721.21intr/s
+packet rate = 101982.11 +/- 9706.25pckts/s
+sent avg = 3.890309 +/- 0.370264MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 22012us, PACKET_SIZE is 5 (Mo 20. Jan 17:36:24 CET 2014)
+interrupt rate = 40436.06 +/- 3335.81intr/s
+interrupt2 rate = 69088.51 +/- 1700.90intr/s
+packet rate = 91271.17 +/- 43.10pckts/s
+sent avg = 3.481719 +/- 0.001644MB/s
+#### WINDOW_SIZE is 2016, ACK_DELAY is 24189us, PACKET_SIZE is 5 (Mo 20. Jan 17:36:48 CET 2014)
+interrupt rate = 36367.36 +/- 4451.86intr/s
+interrupt2 rate = 69718.44 +/- 1995.12intr/s
+packet rate = 83137.28 +/- 2655.05pckts/s
+sent avg = 3.171435 +/- 0.101282MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 2016us, PACKET_SIZE is 6 (Mo 20. Jan 17:37:13 CET 2014)
+interrupt rate = 147534.35 +/- 7282.92intr/s
+interrupt2 rate = 70562.57 +/- 1959.26intr/s
+packet rate = 305799.59 +/- 42246.06pckts/s
+sent avg = 13.998395 +/- 1.933871MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 3830us, PACKET_SIZE is 6 (Mo 20. Jan 17:37:37 CET 2014)
+interrupt rate = 159873.31 +/- 6129.43intr/s
+interrupt2 rate = 69190.40 +/- 1178.30intr/s
+packet rate = 369893.29 +/- 7573.35pckts/s
+sent avg = 16.932371 +/- 0.346681MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 5644us, PACKET_SIZE is 6 (Mo 20. Jan 17:38:01 CET 2014)
+interrupt rate = 138408.89 +/- 9843.52intr/s
+interrupt2 rate = 70227.21 +/- 1924.21intr/s
+packet rate = 285978.01 +/- 9450.91pckts/s
+sent avg = 13.091034 +/- 0.432628MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 7458us, PACKET_SIZE is 6 (Mo 20. Jan 17:38:26 CET 2014)
+interrupt rate = 106983.69 +/- 4070.54intr/s
+interrupt2 rate = 67220.56 +/- 1797.23intr/s
+packet rate = 222082.69 +/- 3667.96pckts/s
+sent avg = 10.166139 +/- 0.167906MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 9272us, PACKET_SIZE is 6 (Mo 20. Jan 17:38:50 CET 2014)
+interrupt rate = 86516.75 +/- 3257.18intr/s
+interrupt2 rate = 67741.19 +/- 1301.26intr/s
+packet rate = 178749.58 +/- 2621.11pckts/s
+sent avg = 8.182506 +/- 0.119985MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 11086us, PACKET_SIZE is 6 (Mo 20. Jan 17:39:14 CET 2014)
+interrupt rate = 72620.56 +/- 2850.22intr/s
+interrupt2 rate = 67643.06 +/- 1300.58intr/s
+packet rate = 150249.08 +/- 968.27pckts/s
+sent avg = 6.877857 +/- 0.044324MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 12900us, PACKET_SIZE is 6 (Mo 20. Jan 17:39:39 CET 2014)
+interrupt rate = 74554.71 +/- 8924.45intr/s
+interrupt2 rate = 15217.23 +/- 28257.84intr/s
+packet rate = 129538.54 +/- 70.42pckts/s
+sent avg = 5.929804 +/- 0.003223MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 14714us, PACKET_SIZE is 6 (Mo 20. Jan 17:40:03 CET 2014)
+interrupt rate = 52277.52 +/- 3415.97intr/s
+interrupt2 rate = 68734.14 +/- 1474.82intr/s
+packet rate = 113623.21 +/- 77.55pckts/s
+sent avg = 5.201258 +/- 0.003550MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 16528us, PACKET_SIZE is 6 (Mo 20. Jan 17:40:29 CET 2014)
+interrupt rate = 46925.12 +/- 4152.24intr/s
+interrupt2 rate = 68941.39 +/- 1501.36intr/s
+packet rate = 101616.48 +/- 7511.09pckts/s
+sent avg = 4.651633 +/- 0.343830MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 18342us, PACKET_SIZE is 6 (Mo 20. Jan 17:40:53 CET 2014)
+interrupt rate = 42830.98 +/- 3108.21intr/s
+interrupt2 rate = 68870.26 +/- 1368.35intr/s
+packet rate = 91222.25 +/- 56.67pckts/s
+sent avg = 4.175823 +/- 0.002594MB/s
+#### WINDOW_SIZE is 1680, ACK_DELAY is 20156us, PACKET_SIZE is 6 (Mo 20. Jan 17:41:18 CET 2014)
+interrupt rate = 38407.10 +/- 3301.79intr/s
+interrupt2 rate = 68973.55 +/- 1578.73intr/s
+packet rate = 83050.98 +/- 50.28pckts/s
+sent avg = 3.801772 +/- 0.002301MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 1728us, PACKET_SIZE is 7 (Mo 20. Jan 17:41:42 CET 2014)
+interrupt rate = 145743.34 +/- 5899.54intr/s
+interrupt2 rate = 71114.10 +/- 1534.29intr/s
+packet rate = 292036.82 +/- 33735.51pckts/s
+sent avg = 15.596449 +/- 1.801671MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 3283us, PACKET_SIZE is 7 (Mo 20. Jan 17:42:06 CET 2014)
+interrupt rate = 144683.26 +/- 2275.61intr/s
+interrupt2 rate = 71442.38 +/- 783.35intr/s
+packet rate = 286106.84 +/- 23611.95pckts/s
+sent avg = 15.279754 +/- 1.261014MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 4838us, PACKET_SIZE is 7 (Mo 20. Jan 17:42:31 CET 2014)
+interrupt rate = 127299.35 +/- 10967.91intr/s
+interrupt2 rate = 69200.51 +/- 1415.16intr/s
+packet rate = 293381.34 +/- 3425.60pckts/s
+sent avg = 15.668254 +/- 0.182947MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 6393us, PACKET_SIZE is 7 (Mo 20. Jan 17:42:55 CET 2014)
+interrupt rate = 105642.60 +/- 7113.32intr/s
+interrupt2 rate = 68129.73 +/- 924.64intr/s
+packet rate = 221505.00 +/- 4122.80pckts/s
+sent avg = 11.829643 +/- 0.220181MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 7948us, PACKET_SIZE is 7 (Mo 20. Jan 17:43:20 CET 2014)
+interrupt rate = 86362.72 +/- 3760.04intr/s
+interrupt2 rate = 67929.94 +/- 662.48intr/s
+packet rate = 179024.90 +/- 2069.66pckts/s
+sent avg = 9.560961 +/- 0.110532MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 9503us, PACKET_SIZE is 7 (Mo 20. Jan 17:43:44 CET 2014)
+interrupt rate = 71194.94 +/- 5920.19intr/s
+interrupt2 rate = 68207.84 +/- 1853.72intr/s
+packet rate = 150102.36 +/- 996.60pckts/s
+sent avg = 8.016331 +/- 0.053224MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 11058us, PACKET_SIZE is 7 (Mo 20. Jan 17:44:08 CET 2014)
+interrupt rate = 63469.26 +/- 728.96intr/s
+interrupt2 rate = 65449.77 +/- 682.32intr/s
+packet rate = 129320.38 +/- 208.89pckts/s
+sent avg = 6.906454 +/- 0.011156MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 12613us, PACKET_SIZE is 7 (Mo 20. Jan 17:44:32 CET 2014)
+interrupt rate = 52635.07 +/- 3718.81intr/s
+interrupt2 rate = 68256.01 +/- 1769.93intr/s
+packet rate = 113541.71 +/- 78.20pckts/s
+sent avg = 6.063782 +/- 0.004176MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 14168us, PACKET_SIZE is 7 (Mo 20. Jan 17:44:57 CET 2014)
+interrupt rate = 47579.87 +/- 2971.51intr/s
+interrupt2 rate = 68028.84 +/- 1352.58intr/s
+packet rate = 101439.11 +/- 6746.02pckts/s
+sent avg = 5.417433 +/- 0.360276MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 15723us, PACKET_SIZE is 7 (Mo 20. Jan 17:45:21 CET 2014)
+interrupt rate = 43396.60 +/- 3155.75intr/s
+interrupt2 rate = 68380.89 +/- 1042.17intr/s
+packet rate = 91191.06 +/- 2676.54pckts/s
+sent avg = 4.870128 +/- 0.142942MB/s
+#### WINDOW_SIZE is 1440, ACK_DELAY is 17278us, PACKET_SIZE is 7 (Mo 20. Jan 17:45:45 CET 2014)
+interrupt rate = 38920.54 +/- 2729.40intr/s
+interrupt2 rate = 68705.93 +/- 1542.45intr/s
+packet rate = 83001.24 +/- 41.77pckts/s
+sent avg = 4.432745 +/- 0.002231MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 1512us, PACKET_SIZE is 8 (Mo 20. Jan 17:46:10 CET 2014)
+interrupt rate = 145791.88 +/- 5972.97intr/s
+interrupt2 rate = 71021.39 +/- 1426.15intr/s
+packet rate = 293623.44 +/- 34443.79pckts/s
+sent avg = 17.921353 +/- 2.102282MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 2872us, PACKET_SIZE is 8 (Mo 20. Jan 17:46:34 CET 2014)
+interrupt rate = 147874.23 +/- 6914.44intr/s
+interrupt2 rate = 70109.60 +/- 2198.86intr/s
+packet rate = 319266.02 +/- 44439.68pckts/s
+sent avg = 19.486451 +/- 2.712383MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 4232us, PACKET_SIZE is 8 (Mo 20. Jan 17:46:58 CET 2014)
+interrupt rate = 139245.14 +/- 9448.58intr/s
+interrupt2 rate = 70843.38 +/- 1324.99intr/s
+packet rate = 285341.18 +/- 6184.32pckts/s
+sent avg = 17.415844 +/- 0.377461MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 5592us, PACKET_SIZE is 8 (Mo 20. Jan 17:47:23 CET 2014)
+interrupt rate = 107007.77 +/- 2664.60intr/s
+interrupt2 rate = 67739.85 +/- 284.77intr/s
+packet rate = 222442.65 +/- 1845.52pckts/s
+sent avg = 13.576822 +/- 0.112641MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 6952us, PACKET_SIZE is 8 (Mo 20. Jan 17:47:47 CET 2014)
+interrupt rate = 85989.64 +/- 3775.55intr/s
+interrupt2 rate = 67295.99 +/- 1957.90intr/s
+packet rate = 178231.87 +/- 2827.42pckts/s
+sent avg = 10.878410 +/- 0.172572MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 8312us, PACKET_SIZE is 8 (Mo 20. Jan 17:48:11 CET 2014)
+interrupt rate = 72874.69 +/- 2310.96intr/s
+interrupt2 rate = 67902.90 +/- 839.32intr/s
+packet rate = 150160.26 +/- 718.87pckts/s
+sent avg = 9.165055 +/- 0.043877MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 9672us, PACKET_SIZE is 8 (Mo 20. Jan 17:48:36 CET 2014)
+interrupt rate = 63152.03 +/- 2253.47intr/s
+interrupt2 rate = 68014.34 +/- 895.42intr/s
+packet rate = 129289.24 +/- 529.72pckts/s
+sent avg = 7.891189 +/- 0.032331MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 11032us, PACKET_SIZE is 8 (Mo 20. Jan 17:49:00 CET 2014)
+interrupt rate = 55258.98 +/- 1734.02intr/s
+interrupt2 rate = 67676.16 +/- 1058.71intr/s
+packet rate = 113534.63 +/- 3545.64pckts/s
+sent avg = 6.929604 +/- 0.216408MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 12392us, PACKET_SIZE is 8 (Mo 20. Jan 17:49:24 CET 2014)
+interrupt rate = 48854.96 +/- 1840.59intr/s
+interrupt2 rate = 67930.51 +/- 1125.67intr/s
+packet rate = 101400.32 +/- 6377.31pckts/s
+sent avg = 6.188984 +/- 0.389240MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 13752us, PACKET_SIZE is 8 (Mo 20. Jan 17:49:52 CET 2014)
+interrupt rate = 44011.60 +/- 1943.87intr/s
+interrupt2 rate = 68088.71 +/- 964.30intr/s
+packet rate = 91160.14 +/- 273.05pckts/s
+sent avg = 5.563973 +/- 0.016666MB/s
+#### WINDOW_SIZE is 1260, ACK_DELAY is 15112us, PACKET_SIZE is 8 (Mo 20. Jan 17:50:16 CET 2014)
+interrupt rate = 40408.62 +/- 1269.05intr/s
+interrupt2 rate = 67857.97 +/- 977.73intr/s
+packet rate = 82987.21 +/- 44.21pckts/s
+sent avg = 5.065138 +/- 0.002698MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 1344us, PACKET_SIZE is 9 (Mo 20. Jan 17:50:40 CET 2014)
+interrupt rate = 158670.08 +/- 7763.68intr/s
+interrupt2 rate = 69245.50 +/- 1357.64intr/s
+packet rate = 360873.19 +/- 26395.73pckts/s
+sent avg = 24.779196 +/- 1.812451MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 2553us, PACKET_SIZE is 9 (Mo 20. Jan 17:51:05 CET 2014)
+interrupt rate = 145536.42 +/- 3816.09intr/s
+interrupt2 rate = 71196.10 +/- 1577.52intr/s
+packet rate = 287079.44 +/- 24842.17pckts/s
+sent avg = 19.712180 +/- 1.705777MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 3762us, PACKET_SIZE is 9 (Mo 20. Jan 17:51:29 CET 2014)
+interrupt rate = 141415.17 +/- 6104.79intr/s
+interrupt2 rate = 70819.22 +/- 1367.30intr/s
+packet rate = 283416.01 +/- 9245.43pckts/s
+sent avg = 19.460633 +/- 0.634833MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 4971us, PACKET_SIZE is 9 (Mo 20. Jan 17:51:54 CET 2014)
+interrupt rate = 105963.23 +/- 3650.57intr/s
+interrupt2 rate = 67738.55 +/- 900.37intr/s
+packet rate = 222430.52 +/- 104.84pckts/s
+sent avg = 15.273092 +/- 0.007199MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 6180us, PACKET_SIZE is 9 (Mo 20. Jan 17:52:18 CET 2014)
+interrupt rate = 86956.93 +/- 2704.88intr/s
+interrupt2 rate = 67241.52 +/- 1538.34intr/s
+packet rate = 178809.89 +/- 3316.82pckts/s
+sent avg = 12.277901 +/- 0.227748MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 7389us, PACKET_SIZE is 9 (Mo 20. Jan 17:52:42 CET 2014)
+interrupt rate = 73220.17 +/- 1986.78intr/s
+interrupt2 rate = 67482.53 +/- 1447.63intr/s
+packet rate = 150003.02 +/- 801.19pckts/s
+sent avg = 10.299890 +/- 0.055013MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 8598us, PACKET_SIZE is 9 (Mo 20. Jan 17:53:07 CET 2014)
+interrupt rate = 63319.07 +/- 1202.35intr/s
+interrupt2 rate = 67842.27 +/- 996.39intr/s
+packet rate = 129249.34 +/- 46.14pckts/s
+sent avg = 8.874848 +/- 0.003168MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 9807us, PACKET_SIZE is 9 (Mo 20. Jan 17:53:31 CET 2014)
+interrupt rate = 56023.46 +/- 1151.62intr/s
+interrupt2 rate = 67856.46 +/- 989.67intr/s
+packet rate = 113422.60 +/- 23.14pckts/s
+sent avg = 7.788112 +/- 0.001589MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 11016us, PACKET_SIZE is 9 (Mo 20. Jan 17:53:56 CET 2014)
+interrupt rate = 49197.06 +/- 1850.85intr/s
+interrupt2 rate = 68076.41 +/- 876.89intr/s
+packet rate = 101283.54 +/- 4983.85pckts/s
+sent avg = 6.954589 +/- 0.342214MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 12225us, PACKET_SIZE is 9 (Mo 20. Jan 17:54:20 CET 2014)
+interrupt rate = 44364.16 +/- 1264.31intr/s
+interrupt2 rate = 68083.14 +/- 859.97intr/s
+packet rate = 91112.90 +/- 117.56pckts/s
+sent avg = 6.256226 +/- 0.008072MB/s
+#### WINDOW_SIZE is 1120, ACK_DELAY is 13434us, PACKET_SIZE is 9 (Mo 20. Jan 17:54:44 CET 2014)
+interrupt rate = 40539.50 +/- 1307.41intr/s
+interrupt2 rate = 68068.07 +/- 885.26intr/s
+packet rate = 82948.89 +/- 16.77pckts/s
+sent avg = 5.695648 +/- 0.001152MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 1209us, PACKET_SIZE is 10 (Mo 20. Jan 17:55:08 CET 2014)
+interrupt rate = 143199.45 +/- 1045.73intr/s
+interrupt2 rate = 71417.19 +/- 507.68intr/s
+packet rate = 273748.85 +/- 11604.32pckts/s
+sent avg = 20.885380 +/- 0.885339MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 2297us, PACKET_SIZE is 10 (Mo 20. Jan 17:55:33 CET 2014)
+interrupt rate = 144701.86 +/- 1058.48intr/s
+interrupt2 rate = 71596.50 +/- 183.12intr/s
+packet rate = 280801.46 +/- 9534.47pckts/s
+sent avg = 21.423451 +/- 0.727423MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 3385us, PACKET_SIZE is 10 (Mo 20. Jan 17:55:57 CET 2014)
+interrupt rate = 140887.05 +/- 8417.07intr/s
+interrupt2 rate = 71111.34 +/- 1244.29intr/s
+packet rate = 276253.45 +/- 18195.31pckts/s
+sent avg = 21.076466 +/- 1.388192MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 4473us, PACKET_SIZE is 10 (Mo 20. Jan 17:56:21 CET 2014)
+interrupt rate = 107159.66 +/- 3731.47intr/s
+interrupt2 rate = 67640.42 +/- 593.06intr/s
+packet rate = 221814.45 +/- 5677.18pckts/s
+sent avg = 16.923100 +/- 0.433135MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 5561us, PACKET_SIZE is 10 (Mo 20. Jan 17:56:46 CET 2014)
+interrupt rate = 86675.09 +/- 2863.04intr/s
+interrupt2 rate = 67621.54 +/- 1273.65intr/s
+packet rate = 178780.27 +/- 2063.71pckts/s
+sent avg = 13.639852 +/- 0.157448MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 6649us, PACKET_SIZE is 10 (Mo 20. Jan 17:57:10 CET 2014)
+interrupt rate = 73155.16 +/- 2318.75intr/s
+interrupt2 rate = 66770.54 +/- 1639.56intr/s
+packet rate = 149911.39 +/- 791.96pckts/s
+sent avg = 11.437332 +/- 0.060422MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 7737us, PACKET_SIZE is 10 (Mo 20. Jan 17:57:34 CET 2014)
+interrupt rate = 63317.67 +/- 2073.54intr/s
+interrupt2 rate = 68126.65 +/- 707.87intr/s
+packet rate = 129170.95 +/- 511.27pckts/s
+sent avg = 9.854961 +/- 0.039007MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 8825us, PACKET_SIZE is 10 (Mo 20. Jan 17:57:59 CET 2014)
+interrupt rate = 55473.30 +/- 1313.34intr/s
+interrupt2 rate = 68144.90 +/- 661.32intr/s
+packet rate = 113384.68 +/- 122.82pckts/s
+sent avg = 8.650565 +/- 0.009370MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 9913us, PACKET_SIZE is 10 (Mo 20. Jan 17:58:23 CET 2014)
+interrupt rate = 49677.69 +/- 1414.76intr/s
+interrupt2 rate = 68161.71 +/- 730.97intr/s
+packet rate = 101190.27 +/- 4642.19pckts/s
+sent avg = 7.720205 +/- 0.354171MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 11001us, PACKET_SIZE is 10 (Mo 20. Jan 17:58:47 CET 2014)
+interrupt rate = 44374.49 +/- 1460.82intr/s
+interrupt2 rate = 68035.81 +/- 953.44intr/s
+packet rate = 91336.50 +/- 5218.21pckts/s
+sent avg = 6.968422 +/- 0.398118MB/s
+#### WINDOW_SIZE is 1008, ACK_DELAY is 12089us, PACKET_SIZE is 10 (Mo 20. Jan 17:59:12 CET 2014)
+interrupt rate = 40701.65 +/- 1047.05intr/s
+interrupt2 rate = 67838.50 +/- 982.00intr/s
+packet rate = 82930.74 +/- 145.62pckts/s
+sent avg = 6.327113 +/- 0.011110MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 1008us, PACKET_SIZE is 12 (Mo 20. Jan 17:59:36 CET 2014)
+interrupt rate = 143146.69 +/- 486.23intr/s
+interrupt2 rate = 71490.25 +/- 159.71intr/s
+packet rate = 277214.90 +/- 1930.95pckts/s
+sent avg = 25.379782 +/- 0.176784MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 1915us, PACKET_SIZE is 12 (Mo 20. Jan 18:00:00 CET 2014)
+interrupt rate = 153005.30 +/- 8828.92intr/s
+interrupt2 rate = 69901.92 +/- 1308.50intr/s
+packet rate = 347928.66 +/- 38779.02pckts/s
+sent avg = 31.853820 +/- 3.550325MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 2822us, PACKET_SIZE is 12 (Mo 20. Jan 18:00:25 CET 2014)
+interrupt rate = 143083.20 +/- 5725.76intr/s
+interrupt2 rate = 71482.08 +/- 682.05intr/s
+packet rate = 280958.31 +/- 3924.66pckts/s
+sent avg = 25.722502 +/- 0.359314MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 3729us, PACKET_SIZE is 12 (Mo 20. Jan 18:00:50 CET 2014)
+interrupt rate = 124209.27 +/- 19112.29intr/s
+interrupt2 rate = 36265.70 +/- 33604.79intr/s
+packet rate = 221540.90 +/- 1943.84pckts/s
+sent avg = 20.282675 +/- 0.177964MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 4636us, PACKET_SIZE is 12 (Mo 20. Jan 18:01:14 CET 2014)
+interrupt rate = 87402.65 +/- 2103.55intr/s
+interrupt2 rate = 67751.78 +/- 352.58intr/s
+packet rate = 178795.62 +/- 690.67pckts/s
+sent avg = 16.369228 +/- 0.063233MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 5543us, PACKET_SIZE is 12 (Mo 20. Jan 18:01:39 CET 2014)
+interrupt rate = 73133.06 +/- 1450.97intr/s
+interrupt2 rate = 66350.27 +/- 1599.11intr/s
+packet rate = 149782.36 +/- 814.76pckts/s
+sent avg = 13.712984 +/- 0.074594MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 6450us, PACKET_SIZE is 12 (Mo 20. Jan 18:02:03 CET 2014)
+interrupt rate = 62385.16 +/- 2694.72intr/s
+interrupt2 rate = 67473.62 +/- 1193.95intr/s
+packet rate = 128995.06 +/- 149.12pckts/s
+sent avg = 11.809850 +/- 0.013652MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 7357us, PACKET_SIZE is 12 (Mo 20. Jan 18:02:28 CET 2014)
+interrupt rate = 55241.59 +/- 1339.58intr/s
+interrupt2 rate = 67410.17 +/- 1127.29intr/s
+packet rate = 113234.79 +/- 26.63pckts/s
+sent avg = 10.366954 +/- 0.002438MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 8264us, PACKET_SIZE is 12 (Mo 20. Jan 18:02:52 CET 2014)
+interrupt rate = 49852.34 +/- 1487.52intr/s
+interrupt2 rate = 68202.08 +/- 1111.17intr/s
+packet rate = 100956.13 +/- 2669.06pckts/s
+sent avg = 9.242810 +/- 0.244360MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 9171us, PACKET_SIZE is 12 (Mo 20. Jan 18:03:16 CET 2014)
+interrupt rate = 44670.46 +/- 1406.92intr/s
+interrupt2 rate = 68056.54 +/- 674.17intr/s
+packet rate = 90983.81 +/- 15.50pckts/s
+sent avg = 8.329817 +/- 0.001419MB/s
+#### WINDOW_SIZE is 840, ACK_DELAY is 10078us, PACKET_SIZE is 12 (Mo 20. Jan 18:03:42 CET 2014)
+interrupt rate = 40552.35 +/- 1147.24intr/s
+interrupt2 rate = 68052.02 +/- 407.87intr/s
+packet rate = 82841.59 +/- 12.97pckts/s
+sent avg = 7.584374 +/- 0.001188MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 864us, PACKET_SIZE is 14 (Mo 20. Jan 18:04:06 CET 2014)
+interrupt rate = 144843.38 +/- 6280.10intr/s
+interrupt2 rate = 71175.52 +/- 933.83intr/s
+packet rate = 293493.25 +/- 36025.39pckts/s
+sent avg = 31.348461 +/- 3.847927MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 1641us, PACKET_SIZE is 14 (Mo 20. Jan 18:04:31 CET 2014)
+interrupt rate = 155067.82 +/- 8806.61intr/s
+interrupt2 rate = 69681.14 +/- 1185.38intr/s
+packet rate = 352443.81 +/- 35388.67pckts/s
+sent avg = 37.645060 +/- 3.779918MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 2418us, PACKET_SIZE is 14 (Mo 20. Jan 18:04:55 CET 2014)
+interrupt rate = 132477.49 +/- 7362.27intr/s
+interrupt2 rate = 68680.06 +/- 1379.69intr/s
+packet rate = 291697.98 +/- 968.21pckts/s
+sent avg = 31.156706 +/- 0.103416MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 3195us, PACKET_SIZE is 14 (Mo 20. Jan 18:05:19 CET 2014)
+interrupt rate = 108080.54 +/- 5273.35intr/s
+interrupt2 rate = 67809.75 +/- 578.84intr/s
+packet rate = 220506.77 +/- 3246.35pckts/s
+sent avg = 23.552664 +/- 0.346748MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 3972us, PACKET_SIZE is 14 (Mo 20. Jan 18:05:44 CET 2014)
+interrupt rate = 105244.82 +/- 15655.48intr/s
+interrupt2 rate = 24491.05 +/- 32541.37intr/s
+packet rate = 178699.52 +/- 867.43pckts/s
+sent avg = 19.087168 +/- 0.092651MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 4749us, PACKET_SIZE is 14 (Mo 20. Jan 18:06:08 CET 2014)
+interrupt rate = 72795.39 +/- 1825.14intr/s
+interrupt2 rate = 67821.11 +/- 476.24intr/s
+packet rate = 149670.49 +/- 553.72pckts/s
+sent avg = 15.986533 +/- 0.059144MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 5526us, PACKET_SIZE is 14 (Mo 20. Jan 18:06:32 CET 2014)
+interrupt rate = 62190.56 +/- 1986.59intr/s
+interrupt2 rate = 67551.75 +/- 1167.16intr/s
+packet rate = 128913.98 +/- 45.98pckts/s
+sent avg = 13.769498 +/- 0.004911MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 6303us, PACKET_SIZE is 14 (Mo 20. Jan 18:06:57 CET 2014)
+interrupt rate = 55567.92 +/- 1771.03intr/s
+interrupt2 rate = 67862.28 +/- 1014.82intr/s
+packet rate = 113162.52 +/- 131.36pckts/s
+sent avg = 12.087062 +/- 0.014031MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 7080us, PACKET_SIZE is 14 (Mo 20. Jan 18:07:21 CET 2014)
+interrupt rate = 49594.85 +/- 1667.63intr/s
+interrupt2 rate = 68124.57 +/- 674.20intr/s
+packet rate = 100898.36 +/- 2056.65pckts/s
+sent avg = 10.777108 +/- 0.219674MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 7857us, PACKET_SIZE is 14 (Mo 20. Jan 18:07:45 CET 2014)
+interrupt rate = 44549.50 +/- 1469.35intr/s
+interrupt2 rate = 68146.59 +/- 355.99intr/s
+packet rate = 90957.70 +/- 15.16pckts/s
+sent avg = 9.715331 +/- 0.001620MB/s
+#### WINDOW_SIZE is 720, ACK_DELAY is 8634us, PACKET_SIZE is 14 (Mo 20. Jan 18:08:10 CET 2014)
+interrupt rate = 40754.11 +/- 1218.65intr/s
+interrupt2 rate = 68251.03 +/- 485.16intr/s
+packet rate = 82826.83 +/- 14.18pckts/s
+sent avg = 8.846860 +/- 0.001514MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 806us, PACKET_SIZE is 15 (Mo 20. Jan 18:08:34 CET 2014)
+interrupt rate = 143336.18 +/- 1934.42intr/s
+interrupt2 rate = 71425.05 +/- 350.39intr/s
+packet rate = 275757.33 +/- 16779.62pckts/s
+sent avg = 31.557922 +/- 1.920276MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 1531us, PACKET_SIZE is 15 (Mo 20. Jan 18:08:58 CET 2014)
+interrupt rate = 145848.12 +/- 5719.64intr/s
+interrupt2 rate = 71300.68 +/- 1139.78intr/s
+packet rate = 288083.24 +/- 30393.48pckts/s
+sent avg = 32.968510 +/- 3.478257MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 2256us, PACKET_SIZE is 15 (Mo 20. Jan 18:09:23 CET 2014)
+interrupt rate = 134358.32 +/- 6534.52intr/s
+interrupt2 rate = 68693.34 +/- 1144.30intr/s
+packet rate = 290723.03 +/- 2672.06pckts/s
+sent avg = 33.270610 +/- 0.305793MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 2981us, PACKET_SIZE is 15 (Mo 20. Jan 18:09:50 CET 2014)
+interrupt rate = 105960.94 +/- 5794.75intr/s
+interrupt2 rate = 67738.66 +/- 1365.63intr/s
+packet rate = 218606.39 +/- 5264.36pckts/s
+sent avg = 25.017516 +/- 0.602458MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 3706us, PACKET_SIZE is 15 (Mo 20. Jan 18:10:14 CET 2014)
+interrupt rate = 86095.24 +/- 3168.69intr/s
+interrupt2 rate = 67783.96 +/- 640.48intr/s
+packet rate = 178049.94 +/- 2082.36pckts/s
+sent avg = 20.376199 +/- 0.238308MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 4431us, PACKET_SIZE is 15 (Mo 20. Jan 18:10:40 CET 2014)
+interrupt rate = 73514.52 +/- 1404.52intr/s
+interrupt2 rate = 67886.58 +/- 586.76intr/s
+packet rate = 149725.00 +/- 213.46pckts/s
+sent avg = 17.134666 +/- 0.024428MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 5156us, PACKET_SIZE is 15 (Mo 20. Jan 18:11:06 CET 2014)
+interrupt rate = 62927.39 +/- 1539.76intr/s
+interrupt2 rate = 67827.03 +/- 746.00intr/s
+packet rate = 128898.53 +/- 57.57pckts/s
+sent avg = 14.751266 +/- 0.006589MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 5881us, PACKET_SIZE is 15 (Mo 20. Jan 18:11:32 CET 2014)
+interrupt rate = 55671.56 +/- 1749.29intr/s
+interrupt2 rate = 68042.27 +/- 711.59intr/s
+packet rate = 113150.47 +/- 35.77pckts/s
+sent avg = 12.949044 +/- 0.004093MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 6606us, PACKET_SIZE is 15 (Mo 20. Jan 18:11:58 CET 2014)
+interrupt rate = 49955.84 +/- 1670.08intr/s
+interrupt2 rate = 68008.52 +/- 907.87intr/s
+packet rate = 100864.12 +/- 1573.22pckts/s
+sent avg = 11.542982 +/- 0.180040MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 7331us, PACKET_SIZE is 15 (Mo 20. Jan 18:12:24 CET 2014)
+interrupt rate = 44743.66 +/- 1260.31intr/s
+interrupt2 rate = 67630.39 +/- 948.18intr/s
+packet rate = 90942.68 +/- 19.50pckts/s
+sent avg = 10.407564 +/- 0.002231MB/s
+#### WINDOW_SIZE is 672, ACK_DELAY is 8056us, PACKET_SIZE is 15 (Mo 20. Jan 18:12:50 CET 2014)
+interrupt rate = 41184.34 +/- 1483.75intr/s
+interrupt2 rate = 68131.02 +/- 717.44intr/s
+packet rate = 82821.69 +/- 593.54pckts/s
+sent avg = 9.478190 +/- 0.067925MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 756us, PACKET_SIZE is 16 (Mo 20. Jan 18:13:16 CET 2014)
+interrupt rate = 143686.25 +/- 3349.84intr/s
+interrupt2 rate = 71216.18 +/- 1062.43intr/s
+packet rate = 280399.26 +/- 22744.61pckts/s
+sent avg = 34.228425 +/- 2.776442MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 1436us, PACKET_SIZE is 16 (Mo 20. Jan 18:13:41 CET 2014)
+interrupt rate = 149945.31 +/- 10037.93intr/s
+interrupt2 rate = 70023.37 +/- 1847.91intr/s
+packet rate = 330649.85 +/- 45550.28pckts/s
+sent avg = 40.362531 +/- 5.560337MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 2116us, PACKET_SIZE is 16 (Mo 20. Jan 18:14:10 CET 2014)
+interrupt rate = 134781.23 +/- 5117.82intr/s
+interrupt2 rate = 68613.21 +/- 675.38intr/s
+packet rate = 290979.85 +/- 3118.08pckts/s
+sent avg = 35.520001 +/- 0.380625MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 2796us, PACKET_SIZE is 16 (Mo 20. Jan 18:14:36 CET 2014)
+interrupt rate = 109219.01 +/- 3590.17intr/s
+interrupt2 rate = 67753.55 +/- 384.38intr/s
+packet rate = 220968.58 +/- 2627.67pckts/s
+sent avg = 26.973704 +/- 0.320760MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 3476us, PACKET_SIZE is 16 (Mo 20. Jan 18:15:02 CET 2014)
+interrupt rate = 86441.04 +/- 3872.04intr/s
+interrupt2 rate = 67672.14 +/- 1327.83intr/s
+packet rate = 177272.64 +/- 2738.34pckts/s
+sent avg = 21.639727 +/- 0.334270MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 4156us, PACKET_SIZE is 16 (Mo 20. Jan 18:15:28 CET 2014)
+interrupt rate = 73336.10 +/- 1956.44intr/s
+interrupt2 rate = 67867.41 +/- 350.97intr/s
+packet rate = 149522.46 +/- 377.69pckts/s
+sent avg = 18.252253 +/- 0.046104MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 4836us, PACKET_SIZE is 16 (Mo 20. Jan 18:15:53 CET 2014)
+interrupt rate = 63431.64 +/- 1714.55intr/s
+interrupt2 rate = 67918.08 +/- 981.24intr/s
+packet rate = 128771.63 +/- 64.63pckts/s
+sent avg = 15.719193 +/- 0.007890MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 5516us, PACKET_SIZE is 16 (Mo 20. Jan 18:16:19 CET 2014)
+interrupt rate = 55355.55 +/- 818.61intr/s
+interrupt2 rate = 67714.04 +/- 629.67intr/s
+packet rate = 113044.07 +/- 48.86pckts/s
+sent avg = 13.799325 +/- 0.005964MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 6196us, PACKET_SIZE is 16 (Mo 20. Jan 18:16:44 CET 2014)
+interrupt rate = 49899.54 +/- 1329.71intr/s
+interrupt2 rate = 67839.86 +/- 883.03intr/s
+packet rate = 100749.44 +/- 59.09pckts/s
+sent avg = 12.298516 +/- 0.007213MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 6876us, PACKET_SIZE is 16 (Mo 20. Jan 18:17:09 CET 2014)
+interrupt rate = 45401.01 +/- 1044.02intr/s
+interrupt2 rate = 68152.28 +/- 1113.46intr/s
+packet rate = 90873.87 +/- 36.27pckts/s
+sent avg = 11.093002 +/- 0.004428MB/s
+#### WINDOW_SIZE is 630, ACK_DELAY is 7556us, PACKET_SIZE is 16 (Mo 20. Jan 18:17:33 CET 2014)
+interrupt rate = 41098.70 +/- 1177.08intr/s
+interrupt2 rate = 67996.44 +/- 603.93intr/s
+packet rate = 82756.14 +/- 57.71pckts/s
+sent avg = 10.102067 +/- 0.007044MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 672us, PACKET_SIZE is 18 (Mo 20. Jan 18:17:57 CET 2014)
+interrupt rate = 145896.94 +/- 6043.97intr/s
+interrupt2 rate = 70555.47 +/- 2288.85intr/s
+packet rate = 297090.22 +/- 38315.60pckts/s
+sent avg = 40.799134 +/- 5.261846MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 1276us, PACKET_SIZE is 18 (Mo 20. Jan 18:18:21 CET 2014)
+interrupt rate = 149264.38 +/- 8557.25intr/s
+interrupt2 rate = 70635.19 +/- 1539.20intr/s
+packet rate = 311239.70 +/- 43666.84pckts/s
+sent avg = 42.742269 +/- 5.996728MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 1880us, PACKET_SIZE is 18 (Mo 20. Jan 18:18:46 CET 2014)
+interrupt rate = 131551.20 +/- 6107.65intr/s
+interrupt2 rate = 66944.25 +/- 2428.90intr/s
+packet rate = 288720.57 +/- 5399.79pckts/s
+sent avg = 39.649737 +/- 0.741549MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 2484us, PACKET_SIZE is 18 (Mo 20. Jan 18:19:10 CET 2014)
+interrupt rate = 105845.58 +/- 3209.08intr/s
+interrupt2 rate = 67710.26 +/- 1242.99intr/s
+packet rate = 220673.33 +/- 1264.37pckts/s
+sent avg = 30.304870 +/- 0.173634MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 3088us, PACKET_SIZE is 18 (Mo 20. Jan 18:19:34 CET 2014)
+interrupt rate = 87830.56 +/- 2950.46intr/s
+interrupt2 rate = 67967.71 +/- 330.92intr/s
+packet rate = 177899.45 +/- 1676.08pckts/s
+sent avg = 24.430772 +/- 0.230175MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 3692us, PACKET_SIZE is 18 (Mo 20. Jan 18:19:59 CET 2014)
+interrupt rate = 73310.22 +/- 2382.23intr/s
+interrupt2 rate = 67982.74 +/- 1232.71intr/s
+packet rate = 149193.90 +/- 907.69pckts/s
+sent avg = 20.488664 +/- 0.124652MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 4296us, PACKET_SIZE is 18 (Mo 20. Jan 18:20:23 CET 2014)
+interrupt rate = 63393.07 +/- 1254.77intr/s
+interrupt2 rate = 67960.19 +/- 277.27intr/s
+packet rate = 128718.06 +/- 379.63pckts/s
+sent avg = 17.676735 +/- 0.052135MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 4900us, PACKET_SIZE is 18 (Mo 20. Jan 18:20:49 CET 2014)
+interrupt rate = 55314.67 +/- 988.90intr/s
+interrupt2 rate = 67732.18 +/- 922.89intr/s
+packet rate = 113014.11 +/- 27.94pckts/s
+sent avg = 15.520126 +/- 0.003836MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 5504us, PACKET_SIZE is 18 (Mo 20. Jan 18:21:13 CET 2014)
+interrupt rate = 49402.85 +/- 685.79intr/s
+interrupt2 rate = 67942.92 +/- 462.70intr/s
+packet rate = 100726.79 +/- 22.58pckts/s
+sent avg = 13.832719 +/- 0.003100MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 6108us, PACKET_SIZE is 18 (Mo 20. Jan 18:21:37 CET 2014)
+interrupt rate = 44742.53 +/- 900.54intr/s
+interrupt2 rate = 67934.32 +/- 833.73intr/s
+packet rate = 90858.11 +/- 21.97pckts/s
+sent avg = 12.477463 +/- 0.003018MB/s
+#### WINDOW_SIZE is 560, ACK_DELAY is 6712us, PACKET_SIZE is 18 (Mo 20. Jan 18:22:02 CET 2014)
+interrupt rate = 40742.42 +/- 1091.96intr/s
+interrupt2 rate = 68218.38 +/- 1081.23intr/s
+packet rate = 82751.90 +/- 17.80pckts/s
+sent avg = 11.364244 +/- 0.002444MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 604us, PACKET_SIZE is 20 (Mo 20. Jan 18:22:26 CET 2014)
+interrupt rate = 145210.31 +/- 5903.44intr/s
+interrupt2 rate = 71057.09 +/- 1215.78intr/s
+packet rate = 287345.62 +/- 34602.85pckts/s
+sent avg = 43.845462 +/- 5.279976MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 1148us, PACKET_SIZE is 20 (Mo 20. Jan 18:22:50 CET 2014)
+interrupt rate = 144358.24 +/- 2207.99intr/s
+interrupt2 rate = 71253.24 +/- 1364.34intr/s
+packet rate = 281658.20 +/- 21203.28pckts/s
+sent avg = 42.977631 +/- 3.235364MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 1692us, PACKET_SIZE is 20 (Mo 20. Jan 18:23:14 CET 2014)
+interrupt rate = 144161.03 +/- 1100.82intr/s
+interrupt2 rate = 71605.57 +/- 505.53intr/s
+packet rate = 279088.85 +/- 1881.26pckts/s
+sent avg = 42.585579 +/- 0.287058MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 2236us, PACKET_SIZE is 20 (Mo 20. Jan 18:23:39 CET 2014)
+interrupt rate = 105635.85 +/- 3281.62intr/s
+interrupt2 rate = 67420.47 +/- 1269.33intr/s
+packet rate = 219980.77 +/- 1833.79pckts/s
+sent avg = 33.566402 +/- 0.279814MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 2780us, PACKET_SIZE is 20 (Mo 20. Jan 18:24:03 CET 2014)
+interrupt rate = 105172.31 +/- 13076.76intr/s
+interrupt2 rate = 22146.23 +/- 31093.04intr/s
+packet rate = 177963.57 +/- 523.45pckts/s
+sent avg = 27.155085 +/- 0.079872MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 3324us, PACKET_SIZE is 20 (Mo 20. Jan 18:24:27 CET 2014)
+interrupt rate = 73268.44 +/- 2193.79intr/s
+interrupt2 rate = 67910.65 +/- 573.62intr/s
+packet rate = 148957.54 +/- 913.88pckts/s
+sent avg = 22.729117 +/- 0.139447MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 3868us, PACKET_SIZE is 20 (Mo 20. Jan 18:24:52 CET 2014)
+interrupt rate = 63340.52 +/- 1767.28intr/s
+interrupt2 rate = 68085.19 +/- 599.79intr/s
+packet rate = 128520.39 +/- 76.10pckts/s
+sent avg = 19.610655 +/- 0.011612MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 4412us, PACKET_SIZE is 20 (Mo 20. Jan 18:25:16 CET 2014)
+interrupt rate = 54971.26 +/- 924.70intr/s
+interrupt2 rate = 67991.72 +/- 392.22intr/s
+packet rate = 112862.08 +/- 27.34pckts/s
+sent avg = 17.221387 +/- 0.004171MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 4956us, PACKET_SIZE is 20 (Mo 20. Jan 18:25:40 CET 2014)
+interrupt rate = 49369.94 +/- 725.20intr/s
+interrupt2 rate = 67558.18 +/- 934.45intr/s
+packet rate = 100595.19 +/- 25.89pckts/s
+sent avg = 15.349608 +/- 0.003950MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 5500us, PACKET_SIZE is 20 (Mo 20. Jan 18:26:05 CET 2014)
+interrupt rate = 44628.11 +/- 961.84intr/s
+interrupt2 rate = 67852.63 +/- 1211.00intr/s
+packet rate = 90747.79 +/- 930.02pckts/s
+sent avg = 13.847014 +/- 0.141909MB/s
+#### WINDOW_SIZE is 504, ACK_DELAY is 6044us, PACKET_SIZE is 20 (Mo 20. Jan 18:26:29 CET 2014)
+interrupt rate = 40804.95 +/- 944.77intr/s
+interrupt2 rate = 67983.63 +/- 739.52intr/s
+packet rate = 82640.64 +/- 18.90pckts/s
+sent avg = 12.609962 +/- 0.002883MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 576us, PACKET_SIZE is 21 (Mo 20. Jan 18:26:53 CET 2014)
+interrupt rate = 143165.41 +/- 368.49intr/s
+interrupt2 rate = 71479.76 +/- 86.07intr/s
+packet rate = 275818.90 +/- 494.35pckts/s
+sent avg = 44.190955 +/- 0.079204MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 1094us, PACKET_SIZE is 21 (Mo 20. Jan 18:27:17 CET 2014)
+interrupt rate = 146124.77 +/- 7598.66intr/s
+interrupt2 rate = 70888.16 +/- 1147.40intr/s
+packet rate = 292938.63 +/- 41347.42pckts/s
+sent avg = 46.933833 +/- 6.624571MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 1612us, PACKET_SIZE is 21 (Mo 20. Jan 18:27:42 CET 2014)
+interrupt rate = 140875.65 +/- 5922.04intr/s
+interrupt2 rate = 70708.84 +/- 1749.90intr/s
+packet rate = 280797.49 +/- 5347.78pckts/s
+sent avg = 44.988611 +/- 0.856806MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 2130us, PACKET_SIZE is 21 (Mo 20. Jan 18:28:06 CET 2014)
+interrupt rate = 105492.70 +/- 5193.83intr/s
+interrupt2 rate = 67322.83 +/- 1808.54intr/s
+packet rate = 218515.27 +/- 4297.36pckts/s
+sent avg = 35.009924 +/- 0.688511MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 2648us, PACKET_SIZE is 21 (Mo 20. Jan 18:28:30 CET 2014)
+interrupt rate = 85656.46 +/- 2697.71intr/s
+interrupt2 rate = 67648.57 +/- 980.42intr/s
+packet rate = 177792.48 +/- 1948.04pckts/s
+sent avg = 28.485429 +/- 0.312110MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 3166us, PACKET_SIZE is 21 (Mo 20. Jan 18:28:55 CET 2014)
+interrupt rate = 72609.40 +/- 2379.44intr/s
+interrupt2 rate = 67986.35 +/- 851.30intr/s
+packet rate = 148321.07 +/- 3574.54pckts/s
+sent avg = 23.763599 +/- 0.572703MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 3684us, PACKET_SIZE is 21 (Mo 20. Jan 18:29:19 CET 2014)
+interrupt rate = 63753.27 +/- 1438.73intr/s
+interrupt2 rate = 68112.37 +/- 364.84intr/s
+packet rate = 128443.32 +/- 65.37pckts/s
+sent avg = 20.578840 +/- 0.010474MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 4202us, PACKET_SIZE is 21 (Mo 20. Jan 18:29:43 CET 2014)
+interrupt rate = 55564.98 +/- 1088.84intr/s
+interrupt2 rate = 67929.57 +/- 528.27intr/s
+packet rate = 112817.96 +/- 25.43pckts/s
+sent avg = 18.075388 +/- 0.004074MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 4720us, PACKET_SIZE is 21 (Mo 20. Jan 18:30:08 CET 2014)
+interrupt rate = 49675.80 +/- 1103.56intr/s
+interrupt2 rate = 67972.71 +/- 1169.83intr/s
+packet rate = 100558.57 +/- 21.54pckts/s
+sent avg = 16.111221 +/- 0.003452MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 5238us, PACKET_SIZE is 21 (Mo 20. Jan 18:30:32 CET 2014)
+interrupt rate = 44681.83 +/- 638.03intr/s
+interrupt2 rate = 67759.19 +/- 866.88intr/s
+packet rate = 90708.27 +/- 21.03pckts/s
+sent avg = 14.533033 +/- 0.003369MB/s
+#### WINDOW_SIZE is 480, ACK_DELAY is 5756us, PACKET_SIZE is 21 (Mo 20. Jan 18:30:56 CET 2014)
+interrupt rate = 40677.25 +/- 625.61intr/s
+interrupt2 rate = 68123.02 +/- 449.53intr/s
+packet rate = 82614.23 +/- 18.83pckts/s
+sent avg = 13.236228 +/- 0.003017MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 504us, PACKET_SIZE is 24 (Mo 20. Jan 18:31:21 CET 2014)
+interrupt rate = 145774.50 +/- 5986.30intr/s
+interrupt2 rate = 70881.57 +/- 1505.56intr/s
+packet rate = 297012.15 +/- 39742.58pckts/s
+sent avg = 54.384549 +/- 7.277084MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 957us, PACKET_SIZE is 24 (Mo 20. Jan 18:31:45 CET 2014)
+interrupt rate = 153590.15 +/- 9678.57intr/s
+interrupt2 rate = 69407.35 +/- 1982.66intr/s
+packet rate = 336176.76 +/- 47909.28pckts/s
+sent avg = 61.555804 +/- 8.772452MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 1410us, PACKET_SIZE is 24 (Mo 20. Jan 18:32:09 CET 2014)
+interrupt rate = 140231.50 +/- 6640.86intr/s
+interrupt2 rate = 70582.88 +/- 2108.00intr/s
+packet rate = 281267.82 +/- 5175.68pckts/s
+sent avg = 51.501676 +/- 0.947696MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 1863us, PACKET_SIZE is 24 (Mo 20. Jan 18:32:34 CET 2014)
+interrupt rate = 105559.05 +/- 3289.17intr/s
+interrupt2 rate = 67562.21 +/- 888.12intr/s
+packet rate = 219367.61 +/- 1620.32pckts/s
+sent avg = 40.167410 +/- 0.296689MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 2316us, PACKET_SIZE is 24 (Mo 20. Jan 18:32:58 CET 2014)
+interrupt rate = 85967.47 +/- 2107.38intr/s
+interrupt2 rate = 67801.37 +/- 636.41intr/s
+packet rate = 177425.28 +/- 754.29pckts/s
+sent avg = 32.487539 +/- 0.138115MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 2769us, PACKET_SIZE is 24 (Mo 20. Jan 18:33:22 CET 2014)
+interrupt rate = 72302.18 +/- 1792.34intr/s
+interrupt2 rate = 67929.07 +/- 521.17intr/s
+packet rate = 148884.24 +/- 561.66pckts/s
+sent avg = 27.261519 +/- 0.102843MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 3222us, PACKET_SIZE is 24 (Mo 20. Jan 18:33:47 CET 2014)
+interrupt rate = 63578.06 +/- 1975.61intr/s
+interrupt2 rate = 68012.88 +/- 828.08intr/s
+packet rate = 128258.60 +/- 454.61pckts/s
+sent avg = 23.484852 +/- 0.083242MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 3675us, PACKET_SIZE is 24 (Mo 20. Jan 18:34:11 CET 2014)
+interrupt rate = 56390.52 +/- 1163.73intr/s
+interrupt2 rate = 68159.10 +/- 1048.38intr/s
+packet rate = 112703.83 +/- 52.01pckts/s
+sent avg = 20.636688 +/- 0.009523MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 4128us, PACKET_SIZE is 24 (Mo 20. Jan 18:34:35 CET 2014)
+interrupt rate = 49950.03 +/- 953.06intr/s
+interrupt2 rate = 68193.93 +/- 454.26intr/s
+packet rate = 100482.95 +/- 24.28pckts/s
+sent avg = 18.398977 +/- 0.004446MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 4581us, PACKET_SIZE is 24 (Mo 20. Jan 18:35:00 CET 2014)
+interrupt rate = 45143.45 +/- 628.70intr/s
+interrupt2 rate = 68067.79 +/- 276.83intr/s
+packet rate = 90656.56 +/- 19.45pckts/s
+sent avg = 16.599711 +/- 0.003562MB/s
+#### WINDOW_SIZE is 420, ACK_DELAY is 5034us, PACKET_SIZE is 24 (Mo 20. Jan 18:35:25 CET 2014)
+interrupt rate = 40846.29 +/- 556.66intr/s
+interrupt2 rate = 67845.39 +/- 833.46intr/s
+packet rate = 82571.88 +/- 18.31pckts/s
+sent avg = 15.119362 +/- 0.003352MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 432us, PACKET_SIZE is 28 (Mo 20. Jan 18:35:49 CET 2014)
+interrupt rate = 143394.78 +/- 3293.43intr/s
+interrupt2 rate = 71200.16 +/- 804.05intr/s
+packet rate = 275821.86 +/- 29636.53pckts/s
+sent avg = 58.921907 +/- 6.331046MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 820us, PACKET_SIZE is 28 (Mo 20. Jan 18:36:14 CET 2014)
+interrupt rate = 143082.87 +/- 2015.05intr/s
+interrupt2 rate = 71394.09 +/- 949.91intr/s
+packet rate = 277293.66 +/- 16041.10pckts/s
+sent avg = 59.236317 +/- 3.426749MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 1208us, PACKET_SIZE is 28 (Mo 20. Jan 18:36:39 CET 2014)
+interrupt rate = 141964.59 +/- 4192.00intr/s
+interrupt2 rate = 70999.07 +/- 1279.34intr/s
+packet rate = 276636.43 +/- 10086.56pckts/s
+sent avg = 59.095916 +/- 2.154722MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 1596us, PACKET_SIZE is 28 (Mo 20. Jan 18:37:04 CET 2014)
+interrupt rate = 121615.09 +/- 19810.95intr/s
+interrupt2 rate = 37869.59 +/- 33571.57intr/s
+packet rate = 217273.98 +/- 4675.13pckts/s
+sent avg = 46.414730 +/- 0.998716MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 1984us, PACKET_SIZE is 28 (Mo 20. Jan 18:37:28 CET 2014)
+interrupt rate = 85250.83 +/- 5934.78intr/s
+interrupt2 rate = 68153.47 +/- 833.49intr/s
+packet rate = 176425.80 +/- 3191.37pckts/s
+sent avg = 37.688616 +/- 0.681751MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 2372us, PACKET_SIZE is 28 (Mo 20. Jan 18:37:53 CET 2014)
+interrupt rate = 73205.36 +/- 1324.60intr/s
+interrupt2 rate = 66890.47 +/- 1501.27intr/s
+packet rate = 148593.07 +/- 330.55pckts/s
+sent avg = 31.742903 +/- 0.070612MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 2760us, PACKET_SIZE is 28 (Mo 20. Jan 18:38:18 CET 2014)
+interrupt rate = 62725.37 +/- 1667.74intr/s
+interrupt2 rate = 67416.47 +/- 1418.09intr/s
+packet rate = 128003.39 +/- 749.55pckts/s
+sent avg = 27.344474 +/- 0.160121MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 3148us, PACKET_SIZE is 28 (Mo 20. Jan 18:38:42 CET 2014)
+interrupt rate = 56794.09 +/- 4113.84intr/s
+interrupt2 rate = 65489.44 +/- 12665.65intr/s
+packet rate = 112484.01 +/- 568.72pckts/s
+sent avg = 24.029177 +/- 0.121491MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 3536us, PACKET_SIZE is 28 (Mo 20. Jan 18:39:06 CET 2014)
+interrupt rate = 49851.64 +/- 891.22intr/s
+interrupt2 rate = 68110.35 +/- 268.25intr/s
+packet rate = 100382.13 +/- 25.24pckts/s
+sent avg = 21.443937 +/- 0.005392MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 3924us, PACKET_SIZE is 28 (Mo 20. Jan 18:39:32 CET 2014)
+interrupt rate = 45195.32 +/- 854.68intr/s
+interrupt2 rate = 68207.29 +/- 522.13intr/s
+packet rate = 90578.47 +/- 26.25pckts/s
+sent avg = 19.349648 +/- 0.005607MB/s
+#### WINDOW_SIZE is 360, ACK_DELAY is 4312us, PACKET_SIZE is 28 (Mo 20. Jan 18:39:57 CET 2014)
+interrupt rate = 41145.85 +/- 725.97intr/s
+interrupt2 rate = 68281.07 +/- 212.09intr/s
+packet rate = 82517.11 +/- 18.31pckts/s
+sent avg = 17.627557 +/- 0.003911MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 403us, PACKET_SIZE is 30 (Mo 20. Jan 18:40:21 CET 2014)
+interrupt rate = 143031.38 +/- 2718.50intr/s
+interrupt2 rate = 71323.89 +/- 1164.61intr/s
+packet rate = 274660.36 +/- 16409.60pckts/s
+sent avg = 62.864767 +/- 3.755858MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 765us, PACKET_SIZE is 30 (Mo 20. Jan 18:40:46 CET 2014)
+interrupt rate = 145375.02 +/- 5617.31intr/s
+interrupt2 rate = 70500.70 +/- 2061.00intr/s
+packet rate = 293267.22 +/- 38987.79pckts/s
+sent avg = 67.123541 +/- 8.923596MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 1127us, PACKET_SIZE is 30 (Mo 20. Jan 18:41:11 CET 2014)
+interrupt rate = 141011.61 +/- 5312.23intr/s
+interrupt2 rate = 70881.77 +/- 1345.34intr/s
+packet rate = 279423.51 +/- 4664.82pckts/s
+sent avg = 63.954967 +/- 1.067693MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 1489us, PACKET_SIZE is 30 (Mo 20. Jan 18:41:37 CET 2014)
+interrupt rate = 104839.55 +/- 5874.47intr/s
+interrupt2 rate = 67579.20 +/- 1317.13intr/s
+packet rate = 216495.54 +/- 6027.38pckts/s
+sent avg = 49.551896 +/- 1.379557MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 1851us, PACKET_SIZE is 30 (Mo 20. Jan 18:42:02 CET 2014)
+interrupt rate = 87798.12 +/- 2426.51intr/s
+interrupt2 rate = 67694.11 +/- 905.52intr/s
+packet rate = 176672.60 +/- 1230.78pckts/s
+sent avg = 40.437149 +/- 0.281704MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 2213us, PACKET_SIZE is 30 (Mo 20. Jan 18:42:26 CET 2014)
+interrupt rate = 73618.91 +/- 1461.43intr/s
+interrupt2 rate = 67592.65 +/- 1154.72intr/s
+packet rate = 148538.87 +/- 920.52pckts/s
+sent avg = 33.997849 +/- 0.210691MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 2575us, PACKET_SIZE is 30 (Mo 20. Jan 18:42:51 CET 2014)
+interrupt rate = 63006.99 +/- 1231.61intr/s
+interrupt2 rate = 67602.58 +/- 1090.82intr/s
+packet rate = 128014.70 +/- 1863.95pckts/s
+sent avg = 29.300240 +/- 0.426625MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 2937us, PACKET_SIZE is 30 (Mo 20. Jan 18:43:15 CET 2014)
+interrupt rate = 56270.02 +/- 1612.47intr/s
+interrupt2 rate = 67223.25 +/- 1272.67intr/s
+packet rate = 112315.70 +/- 656.17pckts/s
+sent avg = 25.707023 +/- 0.150186MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 3299us, PACKET_SIZE is 30 (Mo 20. Jan 18:43:40 CET 2014)
+interrupt rate = 50132.55 +/- 959.59intr/s
+interrupt2 rate = 68230.74 +/- 507.95intr/s
+packet rate = 100342.88 +/- 29.07pckts/s
+sent avg = 22.966662 +/- 0.006653MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 3661us, PACKET_SIZE is 30 (Mo 20. Jan 18:44:04 CET 2014)
+interrupt rate = 45407.68 +/- 873.58intr/s
+interrupt2 rate = 68206.89 +/- 283.83intr/s
+packet rate = 90546.58 +/- 232.20pckts/s
+sent avg = 20.724468 +/- 0.053146MB/s
+#### WINDOW_SIZE is 336, ACK_DELAY is 4023us, PACKET_SIZE is 30 (Mo 20. Jan 18:44:29 CET 2014)
+interrupt rate = 41490.38 +/- 804.54intr/s
+interrupt2 rate = 68255.26 +/- 782.16intr/s
+packet rate = 82493.13 +/- 21.19pckts/s
+sent avg = 18.881178 +/- 0.004849MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 378us, PACKET_SIZE is 32 (Mo 20. Jan 18:44:53 CET 2014)
+interrupt rate = 142899.93 +/- 1297.08intr/s
+interrupt2 rate = 71327.57 +/- 440.78intr/s
+packet rate = 272990.25 +/- 15651.80pckts/s
+sent avg = 66.648010 +/- 3.821241MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 718us, PACKET_SIZE is 32 (Mo 20. Jan 18:45:17 CET 2014)
+interrupt rate = 145237.26 +/- 6296.23intr/s
+interrupt2 rate = 70851.94 +/- 1376.90intr/s
+packet rate = 288473.56 +/- 41269.48pckts/s
+sent avg = 70.428114 +/- 10.075556MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 1058us, PACKET_SIZE is 32 (Mo 20. Jan 18:45:43 CET 2014)
+interrupt rate = 141775.97 +/- 4223.77intr/s
+interrupt2 rate = 71021.34 +/- 1042.13intr/s
+packet rate = 278456.94 +/- 3877.80pckts/s
+sent avg = 67.982652 +/- 0.946729MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 1398us, PACKET_SIZE is 32 (Mo 20. Jan 18:46:08 CET 2014)
+interrupt rate = 106092.73 +/- 3303.89intr/s
+interrupt2 rate = 67462.94 +/- 1027.18intr/s
+packet rate = 217622.12 +/- 2460.62pckts/s
+sent avg = 53.130400 +/- 0.600738MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 1738us, PACKET_SIZE is 32 (Mo 20. Jan 18:46:34 CET 2014)
+interrupt rate = 87458.62 +/- 1485.89intr/s
+interrupt2 rate = 67232.78 +/- 1260.95intr/s
+packet rate = 176304.18 +/- 714.58pckts/s
+sent avg = 43.043014 +/- 0.174457MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 2078us, PACKET_SIZE is 32 (Mo 20. Jan 18:46:58 CET 2014)
+interrupt rate = 73461.69 +/- 2066.82intr/s
+interrupt2 rate = 68036.38 +/- 685.58intr/s
+packet rate = 147852.10 +/- 1504.98pckts/s
+sent avg = 36.096705 +/- 0.367427MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 2418us, PACKET_SIZE is 32 (Mo 20. Jan 18:47:22 CET 2014)
+interrupt rate = 63408.46 +/- 898.14intr/s
+interrupt2 rate = 67266.31 +/- 1186.07intr/s
+packet rate = 127667.14 +/- 81.77pckts/s
+sent avg = 31.168736 +/- 0.019964MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 2758us, PACKET_SIZE is 32 (Mo 20. Jan 18:47:47 CET 2014)
+interrupt rate = 55295.85 +/- 1257.35intr/s
+interrupt2 rate = 67307.16 +/- 1262.12intr/s
+packet rate = 112130.54 +/- 539.41pckts/s
+sent avg = 27.375621 +/- 0.131692MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 3098us, PACKET_SIZE is 32 (Mo 20. Jan 18:48:11 CET 2014)
+interrupt rate = 49935.02 +/- 924.58intr/s
+interrupt2 rate = 68148.44 +/- 324.59intr/s
+packet rate = 100087.06 +/- 79.18pckts/s
+sent avg = 24.435317 +/- 0.019330MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 3438us, PACKET_SIZE is 32 (Mo 20. Jan 18:48:35 CET 2014)
+interrupt rate = 45241.49 +/- 855.52intr/s
+interrupt2 rate = 68156.12 +/- 711.27intr/s
+packet rate = 90328.56 +/- 38.03pckts/s
+sent avg = 22.052872 +/- 0.009285MB/s
+#### WINDOW_SIZE is 315, ACK_DELAY is 3778us, PACKET_SIZE is 32 (Mo 20. Jan 18:49:00 CET 2014)
+interrupt rate = 41255.78 +/- 580.64intr/s
+interrupt2 rate = 68313.16 +/- 226.75intr/s
+packet rate = 82300.87 +/- 31.88pckts/s
+sent avg = 20.092986 +/- 0.007783MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 345us, PACKET_SIZE is 35 (Mo 20. Jan 18:49:24 CET 2014)
+interrupt rate = 142339.88 +/- 1087.34intr/s
+interrupt2 rate = 71308.94 +/- 507.76intr/s
+packet rate = 269873.70 +/- 7798.71pckts/s
+sent avg = 72.064052 +/- 2.082481MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 656us, PACKET_SIZE is 35 (Mo 20. Jan 18:49:48 CET 2014)
+interrupt rate = 142886.50 +/- 737.64intr/s
+interrupt2 rate = 71323.94 +/- 635.41intr/s
+packet rate = 274918.27 +/- 10803.27pckts/s
+sent avg = 73.411099 +/- 2.884785MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 967us, PACKET_SIZE is 35 (Mo 20. Jan 18:50:13 CET 2014)
+interrupt rate = 141401.82 +/- 3954.23intr/s
+interrupt2 rate = 70836.54 +/- 1745.16intr/s
+packet rate = 274844.29 +/- 11163.61pckts/s
+sent avg = 73.391344 +/- 2.981006MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 1278us, PACKET_SIZE is 35 (Mo 20. Jan 18:50:39 CET 2014)
+interrupt rate = 105928.60 +/- 4041.26intr/s
+interrupt2 rate = 67701.73 +/- 829.70intr/s
+packet rate = 217222.06 +/- 1237.57pckts/s
+sent avg = 58.004548 +/- 0.330466MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 1589us, PACKET_SIZE is 35 (Mo 20. Jan 18:51:04 CET 2014)
+interrupt rate = 86327.54 +/- 3653.02intr/s
+interrupt2 rate = 67791.67 +/- 947.73intr/s
+packet rate = 175058.43 +/- 3361.12pckts/s
+sent avg = 46.745645 +/- 0.897517MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 1900us, PACKET_SIZE is 35 (Mo 20. Jan 18:51:29 CET 2014)
+interrupt rate = 73484.81 +/- 1694.04intr/s
+interrupt2 rate = 67830.78 +/- 837.05intr/s
+packet rate = 147759.16 +/- 523.32pckts/s
+sent avg = 39.455952 +/- 0.139741MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 2211us, PACKET_SIZE is 35 (Mo 20. Jan 18:51:53 CET 2014)
+interrupt rate = 63779.68 +/- 1690.40intr/s
+interrupt2 rate = 67794.90 +/- 990.42intr/s
+packet rate = 127460.05 +/- 76.49pckts/s
+sent avg = 34.035504 +/- 0.020426MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 2522us, PACKET_SIZE is 35 (Mo 20. Jan 18:52:17 CET 2014)
+interrupt rate = 55694.04 +/- 786.67intr/s
+interrupt2 rate = 67812.59 +/- 587.64intr/s
+packet rate = 112018.07 +/- 52.62pckts/s
+sent avg = 29.912051 +/- 0.014050MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 2833us, PACKET_SIZE is 35 (Mo 20. Jan 18:52:42 CET 2014)
+interrupt rate = 50315.52 +/- 1169.14intr/s
+interrupt2 rate = 67210.09 +/- 1292.50intr/s
+packet rate = 99882.98 +/- 122.89pckts/s
+sent avg = 26.671634 +/- 0.032815MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 3144us, PACKET_SIZE is 35 (Mo 20. Jan 18:53:06 CET 2014)
+interrupt rate = 45291.01 +/- 981.60intr/s
+interrupt2 rate = 68132.50 +/- 461.40intr/s
+packet rate = 90175.24 +/- 126.51pckts/s
+sent avg = 24.079388 +/- 0.033781MB/s
+#### WINDOW_SIZE is 288, ACK_DELAY is 3455us, PACKET_SIZE is 35 (Mo 20. Jan 18:53:30 CET 2014)
+interrupt rate = 41170.21 +/- 766.99intr/s
+interrupt2 rate = 68177.92 +/- 836.94intr/s
+packet rate = 82182.80 +/- 24.49pckts/s
+sent avg = 21.945174 +/- 0.006540MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 336us, PACKET_SIZE is 36 (Mo 20. Jan 18:53:54 CET 2014)
+interrupt rate = 142165.96 +/- 1835.31intr/s
+interrupt2 rate = 71136.77 +/- 574.14intr/s
+packet rate = 271402.11 +/- 14566.30pckts/s
+sent avg = 74.542815 +/- 4.000755MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 638us, PACKET_SIZE is 36 (Mo 20. Jan 18:54:19 CET 2014)
+interrupt rate = 143352.59 +/- 5862.09intr/s
+interrupt2 rate = 70592.43 +/- 1142.43intr/s
+packet rate = 288689.36 +/- 31993.79pckts/s
+sent avg = 79.290902 +/- 8.787357MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 940us, PACKET_SIZE is 36 (Mo 20. Jan 18:54:43 CET 2014)
+interrupt rate = 140835.80 +/- 4553.87intr/s
+interrupt2 rate = 70838.79 +/- 1397.36intr/s
+packet rate = 274542.84 +/- 7279.23pckts/s
+sent avg = 75.405443 +/- 1.999299MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 1242us, PACKET_SIZE is 36 (Mo 20. Jan 18:55:08 CET 2014)
+interrupt rate = 105768.97 +/- 3384.77intr/s
+interrupt2 rate = 67730.70 +/- 605.06intr/s
+packet rate = 217158.38 +/- 686.21pckts/s
+sent avg = 59.644330 +/- 0.188474MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 1544us, PACKET_SIZE is 36 (Mo 20. Jan 18:55:32 CET 2014)
+interrupt rate = 87723.21 +/- 3037.52intr/s
+interrupt2 rate = 67919.95 +/- 812.37intr/s
+packet rate = 175245.07 +/- 2369.13pckts/s
+sent avg = 48.132495 +/- 0.650700MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 1846us, PACKET_SIZE is 36 (Mo 20. Jan 18:55:56 CET 2014)
+interrupt rate = 73774.57 +/- 2124.88intr/s
+interrupt2 rate = 67837.63 +/- 672.35intr/s
+packet rate = 147753.59 +/- 499.52pckts/s
+sent avg = 40.581735 +/- 0.137196MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 2148us, PACKET_SIZE is 36 (Mo 20. Jan 18:56:20 CET 2014)
+interrupt rate = 63519.51 +/- 1411.01intr/s
+interrupt2 rate = 67869.29 +/- 726.77intr/s
+packet rate = 127473.41 +/- 76.87pckts/s
+sent avg = 35.011617 +/- 0.021113MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 2450us, PACKET_SIZE is 36 (Mo 20. Jan 18:56:45 CET 2014)
+interrupt rate = 55930.84 +/- 1249.38intr/s
+interrupt2 rate = 67817.94 +/- 1103.71intr/s
+packet rate = 112054.63 +/- 912.05pckts/s
+sent avg = 30.776722 +/- 0.250502MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 2752us, PACKET_SIZE is 36 (Mo 20. Jan 18:57:09 CET 2014)
+interrupt rate = 49925.76 +/- 550.82intr/s
+interrupt2 rate = 67059.56 +/- 1030.37intr/s
+packet rate = 99905.72 +/- 276.40pckts/s
+sent avg = 27.439927 +/- 0.075915MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 3054us, PACKET_SIZE is 36 (Mo 20. Jan 18:57:33 CET 2014)
+interrupt rate = 45945.23 +/- 1012.02intr/s
+interrupt2 rate = 68127.87 +/- 916.15intr/s
+packet rate = 90216.82 +/- 100.95pckts/s
+sent avg = 24.778789 +/- 0.027728MB/s
+#### WINDOW_SIZE is 280, ACK_DELAY is 3356us, PACKET_SIZE is 36 (Mo 20. Jan 18:57:58 CET 2014)
+interrupt rate = 41496.71 +/- 703.34intr/s
+interrupt2 rate = 68093.02 +/- 379.52intr/s
+packet rate = 82225.51 +/- 105.59pckts/s
+sent avg = 22.583910 +/- 0.029000MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 302us, PACKET_SIZE is 40 (Mo 20. Jan 18:58:22 CET 2014)
+interrupt rate = 141323.23 +/- 1492.37intr/s
+interrupt2 rate = 70703.70 +/- 1262.40intr/s
+packet rate = 268749.92 +/- 10875.01pckts/s
+sent avg = 82.015966 +/- 3.318790MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 574us, PACKET_SIZE is 40 (Mo 20. Jan 18:58:46 CET 2014)
+interrupt rate = 141740.98 +/- 2951.01intr/s
+interrupt2 rate = 71049.29 +/- 660.33intr/s
+packet rate = 274043.39 +/- 10669.92pckts/s
+sent avg = 83.631404 +/- 3.256202MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 846us, PACKET_SIZE is 40 (Mo 20. Jan 18:59:11 CET 2014)
+interrupt rate = 139535.49 +/- 5699.10intr/s
+interrupt2 rate = 70634.17 +/- 1233.00intr/s
+packet rate = 273063.34 +/- 6366.75pckts/s
+sent avg = 83.332317 +/- 1.942979MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 1118us, PACKET_SIZE is 40 (Mo 20. Jan 18:59:35 CET 2014)
+interrupt rate = 106643.41 +/- 4216.35intr/s
+interrupt2 rate = 67528.06 +/- 1189.76intr/s
+packet rate = 215523.70 +/- 3214.37pckts/s
+sent avg = 65.772614 +/- 0.980949MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 1390us, PACKET_SIZE is 40 (Mo 20. Jan 18:59:59 CET 2014)
+interrupt rate = 87162.23 +/- 2517.78intr/s
+interrupt2 rate = 67708.25 +/- 955.53intr/s
+packet rate = 175136.97 +/- 1285.55pckts/s
+sent avg = 53.447561 +/- 0.392320MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 1662us, PACKET_SIZE is 40 (Mo 20. Jan 19:00:24 CET 2014)
+interrupt rate = 73891.83 +/- 2758.65intr/s
+interrupt2 rate = 67729.49 +/- 802.88intr/s
+packet rate = 147326.69 +/- 411.67pckts/s
+sent avg = 44.960539 +/- 0.125631MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 1934us, PACKET_SIZE is 40 (Mo 20. Jan 19:00:48 CET 2014)
+interrupt rate = 63352.17 +/- 2808.04intr/s
+interrupt2 rate = 68158.23 +/- 836.74intr/s
+packet rate = 127134.67 +/- 125.46pckts/s
+sent avg = 38.798423 +/- 0.038287MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 2206us, PACKET_SIZE is 40 (Mo 20. Jan 19:01:12 CET 2014)
+interrupt rate = 56441.39 +/- 1157.77intr/s
+interrupt2 rate = 67640.43 +/- 959.30intr/s
+packet rate = 111747.59 +/- 79.81pckts/s
+sent avg = 34.102657 +/- 0.024357MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 2478us, PACKET_SIZE is 40 (Mo 20. Jan 19:01:38 CET 2014)
+interrupt rate = 49995.52 +/- 1063.63intr/s
+interrupt2 rate = 67823.72 +/- 1062.01intr/s
+packet rate = 99758.81 +/- 54.94pckts/s
+sent avg = 30.443973 +/- 0.016766MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 2750us, PACKET_SIZE is 40 (Mo 20. Jan 19:02:02 CET 2014)
+interrupt rate = 45346.57 +/- 649.05intr/s
+interrupt2 rate = 67483.91 +/- 981.86intr/s
+packet rate = 89998.78 +/- 100.78pckts/s
+sent avg = 27.465449 +/- 0.030756MB/s
+#### WINDOW_SIZE is 252, ACK_DELAY is 3022us, PACKET_SIZE is 40 (Mo 20. Jan 19:02:26 CET 2014)
+interrupt rate = 41526.00 +/- 870.43intr/s
+interrupt2 rate = 68096.49 +/- 593.48intr/s
+packet rate = 82047.75 +/- 51.80pckts/s
+sent avg = 25.038986 +/- 0.015808MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 288us, PACKET_SIZE is 42 (Mo 20. Jan 19:02:51 CET 2014)
+interrupt rate = 140549.08 +/- 521.41intr/s
+interrupt2 rate = 70995.74 +/- 123.97intr/s
+packet rate = 263831.30 +/- 8920.39pckts/s
+sent avg = 84.540669 +/- 2.858401MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 547us, PACKET_SIZE is 42 (Mo 20. Jan 19:03:15 CET 2014)
+interrupt rate = 140547.89 +/- 3196.08intr/s
+interrupt2 rate = 70705.00 +/- 1082.14intr/s
+packet rate = 273694.34 +/- 9722.68pckts/s
+sent avg = 87.701129 +/- 3.115483MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 806us, PACKET_SIZE is 42 (Mo 20. Jan 19:03:39 CET 2014)
+interrupt rate = 139122.01 +/- 5234.82intr/s
+interrupt2 rate = 70720.09 +/- 1295.11intr/s
+packet rate = 271129.59 +/- 11308.21pckts/s
+sent avg = 86.879292 +/- 3.623542MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 1065us, PACKET_SIZE is 42 (Mo 20. Jan 19:04:04 CET 2014)
+interrupt rate = 143755.49 +/- 5145.58intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 216212.34 +/- 1559.74pckts/s
+sent avg = 69.281907 +/- 0.499794MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 1324us, PACKET_SIZE is 42 (Mo 20. Jan 19:04:28 CET 2014)
+interrupt rate = 86344.25 +/- 2797.08intr/s
+interrupt2 rate = 67804.32 +/- 473.09intr/s
+packet rate = 175005.67 +/- 585.66pckts/s
+sent avg = 56.077868 +/- 0.187666MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 1583us, PACKET_SIZE is 42 (Mo 20. Jan 19:04:52 CET 2014)
+interrupt rate = 74334.05 +/- 2472.03intr/s
+interrupt2 rate = 67892.14 +/- 789.76intr/s
+packet rate = 146724.15 +/- 1411.96pckts/s
+sent avg = 47.015491 +/- 0.452442MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 1842us, PACKET_SIZE is 42 (Mo 20. Jan 19:05:17 CET 2014)
+interrupt rate = 63592.28 +/- 1791.63intr/s
+interrupt2 rate = 67637.41 +/- 930.87intr/s
+packet rate = 126968.65 +/- 287.45pckts/s
+sent avg = 40.685144 +/- 0.092108MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 2101us, PACKET_SIZE is 42 (Mo 20. Jan 19:05:41 CET 2014)
+interrupt rate = 56449.11 +/- 1405.76intr/s
+interrupt2 rate = 67843.50 +/- 1360.82intr/s
+packet rate = 111634.35 +/- 67.56pckts/s
+sent avg = 35.771504 +/- 0.021649MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 2360us, PACKET_SIZE is 42 (Mo 20. Jan 19:06:05 CET 2014)
+interrupt rate = 50289.35 +/- 1203.72intr/s
+interrupt2 rate = 67953.66 +/- 694.25intr/s
+packet rate = 99622.51 +/- 116.57pckts/s
+sent avg = 31.922495 +/- 0.037353MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 2619us, PACKET_SIZE is 42 (Mo 20. Jan 19:06:32 CET 2014)
+interrupt rate = 46677.84 +/- 708.68intr/s
+interrupt2 rate = 68126.25 +/- 542.70intr/s
+packet rate = 89969.05 +/- 29.86pckts/s
+sent avg = 28.829194 +/- 0.009569MB/s
+#### WINDOW_SIZE is 240, ACK_DELAY is 2878us, PACKET_SIZE is 42 (Mo 20. Jan 19:06:56 CET 2014)
+interrupt rate = 41241.97 +/- 815.88intr/s
+interrupt2 rate = 67700.68 +/- 775.76intr/s
+packet rate = 81972.63 +/- 310.14pckts/s
+sent avg = 26.266865 +/- 0.099380MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 268us, PACKET_SIZE is 45 (Mo 20. Jan 19:07:20 CET 2014)
+interrupt rate = 139706.99 +/- 2322.81intr/s
+interrupt2 rate = 70776.10 +/- 779.15intr/s
+packet rate = 263899.27 +/- 8541.80pckts/s
+sent avg = 90.602623 +/- 2.932593MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 510us, PACKET_SIZE is 45 (Mo 20. Jan 19:07:45 CET 2014)
+interrupt rate = 140872.31 +/- 1939.05intr/s
+interrupt2 rate = 70962.94 +/- 987.08intr/s
+packet rate = 268628.18 +/- 3549.85pckts/s
+sent avg = 92.226167 +/- 1.218743MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 752us, PACKET_SIZE is 45 (Mo 20. Jan 19:08:09 CET 2014)
+interrupt rate = 140299.61 +/- 2354.81intr/s
+interrupt2 rate = 70782.68 +/- 695.24intr/s
+packet rate = 267555.22 +/- 11684.79pckts/s
+sent avg = 91.857796 +/- 4.011656MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 994us, PACKET_SIZE is 45 (Mo 20. Jan 19:08:34 CET 2014)
+interrupt rate = 105824.80 +/- 5638.41intr/s
+interrupt2 rate = 67287.60 +/- 1427.61intr/s
+packet rate = 213407.26 +/- 4901.90pckts/s
+sent avg = 73.267569 +/- 1.682933MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 1236us, PACKET_SIZE is 45 (Mo 20. Jan 19:08:58 CET 2014)
+interrupt rate = 86033.10 +/- 2491.93intr/s
+interrupt2 rate = 67935.13 +/- 637.10intr/s
+packet rate = 174579.42 +/- 634.50pckts/s
+sent avg = 59.937089 +/- 0.217838MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 1478us, PACKET_SIZE is 45 (Mo 20. Jan 19:09:22 CET 2014)
+interrupt rate = 73380.98 +/- 2966.07intr/s
+interrupt2 rate = 66996.57 +/- 1553.76intr/s
+packet rate = 146158.53 +/- 1283.09pckts/s
+sent avg = 50.179547 +/- 0.440516MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 1720us, PACKET_SIZE is 45 (Mo 20. Jan 19:09:47 CET 2014)
+interrupt rate = 63458.95 +/- 2017.34intr/s
+interrupt2 rate = 67714.08 +/- 1370.53intr/s
+packet rate = 126664.73 +/- 192.68pckts/s
+sent avg = 43.486884 +/- 0.066153MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 1962us, PACKET_SIZE is 45 (Mo 20. Jan 19:10:11 CET 2014)
+interrupt rate = 56018.64 +/- 2787.76intr/s
+interrupt2 rate = 68277.69 +/- 771.87intr/s
+packet rate = 111322.14 +/- 640.66pckts/s
+sent avg = 38.219423 +/- 0.219952MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 2204us, PACKET_SIZE is 45 (Mo 20. Jan 19:10:35 CET 2014)
+interrupt rate = 50105.74 +/- 1477.81intr/s
+interrupt2 rate = 68213.46 +/- 584.86intr/s
+packet rate = 99431.39 +/- 36.29pckts/s
+sent avg = 34.137059 +/- 0.012459MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 2446us, PACKET_SIZE is 45 (Mo 20. Jan 19:10:59 CET 2014)
+interrupt rate = 44970.21 +/- 1235.12intr/s
+interrupt2 rate = 67906.44 +/- 602.63intr/s
+packet rate = 89800.23 +/- 1246.30pckts/s
+sent avg = 30.830462 +/- 0.427882MB/s
+#### WINDOW_SIZE is 224, ACK_DELAY is 2688us, PACKET_SIZE is 45 (Mo 20. Jan 19:11:24 CET 2014)
+interrupt rate = 40892.44 +/- 742.04intr/s
+interrupt2 rate = 68189.75 +/- 570.85intr/s
+packet rate = 81855.19 +/- 33.75pckts/s
+sent avg = 28.102750 +/- 0.011586MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 252us, PACKET_SIZE is 48 (Mo 20. Jan 19:11:48 CET 2014)
+interrupt rate = 139417.10 +/- 3461.20intr/s
+interrupt2 rate = 70688.99 +/- 1138.21intr/s
+packet rate = 258357.43 +/- 9559.45pckts/s
+sent avg = 94.613316 +/- 3.500774MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 478us, PACKET_SIZE is 48 (Mo 20. Jan 19:12:12 CET 2014)
+interrupt rate = 134800.69 +/- 6380.32intr/s
+interrupt2 rate = 69773.92 +/- 1267.64intr/s
+packet rate = 265814.49 +/- 4060.57pckts/s
+sent avg = 97.344173 +/- 1.487026MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 704us, PACKET_SIZE is 48 (Mo 20. Jan 19:12:37 CET 2014)
+interrupt rate = 171297.32 +/- 15308.63intr/s
+interrupt2 rate = 7895.89 +/- 21754.50intr/s
+packet rate = 268239.14 +/- 36.83pckts/s
+sent avg = 98.232105 +/- 0.013489MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 930us, PACKET_SIZE is 48 (Mo 20. Jan 19:13:01 CET 2014)
+interrupt rate = 106131.96 +/- 4542.21intr/s
+interrupt2 rate = 67799.22 +/- 790.69intr/s
+packet rate = 214433.30 +/- 3292.16pckts/s
+sent avg = 78.527820 +/- 1.205624MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 1156us, PACKET_SIZE is 48 (Mo 20. Jan 19:13:25 CET 2014)
+interrupt rate = 87227.08 +/- 3546.74intr/s
+interrupt2 rate = 66966.90 +/- 1735.63intr/s
+packet rate = 173752.46 +/- 2444.32pckts/s
+sent avg = 63.630050 +/- 0.895136MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 1382us, PACKET_SIZE is 48 (Mo 20. Jan 19:13:50 CET 2014)
+interrupt rate = 73198.44 +/- 2465.23intr/s
+interrupt2 rate = 67897.76 +/- 1303.53intr/s
+packet rate = 146747.12 +/- 1057.86pckts/s
+sent avg = 53.740401 +/- 0.387401MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 1608us, PACKET_SIZE is 48 (Mo 20. Jan 19:14:14 CET 2014)
+interrupt rate = 63943.74 +/- 1878.60intr/s
+interrupt2 rate = 67755.61 +/- 805.47intr/s
+packet rate = 126762.00 +/- 129.10pckts/s
+sent avg = 46.421633 +/- 0.047279MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 1834us, PACKET_SIZE is 48 (Mo 20. Jan 19:14:38 CET 2014)
+interrupt rate = 56362.64 +/- 1273.62intr/s
+interrupt2 rate = 67907.78 +/- 633.18intr/s
+packet rate = 111575.85 +/- 1188.19pckts/s
+sent avg = 40.860296 +/- 0.435129MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 2060us, PACKET_SIZE is 48 (Mo 20. Jan 19:15:02 CET 2014)
+interrupt rate = 50453.11 +/- 1564.24intr/s
+interrupt2 rate = 67927.87 +/- 504.85intr/s
+packet rate = 99537.26 +/- 327.72pckts/s
+sent avg = 36.451633 +/- 0.120015MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 2286us, PACKET_SIZE is 48 (Mo 20. Jan 19:15:27 CET 2014)
+interrupt rate = 45642.86 +/- 1128.07intr/s
+interrupt2 rate = 67718.13 +/- 989.60intr/s
+packet rate = 89899.57 +/- 62.70pckts/s
+sent avg = 32.922205 +/- 0.022962MB/s
+#### WINDOW_SIZE is 210, ACK_DELAY is 2512us, PACKET_SIZE is 48 (Mo 20. Jan 19:15:51 CET 2014)
+interrupt rate = 41929.21 +/- 1141.39intr/s
+interrupt2 rate = 67933.77 +/- 1243.33intr/s
+packet rate = 82007.98 +/- 939.50pckts/s
+sent avg = 30.032219 +/- 0.344057MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 216us, PACKET_SIZE is 56 (Mo 20. Jan 19:16:15 CET 2014)
+interrupt rate = 121489.75 +/- 8471.59intr/s
+interrupt2 rate = 68913.58 +/- 1066.95intr/s
+packet rate = 229253.39 +/- 9495.26pckts/s
+sent avg = 97.947617 +/- 4.056812MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 410us, PACKET_SIZE is 56 (Mo 20. Jan 19:16:40 CET 2014)
+interrupt rate = 116504.25 +/- 5426.58intr/s
+interrupt2 rate = 68420.69 +/- 820.30intr/s
+packet rate = 233760.20 +/- 5784.00pckts/s
+sent avg = 99.873132 +/- 2.471192MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 604us, PACKET_SIZE is 56 (Mo 20. Jan 19:17:04 CET 2014)
+interrupt rate = 116645.72 +/- 7169.00intr/s
+interrupt2 rate = 68298.30 +/- 1383.27intr/s
+packet rate = 233867.70 +/- 5561.06pckts/s
+sent avg = 99.919061 +/- 2.375943MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 798us, PACKET_SIZE is 56 (Mo 20. Jan 19:17:30 CET 2014)
+interrupt rate = 106008.13 +/- 5722.46intr/s
+interrupt2 rate = 67548.80 +/- 1153.06intr/s
+packet rate = 211522.70 +/- 4512.83pckts/s
+sent avg = 90.372249 +/- 1.928088MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 992us, PACKET_SIZE is 56 (Mo 20. Jan 19:17:54 CET 2014)
+interrupt rate = 87278.28 +/- 4825.36intr/s
+interrupt2 rate = 68019.13 +/- 1223.96intr/s
+packet rate = 171796.58 +/- 3749.85pckts/s
+sent avg = 73.399419 +/- 1.602108MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 1186us, PACKET_SIZE is 56 (Mo 20. Jan 19:18:18 CET 2014)
+interrupt rate = 73675.53 +/- 3168.31intr/s
+interrupt2 rate = 67819.98 +/- 1024.26intr/s
+packet rate = 145504.94 +/- 1452.81pckts/s
+sent avg = 62.166416 +/- 0.620708MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 1380us, PACKET_SIZE is 56 (Mo 20. Jan 19:18:43 CET 2014)
+interrupt rate = 63852.61 +/- 1521.18intr/s
+interrupt2 rate = 67536.72 +/- 1112.20intr/s
+packet rate = 125936.66 +/- 484.49pckts/s
+sent avg = 53.805945 +/- 0.206995MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 1574us, PACKET_SIZE is 56 (Mo 20. Jan 19:19:07 CET 2014)
+interrupt rate = 56851.65 +/- 1588.00intr/s
+interrupt2 rate = 68025.63 +/- 284.91intr/s
+packet rate = 110909.73 +/- 161.10pckts/s
+sent avg = 47.385749 +/- 0.068830MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 1768us, PACKET_SIZE is 56 (Mo 20. Jan 19:19:31 CET 2014)
+interrupt rate = 50575.96 +/- 1401.90intr/s
+interrupt2 rate = 67993.89 +/- 624.94intr/s
+packet rate = 99065.56 +/- 615.63pckts/s
+sent avg = 42.325375 +/- 0.263027MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 1962us, PACKET_SIZE is 56 (Mo 20. Jan 19:19:56 CET 2014)
+interrupt rate = 45837.34 +/- 1611.12intr/s
+interrupt2 rate = 68151.28 +/- 1111.89intr/s
+packet rate = 89496.58 +/- 190.47pckts/s
+sent avg = 38.237064 +/- 0.081378MB/s
+#### WINDOW_SIZE is 180, ACK_DELAY is 2156us, PACKET_SIZE is 56 (Mo 20. Jan 19:20:20 CET 2014)
+interrupt rate = 41501.65 +/- 1178.89intr/s
+interrupt2 rate = 68170.46 +/- 591.30intr/s
+packet rate = 81623.43 +/- 41.09pckts/s
+sent avg = 34.873293 +/- 0.017554MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 201us, PACKET_SIZE is 60 (Mo 20. Jan 19:20:44 CET 2014)
+interrupt rate = 116741.22 +/- 7879.80intr/s
+interrupt2 rate = 68807.58 +/- 830.41intr/s
+packet rate = 217977.80 +/- 5945.92pckts/s
+sent avg = 99.782317 +/- 2.721828MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 382us, PACKET_SIZE is 60 (Mo 20. Jan 19:21:09 CET 2014)
+interrupt rate = 112013.73 +/- 7113.19intr/s
+interrupt2 rate = 68296.14 +/- 887.49intr/s
+packet rate = 220216.06 +/- 5342.91pckts/s
+sent avg = 100.806913 +/- 2.445791MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 563us, PACKET_SIZE is 60 (Mo 20. Jan 19:21:34 CET 2014)
+interrupt rate = 111945.23 +/- 5640.04intr/s
+interrupt2 rate = 67908.58 +/- 846.87intr/s
+packet rate = 221551.36 +/- 3825.07pckts/s
+sent avg = 101.418163 +/- 1.750980MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 744us, PACKET_SIZE is 60 (Mo 20. Jan 19:21:58 CET 2014)
+interrupt rate = 110549.10 +/- 10031.63intr/s
+interrupt2 rate = 65676.55 +/- 11216.87intr/s
+packet rate = 214120.45 +/- 5026.52pckts/s
+sent avg = 98.016564 +/- 2.300956MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 925us, PACKET_SIZE is 60 (Mo 20. Jan 19:22:22 CET 2014)
+interrupt rate = 86880.64 +/- 2727.84intr/s
+interrupt2 rate = 67817.10 +/- 552.28intr/s
+packet rate = 172451.24 +/- 1413.69pckts/s
+sent avg = 78.941913 +/- 0.647135MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 1106us, PACKET_SIZE is 60 (Mo 20. Jan 19:22:48 CET 2014)
+interrupt rate = 74154.95 +/- 2688.47intr/s
+interrupt2 rate = 67878.39 +/- 821.62intr/s
+packet rate = 145439.05 +/- 475.40pckts/s
+sent avg = 66.576716 +/- 0.217621MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 1287us, PACKET_SIZE is 60 (Mo 20. Jan 19:23:13 CET 2014)
+interrupt rate = 72641.85 +/- 11400.56intr/s
+interrupt2 rate = 42876.71 +/- 32760.91intr/s
+packet rate = 125885.82 +/- 169.40pckts/s
+sent avg = 57.625957 +/- 0.077547MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 1468us, PACKET_SIZE is 60 (Mo 20. Jan 19:23:37 CET 2014)
+interrupt rate = 56981.32 +/- 1551.84intr/s
+interrupt2 rate = 67213.09 +/- 1225.65intr/s
+packet rate = 110502.87 +/- 784.13pckts/s
+sent avg = 50.584201 +/- 0.358945MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 1649us, PACKET_SIZE is 60 (Mo 20. Jan 19:24:01 CET 2014)
+interrupt rate = 50539.63 +/- 1442.00intr/s
+interrupt2 rate = 67895.45 +/- 769.43intr/s
+packet rate = 98921.07 +/- 54.14pckts/s
+sent avg = 45.282473 +/- 0.024784MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 1830us, PACKET_SIZE is 60 (Mo 20. Jan 19:24:27 CET 2014)
+interrupt rate = 45701.17 +/- 769.96intr/s
+interrupt2 rate = 68080.64 +/- 577.63intr/s
+packet rate = 89389.44 +/- 353.29pckts/s
+sent avg = 40.919240 +/- 0.161725MB/s
+#### WINDOW_SIZE is 168, ACK_DELAY is 2011us, PACKET_SIZE is 60 (Mo 20. Jan 19:24:51 CET 2014)
+interrupt rate = 41800.67 +/- 1164.25intr/s
+interrupt2 rate = 68208.21 +/- 273.32intr/s
+packet rate = 81532.94 +/- 35.53pckts/s
+sent avg = 37.322816 +/- 0.016266MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 192us, PACKET_SIZE is 63 (Mo 20. Jan 19:25:15 CET 2014)
+interrupt rate = 112310.30 +/- 7760.16intr/s
+interrupt2 rate = 68685.83 +/- 1110.10intr/s
+packet rate = 208835.11 +/- 6152.45pckts/s
+sent avg = 100.376986 +/- 2.957186MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 364us, PACKET_SIZE is 63 (Mo 20. Jan 19:25:40 CET 2014)
+interrupt rate = 109415.34 +/- 7150.46intr/s
+interrupt2 rate = 67985.09 +/- 866.36intr/s
+packet rate = 212401.33 +/- 3907.74pckts/s
+sent avg = 102.091094 +/- 1.878263MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 536us, PACKET_SIZE is 63 (Mo 20. Jan 19:26:05 CET 2014)
+interrupt rate = 144561.91 +/- 7813.22intr/s
+interrupt2 rate = 925.85 +/- 7434.49intr/s
+packet rate = 213160.39 +/- 1009.20pckts/s
+sent avg = 102.455937 +/- 0.485075MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 708us, PACKET_SIZE is 63 (Mo 20. Jan 19:26:29 CET 2014)
+interrupt rate = 108050.83 +/- 3985.48intr/s
+interrupt2 rate = 67058.09 +/- 1454.71intr/s
+packet rate = 211114.03 +/- 1906.67pckts/s
+sent avg = 101.472350 +/- 0.916442MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 880us, PACKET_SIZE is 63 (Mo 20. Jan 19:26:53 CET 2014)
+interrupt rate = 87323.26 +/- 2308.76intr/s
+interrupt2 rate = 67247.98 +/- 1424.92intr/s
+packet rate = 172157.96 +/- 1074.85pckts/s
+sent avg = 82.748043 +/- 0.516627MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 1052us, PACKET_SIZE is 63 (Mo 20. Jan 19:27:18 CET 2014)
+interrupt rate = 74729.88 +/- 2136.11intr/s
+interrupt2 rate = 67682.36 +/- 892.82intr/s
+packet rate = 145053.76 +/- 1103.48pckts/s
+sent avg = 69.720359 +/- 0.530389MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 1224us, PACKET_SIZE is 63 (Mo 20. Jan 19:27:42 CET 2014)
+interrupt rate = 63960.99 +/- 2327.12intr/s
+interrupt2 rate = 67291.15 +/- 1457.98intr/s
+packet rate = 125408.12 +/- 1112.17pckts/s
+sent avg = 60.277643 +/- 0.534566MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 1396us, PACKET_SIZE is 63 (Mo 20. Jan 19:28:06 CET 2014)
+interrupt rate = 56053.63 +/- 1664.24intr/s
+interrupt2 rate = 67466.85 +/- 1467.87intr/s
+packet rate = 110642.85 +/- 879.71pckts/s
+sent avg = 53.180692 +/- 0.422833MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 1568us, PACKET_SIZE is 63 (Mo 20. Jan 19:28:31 CET 2014)
+interrupt rate = 50710.23 +/- 1706.16intr/s
+interrupt2 rate = 68031.48 +/- 562.71intr/s
+packet rate = 98905.63 +/- 186.51pckts/s
+sent avg = 47.539177 +/- 0.089646MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 1740us, PACKET_SIZE is 63 (Mo 20. Jan 19:28:55 CET 2014)
+interrupt rate = 45590.58 +/- 1429.19intr/s
+interrupt2 rate = 67715.98 +/- 702.50intr/s
+packet rate = 89405.27 +/- 98.46pckts/s
+sent avg = 42.972809 +/- 0.047324MB/s
+#### WINDOW_SIZE is 160, ACK_DELAY is 1912us, PACKET_SIZE is 63 (Mo 20. Jan 19:29:19 CET 2014)
+interrupt rate = 41800.87 +/- 867.62intr/s
+interrupt2 rate = 68227.73 +/- 526.11intr/s
+packet rate = 81554.67 +/- 52.78pckts/s
+sent avg = 39.199405 +/- 0.025368MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 172us, PACKET_SIZE is 70 (Mo 20. Jan 19:29:44 CET 2014)
+interrupt rate = 104703.13 +/- 6171.21intr/s
+interrupt2 rate = 68347.66 +/- 1043.47intr/s
+packet rate = 190643.29 +/- 5477.14pckts/s
+sent avg = 101.814499 +/- 2.925108MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 327us, PACKET_SIZE is 70 (Mo 20. Jan 19:30:08 CET 2014)
+interrupt rate = 102168.41 +/- 6813.18intr/s
+interrupt2 rate = 67920.96 +/- 1254.01intr/s
+packet rate = 192965.83 +/- 4338.40pckts/s
+sent avg = 103.054874 +/- 2.316955MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 482us, PACKET_SIZE is 70 (Mo 20. Jan 19:30:33 CET 2014)
+interrupt rate = 123716.41 +/- 19556.85intr/s
+interrupt2 rate = 24683.40 +/- 32558.33intr/s
+packet rate = 193818.64 +/- 3146.35pckts/s
+sent avg = 103.510321 +/- 1.680330MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 637us, PACKET_SIZE is 70 (Mo 20. Jan 19:30:57 CET 2014)
+interrupt rate = 98784.47 +/- 5481.39intr/s
+interrupt2 rate = 67817.59 +/- 856.66intr/s
+packet rate = 192970.24 +/- 4284.47pckts/s
+sent avg = 103.057227 +/- 2.288152MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 792us, PACKET_SIZE is 70 (Mo 20. Jan 19:31:21 CET 2014)
+interrupt rate = 87036.14 +/- 3983.88intr/s
+interrupt2 rate = 67688.88 +/- 902.48intr/s
+packet rate = 170637.76 +/- 2231.13pckts/s
+sent avg = 91.130397 +/- 1.191551MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 947us, PACKET_SIZE is 70 (Mo 20. Jan 19:31:48 CET 2014)
+interrupt rate = 100816.99 +/- 3065.95intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 144943.95 +/- 195.74pckts/s
+sent avg = 77.408420 +/- 0.104536MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 1102us, PACKET_SIZE is 70 (Mo 20. Jan 19:32:12 CET 2014)
+interrupt rate = 64066.09 +/- 2524.68intr/s
+interrupt2 rate = 67926.52 +/- 1256.81intr/s
+packet rate = 125090.71 +/- 201.30pckts/s
+sent avg = 66.805645 +/- 0.107508MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 1257us, PACKET_SIZE is 70 (Mo 20. Jan 19:32:36 CET 2014)
+interrupt rate = 56072.73 +/- 2246.22intr/s
+interrupt2 rate = 67592.50 +/- 1051.19intr/s
+packet rate = 110166.43 +/- 276.75pckts/s
+sent avg = 58.835224 +/- 0.147799MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 1412us, PACKET_SIZE is 70 (Mo 20. Jan 19:33:01 CET 2014)
+interrupt rate = 50339.90 +/- 1361.98intr/s
+interrupt2 rate = 67564.37 +/- 977.56intr/s
+packet rate = 98422.25 +/- 249.10pckts/s
+sent avg = 52.563155 +/- 0.133034MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 1567us, PACKET_SIZE is 70 (Mo 20. Jan 19:33:25 CET 2014)
+interrupt rate = 45684.57 +/- 1230.12intr/s
+interrupt2 rate = 68077.57 +/- 568.93intr/s
+packet rate = 89057.50 +/- 81.96pckts/s
+sent avg = 47.561837 +/- 0.043769MB/s
+#### WINDOW_SIZE is 144, ACK_DELAY is 1722us, PACKET_SIZE is 70 (Mo 20. Jan 19:33:49 CET 2014)
+interrupt rate = 41692.62 +/- 1488.08intr/s
+interrupt2 rate = 67899.46 +/- 611.72intr/s
+packet rate = 81246.27 +/- 94.77pckts/s
+sent avg = 43.390189 +/- 0.050615MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 168us, PACKET_SIZE is 72 (Mo 20. Jan 19:34:14 CET 2014)
+interrupt rate = 102172.20 +/- 6326.18intr/s
+interrupt2 rate = 68402.35 +/- 1414.42intr/s
+packet rate = 185144.48 +/- 5210.71pckts/s
+sent avg = 101.702899 +/- 2.862330MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 319us, PACKET_SIZE is 72 (Mo 20. Jan 19:34:38 CET 2014)
+interrupt rate = 134154.98 +/- 8097.16intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 189694.56 +/- 1043.47pckts/s
+sent avg = 104.202335 +/- 0.573193MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 470us, PACKET_SIZE is 72 (Mo 20. Jan 19:35:02 CET 2014)
+interrupt rate = 97588.17 +/- 6183.25intr/s
+interrupt2 rate = 67817.88 +/- 1095.29intr/s
+packet rate = 188029.96 +/- 4553.42pckts/s
+sent avg = 103.287944 +/- 2.501270MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 621us, PACKET_SIZE is 72 (Mo 20. Jan 19:35:27 CET 2014)
+interrupt rate = 98051.28 +/- 4130.00intr/s
+interrupt2 rate = 67479.68 +/- 1063.56intr/s
+packet rate = 189140.33 +/- 2809.55pckts/s
+sent avg = 103.897888 +/- 1.543331MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 772us, PACKET_SIZE is 72 (Mo 20. Jan 19:35:51 CET 2014)
+interrupt rate = 86434.71 +/- 3565.92intr/s
+interrupt2 rate = 67801.31 +/- 752.14intr/s
+packet rate = 169970.63 +/- 1916.54pckts/s
+sent avg = 93.367656 +/- 1.052788MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 923us, PACKET_SIZE is 72 (Mo 20. Jan 19:36:15 CET 2014)
+interrupt rate = 72672.47 +/- 2599.71intr/s
+interrupt2 rate = 68039.33 +/- 1148.44intr/s
+packet rate = 143930.54 +/- 950.35pckts/s
+sent avg = 79.063410 +/- 0.522043MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 1074us, PACKET_SIZE is 72 (Mo 20. Jan 19:36:40 CET 2014)
+interrupt rate = 63973.22 +/- 1725.72intr/s
+interrupt2 rate = 67902.80 +/- 735.90intr/s
+packet rate = 124583.35 +/- 553.34pckts/s
+sent avg = 68.435678 +/- 0.303957MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 1225us, PACKET_SIZE is 72 (Mo 20. Jan 19:37:07 CET 2014)
+interrupt rate = 55210.57 +/- 2776.46intr/s
+interrupt2 rate = 67857.73 +/- 1055.36intr/s
+packet rate = 109819.17 +/- 155.02pckts/s
+sent avg = 60.325471 +/- 0.085156MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 1376us, PACKET_SIZE is 72 (Mo 20. Jan 19:37:32 CET 2014)
+interrupt rate = 50106.70 +/- 1241.76intr/s
+interrupt2 rate = 66710.96 +/- 1068.05intr/s
+packet rate = 98078.76 +/- 429.30pckts/s
+sent avg = 53.876271 +/- 0.235824MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 1527us, PACKET_SIZE is 72 (Mo 20. Jan 19:37:56 CET 2014)
+interrupt rate = 45665.02 +/- 1406.17intr/s
+interrupt2 rate = 68089.18 +/- 388.62intr/s
+packet rate = 88762.34 +/- 84.86pckts/s
+sent avg = 48.758608 +/- 0.046616MB/s
+#### WINDOW_SIZE is 140, ACK_DELAY is 1678us, PACKET_SIZE is 72 (Mo 20. Jan 19:38:20 CET 2014)
+interrupt rate = 41407.55 +/- 1234.10intr/s
+interrupt2 rate = 68130.65 +/- 940.88intr/s
+packet rate = 81005.41 +/- 42.70pckts/s
+sent avg = 44.497602 +/- 0.023455MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 151us, PACKET_SIZE is 80 (Mo 20. Jan 19:38:44 CET 2014)
+interrupt rate = 98633.00 +/- 5544.98intr/s
+interrupt2 rate = 67714.15 +/- 971.49intr/s
+packet rate = 170055.34 +/- 4376.12pckts/s
+sent avg = 103.793544 +/- 2.670971MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 287us, PACKET_SIZE is 80 (Mo 20. Jan 19:39:09 CET 2014)
+interrupt rate = 93306.57 +/- 6065.33intr/s
+interrupt2 rate = 67766.48 +/- 1314.04intr/s
+packet rate = 171318.83 +/- 3948.86pckts/s
+sent avg = 104.564713 +/- 2.410190MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 423us, PACKET_SIZE is 80 (Mo 20. Jan 19:39:33 CET 2014)
+interrupt rate = 105864.14 +/- 18521.29intr/s
+interrupt2 rate = 37470.79 +/- 33596.85intr/s
+packet rate = 172076.93 +/- 2828.48pckts/s
+sent avg = 105.027421 +/- 1.726370MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 559us, PACKET_SIZE is 80 (Mo 20. Jan 19:39:57 CET 2014)
+interrupt rate = 104743.80 +/- 17113.96intr/s
+interrupt2 rate = 39288.86 +/- 33353.81intr/s
+packet rate = 172758.52 +/- 1702.68pckts/s
+sent avg = 105.443433 +/- 1.039232MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 695us, PACKET_SIZE is 80 (Mo 20. Jan 19:40:22 CET 2014)
+interrupt rate = 91128.68 +/- 9296.76intr/s
+interrupt2 rate = 63454.95 +/- 16450.18intr/s
+packet rate = 169715.68 +/- 2534.45pckts/s
+sent avg = 103.586232 +/- 1.546903MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 831us, PACKET_SIZE is 80 (Mo 20. Jan 19:40:47 CET 2014)
+interrupt rate = 75755.48 +/- 7544.94intr/s
+interrupt2 rate = 65402.48 +/- 12574.78intr/s
+packet rate = 142699.84 +/- 1450.06pckts/s
+sent avg = 87.097070 +/- 0.885049MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 967us, PACKET_SIZE is 80 (Mo 20. Jan 19:41:11 CET 2014)
+interrupt rate = 64434.03 +/- 4781.04intr/s
+interrupt2 rate = 68166.72 +/- 1117.57intr/s
+packet rate = 123901.31 +/- 630.57pckts/s
+sent avg = 75.623358 +/- 0.384869MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 1103us, PACKET_SIZE is 80 (Mo 20. Jan 19:41:35 CET 2014)
+interrupt rate = 57120.98 +/- 1089.13intr/s
+interrupt2 rate = 67866.43 +/- 706.69intr/s
+packet rate = 109218.49 +/- 100.66pckts/s
+sent avg = 66.661676 +/- 0.061439MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 1239us, PACKET_SIZE is 80 (Mo 20. Jan 19:42:01 CET 2014)
+interrupt rate = 50927.32 +/- 2149.58intr/s
+interrupt2 rate = 67872.48 +/- 685.50intr/s
+packet rate = 97682.35 +/- 180.88pckts/s
+sent avg = 59.620574 +/- 0.110399MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 1375us, PACKET_SIZE is 80 (Mo 20. Jan 19:42:26 CET 2014)
+interrupt rate = 46021.71 +/- 1258.10intr/s
+interrupt2 rate = 67839.81 +/- 843.08intr/s
+packet rate = 88365.70 +/- 614.09pckts/s
+sent avg = 53.934141 +/- 0.374808MB/s
+#### WINDOW_SIZE is 126, ACK_DELAY is 1511us, PACKET_SIZE is 80 (Mo 20. Jan 19:42:50 CET 2014)
+interrupt rate = 42172.04 +/- 1449.94intr/s
+interrupt2 rate = 68035.87 +/- 444.78intr/s
+packet rate = 80669.80 +/- 413.50pckts/s
+sent avg = 49.236936 +/- 0.252378MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 144us, PACKET_SIZE is 84 (Mo 20. Jan 19:43:14 CET 2014)
+interrupt rate = 94967.64 +/- 6688.75intr/s
+interrupt2 rate = 67787.87 +/- 1293.00intr/s
+packet rate = 162656.96 +/- 4316.00pckts/s
+sent avg = 104.241829 +/- 2.765994MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 273us, PACKET_SIZE is 84 (Mo 20. Jan 19:43:38 CET 2014)
+interrupt rate = 89958.17 +/- 5512.13intr/s
+interrupt2 rate = 67770.96 +/- 1063.71intr/s
+packet rate = 164118.16 +/- 3501.44pckts/s
+sent avg = 105.178262 +/- 2.243968MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 402us, PACKET_SIZE is 84 (Mo 20. Jan 19:44:03 CET 2014)
+interrupt rate = 88161.92 +/- 4606.84intr/s
+interrupt2 rate = 67760.04 +/- 1198.83intr/s
+packet rate = 164580.07 +/- 2956.55pckts/s
+sent avg = 105.474287 +/- 1.894764MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 531us, PACKET_SIZE is 84 (Mo 20. Jan 19:44:27 CET 2014)
+interrupt rate = 85267.43 +/- 4856.24intr/s
+interrupt2 rate = 67837.98 +/- 1040.33intr/s
+packet rate = 164556.53 +/- 3188.77pckts/s
+sent avg = 105.459203 +/- 2.043583MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 660us, PACKET_SIZE is 84 (Mo 20. Jan 19:44:51 CET 2014)
+interrupt rate = 85368.06 +/- 4862.42intr/s
+interrupt2 rate = 68071.46 +/- 809.82intr/s
+packet rate = 165134.30 +/- 2328.64pckts/s
+sent avg = 105.829476 +/- 1.492351MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 789us, PACKET_SIZE is 84 (Mo 20. Jan 19:45:16 CET 2014)
+interrupt rate = 74409.80 +/- 3063.77intr/s
+interrupt2 rate = 67807.01 +/- 999.42intr/s
+packet rate = 142785.17 +/- 1067.94pckts/s
+sent avg = 91.506612 +/- 0.684410MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 918us, PACKET_SIZE is 84 (Mo 20. Jan 19:45:40 CET 2014)
+interrupt rate = 64292.92 +/- 2461.62intr/s
+interrupt2 rate = 67815.05 +/- 1017.54intr/s
+packet rate = 123789.68 +/- 776.23pckts/s
+sent avg = 79.332985 +/- 0.497465MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 1047us, PACKET_SIZE is 84 (Mo 20. Jan 19:46:04 CET 2014)
+interrupt rate = 57033.23 +/- 1738.69intr/s
+interrupt2 rate = 67848.34 +/- 871.50intr/s
+packet rate = 109257.68 +/- 540.12pckts/s
+sent avg = 70.019873 +/- 0.346146MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 1176us, PACKET_SIZE is 84 (Mo 20. Jan 19:46:32 CET 2014)
+interrupt rate = 51375.70 +/- 1281.44intr/s
+interrupt2 rate = 67999.38 +/- 734.49intr/s
+packet rate = 97751.97 +/- 188.34pckts/s
+sent avg = 62.646218 +/- 0.120704MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 1305us, PACKET_SIZE is 84 (Mo 20. Jan 19:46:57 CET 2014)
+interrupt rate = 57026.33 +/- 8913.48intr/s
+interrupt2 rate = 26080.32 +/- 32867.91intr/s
+packet rate = 88586.29 +/- 104.07pckts/s
+sent avg = 56.772220 +/- 0.066694MB/s
+#### WINDOW_SIZE is 120, ACK_DELAY is 1434us, PACKET_SIZE is 84 (Mo 20. Jan 19:47:21 CET 2014)
+interrupt rate = 42588.91 +/- 1843.56intr/s
+interrupt2 rate = 67956.48 +/- 972.43intr/s
+packet rate = 80790.66 +/- 217.56pckts/s
+sent avg = 51.776242 +/- 0.139429MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 134us, PACKET_SIZE is 90 (Mo 20. Jan 19:47:45 CET 2014)
+interrupt rate = 104080.50 +/- 17322.28intr/s
+interrupt2 rate = 37123.60 +/- 33689.75intr/s
+packet rate = 153991.64 +/- 2997.86pckts/s
+sent avg = 105.737668 +/- 2.058465MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 255us, PACKET_SIZE is 90 (Mo 20. Jan 19:48:10 CET 2014)
+interrupt rate = 85883.54 +/- 5188.43intr/s
+interrupt2 rate = 67773.11 +/- 1277.56intr/s
+packet rate = 154495.32 +/- 2783.83pckts/s
+sent avg = 106.083520 +/- 1.911505MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 376us, PACKET_SIZE is 90 (Mo 20. Jan 19:48:34 CET 2014)
+interrupt rate = 83422.29 +/- 6498.61intr/s
+interrupt2 rate = 68005.49 +/- 1032.52intr/s
+packet rate = 154186.28 +/- 3742.60pckts/s
+sent avg = 105.871315 +/- 2.569841MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 497us, PACKET_SIZE is 90 (Mo 20. Jan 19:48:58 CET 2014)
+interrupt rate = 75461.35 +/- 10051.23intr/s
+interrupt2 rate = 69018.59 +/- 1769.70intr/s
+packet rate = 154355.59 +/- 2998.66pckts/s
+sent avg = 105.987570 +/- 2.059014MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 618us, PACKET_SIZE is 90 (Mo 20. Jan 19:49:23 CET 2014)
+interrupt rate = 103790.40 +/- 16301.92intr/s
+interrupt2 rate = 22387.68 +/- 31791.92intr/s
+packet rate = 155648.09 +/- 1238.20pckts/s
+sent avg = 106.875060 +/- 0.850203MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 739us, PACKET_SIZE is 90 (Mo 20. Jan 19:49:47 CET 2014)
+interrupt rate = 74587.26 +/- 3264.03intr/s
+interrupt2 rate = 67951.89 +/- 731.45intr/s
+packet rate = 141660.95 +/- 1185.73pckts/s
+sent avg = 97.270854 +/- 0.814177MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 860us, PACKET_SIZE is 90 (Mo 20. Jan 19:50:11 CET 2014)
+interrupt rate = 64956.64 +/- 2572.42intr/s
+interrupt2 rate = 67610.86 +/- 1239.25intr/s
+packet rate = 122915.52 +/- 277.56pckts/s
+sent avg = 84.399390 +/- 0.190584MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 981us, PACKET_SIZE is 90 (Mo 20. Jan 19:50:36 CET 2014)
+interrupt rate = 56894.24 +/- 1393.23intr/s
+interrupt2 rate = 67969.69 +/- 515.23intr/s
+packet rate = 108470.70 +/- 429.95pckts/s
+sent avg = 74.480917 +/- 0.295220MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 1102us, PACKET_SIZE is 90 (Mo 20. Jan 19:51:01 CET 2014)
+interrupt rate = 50990.43 +/- 1017.41intr/s
+interrupt2 rate = 67980.93 +/- 342.98intr/s
+packet rate = 97075.87 +/- 104.57pckts/s
+sent avg = 66.656707 +/- 0.071801MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 1223us, PACKET_SIZE is 90 (Mo 20. Jan 19:51:25 CET 2014)
+interrupt rate = 46723.61 +/- 1451.33intr/s
+interrupt2 rate = 68039.92 +/- 766.69intr/s
+packet rate = 87842.65 +/- 91.25pckts/s
+sent avg = 60.316763 +/- 0.062657MB/s
+#### WINDOW_SIZE is 112, ACK_DELAY is 1344us, PACKET_SIZE is 90 (Mo 20. Jan 19:51:50 CET 2014)
+interrupt rate = 42146.53 +/- 1032.43intr/s
+interrupt2 rate = 67303.59 +/- 865.58intr/s
+packet rate = 80179.94 +/- 111.04pckts/s
+sent avg = 55.055195 +/- 0.076245MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 126us, PACKET_SIZE is 96 (Mo 20. Jan 19:52:14 CET 2014)
+interrupt rate = 86040.58 +/- 6027.55intr/s
+interrupt2 rate = 68174.75 +/- 1368.03intr/s
+packet rate = 144160.40 +/- 2945.51pckts/s
+sent avg = 105.586231 +/- 2.157358MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 239us, PACKET_SIZE is 96 (Mo 20. Jan 19:52:40 CET 2014)
+interrupt rate = 81911.11 +/- 3984.89intr/s
+interrupt2 rate = 67544.12 +/- 1203.45intr/s
+packet rate = 145625.36 +/- 2712.57pckts/s
+sent avg = 106.659200 +/- 1.986746MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 352us, PACKET_SIZE is 96 (Mo 20. Jan 19:53:05 CET 2014)
+interrupt rate = 96841.19 +/- 17304.84intr/s
+interrupt2 rate = 32184.27 +/- 33800.92intr/s
+packet rate = 146756.91 +/- 1304.42pckts/s
+sent avg = 107.487968 +/- 0.955382MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 465us, PACKET_SIZE is 96 (Mo 20. Jan 19:53:29 CET 2014)
+interrupt rate = 78333.10 +/- 4298.93intr/s
+interrupt2 rate = 67925.40 +/- 717.29intr/s
+packet rate = 146152.20 +/- 2278.78pckts/s
+sent avg = 107.045072 +/- 1.669030MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 578us, PACKET_SIZE is 96 (Mo 20. Jan 19:53:53 CET 2014)
+interrupt rate = 76903.66 +/- 3954.22intr/s
+interrupt2 rate = 67830.11 +/- 1075.80intr/s
+packet rate = 146763.89 +/- 1301.98pckts/s
+sent avg = 107.493085 +/- 0.953595MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 691us, PACKET_SIZE is 96 (Mo 20. Jan 19:54:18 CET 2014)
+interrupt rate = 76686.45 +/- 2661.89intr/s
+interrupt2 rate = 67821.33 +/- 757.13intr/s
+packet rate = 143333.69 +/- 1181.10pckts/s
+sent avg = 104.980727 +/- 0.865061MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 804us, PACKET_SIZE is 96 (Mo 20. Jan 19:54:42 CET 2014)
+interrupt rate = 64676.50 +/- 2488.00intr/s
+interrupt2 rate = 67839.95 +/- 827.77intr/s
+packet rate = 122572.58 +/- 831.45pckts/s
+sent avg = 89.774842 +/- 0.608970MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 917us, PACKET_SIZE is 96 (Mo 20. Jan 19:55:06 CET 2014)
+interrupt rate = 57066.00 +/- 1684.98intr/s
+interrupt2 rate = 68061.13 +/- 378.52intr/s
+packet rate = 108368.17 +/- 458.05pckts/s
+sent avg = 79.371220 +/- 0.335488MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 1030us, PACKET_SIZE is 96 (Mo 20. Jan 19:55:30 CET 2014)
+interrupt rate = 51264.72 +/- 1948.19intr/s
+interrupt2 rate = 68015.21 +/- 667.70intr/s
+packet rate = 97004.18 +/- 208.41pckts/s
+sent avg = 71.047983 +/- 0.152644MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 1143us, PACKET_SIZE is 96 (Mo 20. Jan 19:55:55 CET 2014)
+interrupt rate = 46759.25 +/- 1196.77intr/s
+interrupt2 rate = 68039.09 +/- 460.02intr/s
+packet rate = 87812.34 +/- 141.37pckts/s
+sent avg = 64.315676 +/- 0.103545MB/s
+#### WINDOW_SIZE is 105, ACK_DELAY is 1256us, PACKET_SIZE is 96 (Mo 20. Jan 19:56:19 CET 2014)
+interrupt rate = 42217.11 +/- 1365.20intr/s
+interrupt2 rate = 68118.63 +/- 1118.72intr/s
+packet rate = 80232.28 +/- 72.67pckts/s
+sent avg = 58.763875 +/- 0.053224MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 115us, PACKET_SIZE is 105 (Mo 20. Jan 19:56:43 CET 2014)
+interrupt rate = 81310.42 +/- 4481.56intr/s
+interrupt2 rate = 67934.06 +/- 900.74intr/s
+packet rate = 132707.93 +/- 2408.22pckts/s
+sent avg = 106.310525 +/- 1.929192MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 218us, PACKET_SIZE is 105 (Mo 20. Jan 19:57:09 CET 2014)
+interrupt rate = 76665.10 +/- 3912.89intr/s
+interrupt2 rate = 67982.16 +/- 655.14intr/s
+packet rate = 134118.59 +/- 2037.95pckts/s
+sent avg = 107.440583 +/- 1.632573MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 321us, PACKET_SIZE is 105 (Mo 20. Jan 19:57:33 CET 2014)
+interrupt rate = 75768.86 +/- 3443.05intr/s
+interrupt2 rate = 67706.15 +/- 995.90intr/s
+packet rate = 135019.86 +/- 1835.44pckts/s
+sent avg = 108.162573 +/- 1.470346MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 424us, PACKET_SIZE is 105 (Mo 20. Jan 19:57:58 CET 2014)
+interrupt rate = 73383.15 +/- 4901.11intr/s
+interrupt2 rate = 67931.46 +/- 790.29intr/s
+packet rate = 134608.14 +/- 2072.86pckts/s
+sent avg = 107.832750 +/- 1.660542MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 527us, PACKET_SIZE is 105 (Mo 20. Jan 19:58:22 CET 2014)
+interrupt rate = 71667.19 +/- 4036.52intr/s
+interrupt2 rate = 68020.64 +/- 1208.02intr/s
+packet rate = 135089.01 +/- 1485.99pckts/s
+sent avg = 108.217975 +/- 1.190405MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 630us, PACKET_SIZE is 105 (Mo 20. Jan 19:58:46 CET 2014)
+interrupt rate = 71979.97 +/- 3452.72intr/s
+interrupt2 rate = 67710.39 +/- 919.09intr/s
+packet rate = 135125.12 +/- 1462.19pckts/s
+sent avg = 108.246903 +/- 1.171337MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 733us, PACKET_SIZE is 105 (Mo 20. Jan 19:59:11 CET 2014)
+interrupt rate = 64965.76 +/- 3120.65intr/s
+interrupt2 rate = 67987.11 +/- 769.21intr/s
+packet rate = 122113.29 +/- 918.32pckts/s
+sent avg = 97.823297 +/- 0.735651MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 836us, PACKET_SIZE is 105 (Mo 20. Jan 19:59:35 CET 2014)
+interrupt rate = 57272.09 +/- 1627.19intr/s
+interrupt2 rate = 68010.27 +/- 390.16intr/s
+packet rate = 107982.12 +/- 280.27pckts/s
+sent avg = 86.503007 +/- 0.224523MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 939us, PACKET_SIZE is 105 (Mo 20. Jan 20:00:01 CET 2014)
+interrupt rate = 57828.23 +/- 9780.16intr/s
+interrupt2 rate = 46996.73 +/- 31386.58intr/s
+packet rate = 96729.33 +/- 475.28pckts/s
+sent avg = 77.488552 +/- 0.380743MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 1042us, PACKET_SIZE is 105 (Mo 20. Jan 20:00:25 CET 2014)
+interrupt rate = 46494.04 +/- 1480.30intr/s
+interrupt2 rate = 67927.88 +/- 1127.46intr/s
+packet rate = 87646.16 +/- 356.99pckts/s
+sent avg = 70.212147 +/- 0.285978MB/s
+#### WINDOW_SIZE is 96, ACK_DELAY is 1145us, PACKET_SIZE is 105 (Mo 20. Jan 20:00:50 CET 2014)
+interrupt rate = 43280.86 +/- 1128.15intr/s
+interrupt2 rate = 68008.57 +/- 635.12intr/s
+packet rate = 80055.77 +/- 158.89pckts/s
+sent avg = 64.131593 +/- 0.127281MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 108us, PACKET_SIZE is 112 (Mo 20. Jan 20:01:14 CET 2014)
+interrupt rate = 79940.84 +/- 4255.44intr/s
+interrupt2 rate = 67901.92 +/- 1011.18intr/s
+packet rate = 124460.39 +/- 2625.70pckts/s
+sent avg = 106.350428 +/- 2.243637MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 205us, PACKET_SIZE is 112 (Mo 20. Jan 20:01:38 CET 2014)
+interrupt rate = 73293.50 +/- 4348.63intr/s
+interrupt2 rate = 67991.14 +/- 1063.92intr/s
+packet rate = 126318.30 +/- 1821.12pckts/s
+sent avg = 107.938000 +/- 1.556129MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 302us, PACKET_SIZE is 112 (Mo 20. Jan 20:02:03 CET 2014)
+interrupt rate = 70742.55 +/- 4319.07intr/s
+interrupt2 rate = 67960.36 +/- 791.20intr/s
+packet rate = 127178.10 +/- 1422.93pckts/s
+sent avg = 108.672696 +/- 1.215883MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 399us, PACKET_SIZE is 112 (Mo 20. Jan 20:02:27 CET 2014)
+interrupt rate = 69772.68 +/- 4342.80intr/s
+interrupt2 rate = 68011.65 +/- 1154.01intr/s
+packet rate = 127220.16 +/- 1468.22pckts/s
+sent avg = 108.708630 +/- 1.254584MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 496us, PACKET_SIZE is 112 (Mo 20. Jan 20:02:52 CET 2014)
+interrupt rate = 65239.57 +/- 7544.29intr/s
+interrupt2 rate = 68644.20 +/- 1834.12intr/s
+packet rate = 127088.14 +/- 1823.01pckts/s
+sent avg = 108.595822 +/- 1.557747MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 593us, PACKET_SIZE is 112 (Mo 20. Jan 20:03:16 CET 2014)
+interrupt rate = 93351.17 +/- 2976.00intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 127813.28 +/- 266.50pckts/s
+sent avg = 109.215451 +/- 0.227724MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 690us, PACKET_SIZE is 112 (Mo 20. Jan 20:03:40 CET 2014)
+interrupt rate = 66408.46 +/- 2288.41intr/s
+interrupt2 rate = 67782.92 +/- 678.00intr/s
+packet rate = 123863.91 +/- 535.29pckts/s
+sent avg = 105.840741 +/- 0.457399MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 787us, PACKET_SIZE is 112 (Mo 20. Jan 20:04:04 CET 2014)
+interrupt rate = 57017.02 +/- 1195.04intr/s
+interrupt2 rate = 67813.15 +/- 721.16intr/s
+packet rate = 107052.93 +/- 233.82pckts/s
+sent avg = 91.475893 +/- 0.199798MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 884us, PACKET_SIZE is 112 (Mo 20. Jan 20:04:29 CET 2014)
+interrupt rate = 50796.55 +/- 1659.82intr/s
+interrupt2 rate = 67771.18 +/- 1308.79intr/s
+packet rate = 95871.00 +/- 412.63pckts/s
+sent avg = 81.921018 +/- 0.352587MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 981us, PACKET_SIZE is 112 (Mo 20. Jan 20:04:53 CET 2014)
+interrupt rate = 46544.74 +/- 1228.07intr/s
+interrupt2 rate = 68067.44 +/- 583.35intr/s
+packet rate = 86951.38 +/- 100.15pckts/s
+sent avg = 74.299272 +/- 0.085578MB/s
+#### WINDOW_SIZE is 90, ACK_DELAY is 1078us, PACKET_SIZE is 112 (Mo 20. Jan 20:05:17 CET 2014)
+interrupt rate = 42253.37 +/- 997.57intr/s
+interrupt2 rate = 67964.08 +/- 326.37intr/s
+packet rate = 79501.52 +/- 195.80pckts/s
+sent avg = 67.933430 +/- 0.167314MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 100us, PACKET_SIZE is 120 (Mo 20. Jan 20:05:42 CET 2014)
+interrupt rate = 76100.62 +/- 3644.43intr/s
+interrupt2 rate = 68020.18 +/- 1150.64intr/s
+packet rate = 116869.67 +/- 1925.85pckts/s
+sent avg = 106.997377 +/- 1.763169MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 190us, PACKET_SIZE is 120 (Mo 20. Jan 20:06:06 CET 2014)
+interrupt rate = 70183.85 +/- 3049.26intr/s
+interrupt2 rate = 67915.40 +/- 793.48intr/s
+packet rate = 118982.78 +/- 1024.20pckts/s
+sent avg = 108.931985 +/- 0.937682MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 280us, PACKET_SIZE is 120 (Mo 20. Jan 20:06:30 CET 2014)
+interrupt rate = 87914.02 +/- 10360.48intr/s
+interrupt2 rate = 11853.68 +/- 25687.20intr/s
+packet rate = 119935.34 +/- 154.75pckts/s
+sent avg = 109.804085 +/- 0.141680MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 370us, PACKET_SIZE is 120 (Mo 20. Jan 20:06:55 CET 2014)
+interrupt rate = 65520.59 +/- 4893.47intr/s
+interrupt2 rate = 68185.49 +/- 1145.56intr/s
+packet rate = 119525.15 +/- 1350.05pckts/s
+sent avg = 109.428540 +/- 1.236005MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 460us, PACKET_SIZE is 120 (Mo 20. Jan 20:07:19 CET 2014)
+interrupt rate = 89609.41 +/- 2591.54intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 119961.94 +/- 170.70pckts/s
+sent avg = 109.828438 +/- 0.156276MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 550us, PACKET_SIZE is 120 (Mo 20. Jan 20:07:43 CET 2014)
+interrupt rate = 63903.63 +/- 3671.59intr/s
+interrupt2 rate = 68165.66 +/- 845.83intr/s
+packet rate = 119758.00 +/- 863.23pckts/s
+sent avg = 109.641726 +/- 0.790313MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 640us, PACKET_SIZE is 120 (Mo 20. Jan 20:08:08 CET 2014)
+interrupt rate = 64631.53 +/- 2177.67intr/s
+interrupt2 rate = 67762.37 +/- 831.44intr/s
+packet rate = 119854.59 +/- 314.35pckts/s
+sent avg = 109.730154 +/- 0.287798MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 730us, PACKET_SIZE is 120 (Mo 20. Jan 20:08:32 CET 2014)
+interrupt rate = 57159.87 +/- 1897.08intr/s
+interrupt2 rate = 67938.94 +/- 878.49intr/s
+packet rate = 107169.19 +/- 230.03pckts/s
+sent avg = 98.116326 +/- 0.210599MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 820us, PACKET_SIZE is 120 (Mo 20. Jan 20:08:56 CET 2014)
+interrupt rate = 51459.94 +/- 1399.44intr/s
+interrupt2 rate = 67920.34 +/- 722.85intr/s
+packet rate = 95974.24 +/- 345.65pckts/s
+sent avg = 87.867038 +/- 0.316449MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 910us, PACKET_SIZE is 120 (Mo 20. Jan 20:09:20 CET 2014)
+interrupt rate = 45911.15 +/- 1420.84intr/s
+interrupt2 rate = 67983.27 +/- 344.09intr/s
+packet rate = 87044.34 +/- 160.49pckts/s
+sent avg = 79.691469 +/- 0.146931MB/s
+#### WINDOW_SIZE is 84, ACK_DELAY is 1000us, PACKET_SIZE is 120 (Mo 20. Jan 20:09:45 CET 2014)
+interrupt rate = 42980.29 +/- 1250.28intr/s
+interrupt2 rate = 68084.99 +/- 548.49intr/s
+packet rate = 79605.31 +/- 68.38pckts/s
+sent avg = 72.880835 +/- 0.062601MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 96us, PACKET_SIZE is 126 (Mo 20. Jan 20:10:09 CET 2014)
+interrupt rate = 73386.08 +/- 3201.03intr/s
+interrupt2 rate = 67687.99 +/- 1014.52intr/s
+packet rate = 111785.62 +/- 1491.38pckts/s
+sent avg = 107.459931 +/- 1.433667MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 182us, PACKET_SIZE is 126 (Mo 20. Jan 20:10:33 CET 2014)
+interrupt rate = 67855.51 +/- 3578.56intr/s
+interrupt2 rate = 67990.90 +/- 1364.85intr/s
+packet rate = 113306.78 +/- 1282.49pckts/s
+sent avg = 108.922228 +/- 1.232862MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 268us, PACKET_SIZE is 126 (Mo 20. Jan 20:10:58 CET 2014)
+interrupt rate = 65495.81 +/- 3092.99intr/s
+interrupt2 rate = 67977.32 +/- 698.54intr/s
+packet rate = 114374.68 +/- 1062.40pckts/s
+sent avg = 109.948808 +/- 1.021285MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 354us, PACKET_SIZE is 126 (Mo 20. Jan 20:11:22 CET 2014)
+interrupt rate = 63905.83 +/- 3279.08intr/s
+interrupt2 rate = 67960.57 +/- 884.47intr/s
+packet rate = 114621.24 +/- 459.15pckts/s
+sent avg = 110.185820 +/- 0.441379MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 440us, PACKET_SIZE is 126 (Mo 20. Jan 20:11:46 CET 2014)
+interrupt rate = 61384.02 +/- 4864.43intr/s
+interrupt2 rate = 68240.90 +/- 1188.72intr/s
+packet rate = 114589.74 +/- 501.03pckts/s
+sent avg = 110.155539 +/- 0.481641MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 526us, PACKET_SIZE is 126 (Mo 20. Jan 20:12:11 CET 2014)
+interrupt rate = 62422.45 +/- 3358.14intr/s
+interrupt2 rate = 67949.71 +/- 860.93intr/s
+packet rate = 114546.98 +/- 822.51pckts/s
+sent avg = 110.114434 +/- 0.790681MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 612us, PACKET_SIZE is 126 (Mo 20. Jan 20:12:35 CET 2014)
+interrupt rate = 84295.87 +/- 2835.40intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 114678.88 +/- 56.10pckts/s
+sent avg = 110.241233 +/- 0.053933MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 698us, PACKET_SIZE is 126 (Mo 20. Jan 20:13:00 CET 2014)
+interrupt rate = 58014.40 +/- 2668.54intr/s
+interrupt2 rate = 67707.96 +/- 1123.60intr/s
+packet rate = 106404.39 +/- 1054.22pckts/s
+sent avg = 102.286940 +/- 1.013429MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 784us, PACKET_SIZE is 126 (Mo 20. Jan 20:13:24 CET 2014)
+interrupt rate = 50882.37 +/- 1874.48intr/s
+interrupt2 rate = 67991.54 +/- 433.65intr/s
+packet rate = 95316.44 +/- 401.10pckts/s
+sent avg = 91.628048 +/- 0.385583MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 870us, PACKET_SIZE is 126 (Mo 20. Jan 20:13:51 CET 2014)
+interrupt rate = 46423.14 +/- 1381.71intr/s
+interrupt2 rate = 67753.72 +/- 866.95intr/s
+packet rate = 86375.13 +/- 296.17pckts/s
+sent avg = 83.032735 +/- 0.284710MB/s
+#### WINDOW_SIZE is 80, ACK_DELAY is 956us, PACKET_SIZE is 126 (Mo 20. Jan 20:14:15 CET 2014)
+interrupt rate = 43094.80 +/- 1499.58intr/s
+interrupt2 rate = 67987.87 +/- 457.37intr/s
+packet rate = 79035.37 +/- 105.33pckts/s
+sent avg = 75.976997 +/- 0.101257MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 86us, PACKET_SIZE is 140 (Mo 20. Jan 20:14:39 CET 2014)
+interrupt rate = 72209.84 +/- 3302.50intr/s
+interrupt2 rate = 67929.72 +/- 1108.28intr/s
+packet rate = 100913.88 +/- 1214.20pckts/s
+sent avg = 107.787650 +/- 1.296901MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 163us, PACKET_SIZE is 140 (Mo 20. Jan 20:15:04 CET 2014)
+interrupt rate = 63266.12 +/- 2930.03intr/s
+interrupt2 rate = 67968.26 +/- 781.88intr/s
+packet rate = 102413.01 +/- 833.33pckts/s
+sent avg = 109.388899 +/- 0.890095MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 240us, PACKET_SIZE is 140 (Mo 20. Jan 20:15:28 CET 2014)
+interrupt rate = 60963.35 +/- 1876.06intr/s
+interrupt2 rate = 67717.26 +/- 902.86intr/s
+packet rate = 103862.55 +/- 677.76pckts/s
+sent avg = 110.937175 +/- 0.723929MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 317us, PACKET_SIZE is 140 (Mo 20. Jan 20:15:52 CET 2014)
+interrupt rate = 58843.33 +/- 2265.09intr/s
+interrupt2 rate = 67820.82 +/- 600.95intr/s
+packet rate = 103918.09 +/- 433.37pckts/s
+sent avg = 110.996492 +/- 0.462885MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 394us, PACKET_SIZE is 140 (Mo 20. Jan 20:16:17 CET 2014)
+interrupt rate = 57753.81 +/- 2536.92intr/s
+interrupt2 rate = 67952.18 +/- 757.74intr/s
+packet rate = 103869.88 +/- 633.76pckts/s
+sent avg = 110.945002 +/- 0.676933MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 471us, PACKET_SIZE is 140 (Mo 20. Jan 20:16:41 CET 2014)
+interrupt rate = 57661.61 +/- 1993.44intr/s
+interrupt2 rate = 67759.20 +/- 1129.36intr/s
+packet rate = 103967.92 +/- 374.05pckts/s
+sent avg = 111.049722 +/- 0.399531MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 548us, PACKET_SIZE is 140 (Mo 20. Jan 20:17:06 CET 2014)
+interrupt rate = 56723.71 +/- 1639.83intr/s
+interrupt2 rate = 67958.70 +/- 658.77intr/s
+packet rate = 103929.55 +/- 484.60pckts/s
+sent avg = 111.008735 +/- 0.517610MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 625us, PACKET_SIZE is 140 (Mo 20. Jan 20:17:30 CET 2014)
+interrupt rate = 57117.34 +/- 2266.11intr/s
+interrupt2 rate = 67843.43 +/- 624.34intr/s
+packet rate = 103922.02 +/- 427.68pckts/s
+sent avg = 111.000695 +/- 0.456815MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 702us, PACKET_SIZE is 140 (Mo 20. Jan 20:17:54 CET 2014)
+interrupt rate = 51562.92 +/- 2782.67intr/s
+interrupt2 rate = 68048.76 +/- 1057.33intr/s
+packet rate = 94749.57 +/- 602.46pckts/s
+sent avg = 101.203456 +/- 0.643493MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 779us, PACKET_SIZE is 140 (Mo 20. Jan 20:18:19 CET 2014)
+interrupt rate = 45713.08 +/- 958.26intr/s
+interrupt2 rate = 67952.23 +/- 306.09intr/s
+packet rate = 86075.88 +/- 110.18pckts/s
+sent avg = 91.938958 +/- 0.117680MB/s
+#### WINDOW_SIZE is 72, ACK_DELAY is 856us, PACKET_SIZE is 140 (Mo 20. Jan 20:18:43 CET 2014)
+interrupt rate = 41913.01 +/- 1270.11intr/s
+interrupt2 rate = 67967.47 +/- 954.86intr/s
+packet rate = 78862.48 +/- 154.94pckts/s
+sent avg = 84.234213 +/- 0.165499MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 84us, PACKET_SIZE is 144 (Mo 20. Jan 20:19:07 CET 2014)
+interrupt rate = 72431.73 +/- 5857.52intr/s
+interrupt2 rate = 63618.57 +/- 16412.72intr/s
+packet rate = 98462.59 +/- 1284.17pckts/s
+sent avg = 108.174228 +/- 1.410836MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 159us, PACKET_SIZE is 144 (Mo 20. Jan 20:19:32 CET 2014)
+interrupt rate = 62677.96 +/- 2856.60intr/s
+interrupt2 rate = 67896.01 +/- 1145.81intr/s
+packet rate = 99454.42 +/- 1207.86pckts/s
+sent avg = 109.263886 +/- 1.326991MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 234us, PACKET_SIZE is 144 (Mo 20. Jan 20:19:56 CET 2014)
+interrupt rate = 58906.63 +/- 2372.61intr/s
+interrupt2 rate = 68110.95 +/- 676.52intr/s
+packet rate = 100972.39 +/- 915.80pckts/s
+sent avg = 110.931580 +/- 1.006132MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 309us, PACKET_SIZE is 144 (Mo 20. Jan 20:20:20 CET 2014)
+interrupt rate = 58770.41 +/- 2562.38intr/s
+interrupt2 rate = 67833.28 +/- 862.42intr/s
+packet rate = 101175.80 +/- 622.78pckts/s
+sent avg = 111.155057 +/- 0.684205MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 384us, PACKET_SIZE is 144 (Mo 20. Jan 20:20:45 CET 2014)
+interrupt rate = 59060.37 +/- 7127.18intr/s
+interrupt2 rate = 59328.28 +/- 22379.06intr/s
+packet rate = 101247.21 +/- 329.25pckts/s
+sent avg = 111.233510 +/- 0.361728MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 459us, PACKET_SIZE is 144 (Mo 20. Jan 20:21:09 CET 2014)
+interrupt rate = 56249.37 +/- 2056.66intr/s
+interrupt2 rate = 67839.57 +/- 731.26intr/s
+packet rate = 101277.75 +/- 189.95pckts/s
+sent avg = 111.267061 +/- 0.208690MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 534us, PACKET_SIZE is 144 (Mo 20. Jan 20:21:33 CET 2014)
+interrupt rate = 54691.80 +/- 2380.40intr/s
+interrupt2 rate = 67911.37 +/- 637.43intr/s
+packet rate = 101252.88 +/- 357.29pckts/s
+sent avg = 111.239737 +/- 0.392536MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 609us, PACKET_SIZE is 144 (Mo 20. Jan 20:21:58 CET 2014)
+interrupt rate = 55388.04 +/- 2310.76intr/s
+interrupt2 rate = 67768.04 +/- 1009.21intr/s
+packet rate = 101280.51 +/- 285.57pckts/s
+sent avg = 111.270091 +/- 0.313737MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 684us, PACKET_SIZE is 144 (Mo 20. Jan 20:22:22 CET 2014)
+interrupt rate = 51491.66 +/- 2452.21intr/s
+interrupt2 rate = 68029.90 +/- 727.88intr/s
+packet rate = 95065.20 +/- 862.93pckts/s
+sent avg = 104.441750 +/- 0.948043MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 759us, PACKET_SIZE is 144 (Mo 20. Jan 20:22:46 CET 2014)
+interrupt rate = 45860.65 +/- 1302.88intr/s
+interrupt2 rate = 68008.35 +/- 1066.92intr/s
+packet rate = 85725.24 +/- 187.19pckts/s
+sent avg = 94.180566 +/- 0.205654MB/s
+#### WINDOW_SIZE is 70, ACK_DELAY is 834us, PACKET_SIZE is 144 (Mo 20. Jan 20:23:10 CET 2014)
+interrupt rate = 42531.69 +/- 1061.86intr/s
+interrupt2 rate = 67946.02 +/- 384.93intr/s
+packet rate = 78460.02 +/- 241.08pckts/s
+sent avg = 86.198756 +/- 0.264863MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 75us, PACKET_SIZE is 160 (Mo 20. Jan 20:23:35 CET 2014)
+interrupt rate = 66506.74 +/- 1662.17intr/s
+interrupt2 rate = 67966.33 +/- 1207.18intr/s
+packet rate = 88606.20 +/- 769.05pckts/s
+sent avg = 108.161866 +/- 0.938781MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 143us, PACKET_SIZE is 160 (Mo 20. Jan 20:23:59 CET 2014)
+interrupt rate = 59210.16 +/- 1960.33intr/s
+interrupt2 rate = 67791.24 +/- 782.43intr/s
+packet rate = 90033.88 +/- 510.42pckts/s
+sent avg = 109.904640 +/- 0.623076MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 211us, PACKET_SIZE is 160 (Mo 20. Jan 20:24:23 CET 2014)
+interrupt rate = 55164.34 +/- 2202.93intr/s
+interrupt2 rate = 67948.92 +/- 789.94intr/s
+packet rate = 90835.45 +/- 501.63pckts/s
+sent avg = 110.883118 +/- 0.612347MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 279us, PACKET_SIZE is 160 (Mo 20. Jan 20:24:48 CET 2014)
+interrupt rate = 53567.45 +/- 2087.18intr/s
+interrupt2 rate = 67887.06 +/- 888.44intr/s
+packet rate = 91745.23 +/- 175.39pckts/s
+sent avg = 111.993684 +/- 0.214101MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 347us, PACKET_SIZE is 160 (Mo 20. Jan 20:25:12 CET 2014)
+interrupt rate = 52144.36 +/- 2023.32intr/s
+interrupt2 rate = 67925.68 +/- 653.55intr/s
+packet rate = 91760.46 +/- 173.44pckts/s
+sent avg = 112.012285 +/- 0.211722MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 415us, PACKET_SIZE is 160 (Mo 20. Jan 20:25:36 CET 2014)
+interrupt rate = 51703.24 +/- 1752.24intr/s
+interrupt2 rate = 67920.97 +/- 482.95intr/s
+packet rate = 91753.30 +/- 279.87pckts/s
+sent avg = 112.003543 +/- 0.341636MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 483us, PACKET_SIZE is 160 (Mo 20. Jan 20:26:03 CET 2014)
+interrupt rate = 50472.57 +/- 1961.03intr/s
+interrupt2 rate = 67973.83 +/- 817.33intr/s
+packet rate = 91725.43 +/- 288.80pckts/s
+sent avg = 111.969514 +/- 0.352545MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 551us, PACKET_SIZE is 160 (Mo 20. Jan 20:26:27 CET 2014)
+interrupt rate = 50187.69 +/- 1936.38intr/s
+interrupt2 rate = 68014.12 +/- 500.52intr/s
+packet rate = 91761.96 +/- 105.68pckts/s
+sent avg = 112.014107 +/- 0.129001MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 619us, PACKET_SIZE is 160 (Mo 20. Jan 20:26:51 CET 2014)
+interrupt rate = 50130.73 +/- 2036.83intr/s
+interrupt2 rate = 67991.47 +/- 1114.68intr/s
+packet rate = 91725.06 +/- 230.58pckts/s
+sent avg = 111.969068 +/- 0.281475MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 687us, PACKET_SIZE is 160 (Mo 20. Jan 20:27:16 CET 2014)
+interrupt rate = 46102.95 +/- 1570.84intr/s
+interrupt2 rate = 67770.05 +/- 570.70intr/s
+packet rate = 84494.48 +/- 484.98pckts/s
+sent avg = 103.142673 +/- 0.592017MB/s
+#### WINDOW_SIZE is 63, ACK_DELAY is 755us, PACKET_SIZE is 160 (Mo 20. Jan 20:27:40 CET 2014)
+interrupt rate = 41755.84 +/- 1124.81intr/s
+interrupt2 rate = 67924.76 +/- 541.70intr/s
+packet rate = 77355.21 +/- 85.00pckts/s
+sent avg = 94.427742 +/- 0.103762MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 72us, PACKET_SIZE is 168 (Mo 20. Jan 20:28:04 CET 2014)
+interrupt rate = 82184.74 +/- 8164.96intr/s
+interrupt2 rate = 10903.72 +/- 24847.42intr/s
+packet rate = 87116.05 +/- 1228.97pckts/s
+sent avg = 111.659975 +/- 1.575218MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 136us, PACKET_SIZE is 168 (Mo 20. Jan 20:28:29 CET 2014)
+interrupt rate = 57059.32 +/- 1867.47intr/s
+interrupt2 rate = 67811.82 +/- 819.27intr/s
+packet rate = 85854.91 +/- 373.40pckts/s
+sent avg = 110.043522 +/- 0.478599MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 200us, PACKET_SIZE is 168 (Mo 20. Jan 20:28:53 CET 2014)
+interrupt rate = 53680.38 +/- 1866.45intr/s
+interrupt2 rate = 67902.43 +/- 716.80intr/s
+packet rate = 86777.49 +/- 271.31pckts/s
+sent avg = 111.226036 +/- 0.347745MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 264us, PACKET_SIZE is 168 (Mo 20. Jan 20:29:17 CET 2014)
+interrupt rate = 51923.10 +/- 1869.07intr/s
+interrupt2 rate = 67828.82 +/- 754.35intr/s
+packet rate = 87611.01 +/- 238.71pckts/s
+sent avg = 112.294385 +/- 0.305969MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 328us, PACKET_SIZE is 168 (Mo 20. Jan 20:29:42 CET 2014)
+interrupt rate = 50884.95 +/- 1867.02intr/s
+interrupt2 rate = 67924.19 +/- 595.82intr/s
+packet rate = 87598.08 +/- 336.54pckts/s
+sent avg = 112.277818 +/- 0.431352MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 392us, PACKET_SIZE is 168 (Mo 20. Jan 20:30:06 CET 2014)
+interrupt rate = 61726.82 +/- 7392.93intr/s
+interrupt2 rate = 15917.77 +/- 28801.28intr/s
+packet rate = 87655.27 +/- 176.16pckts/s
+sent avg = 112.351120 +/- 0.225787MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 456us, PACKET_SIZE is 168 (Mo 20. Jan 20:30:30 CET 2014)
+interrupt rate = 48344.02 +/- 1964.19intr/s
+interrupt2 rate = 67952.22 +/- 368.02intr/s
+packet rate = 87658.01 +/- 122.22pckts/s
+sent avg = 112.354629 +/- 0.156652MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 520us, PACKET_SIZE is 168 (Mo 20. Jan 20:30:54 CET 2014)
+interrupt rate = 48447.20 +/- 1777.78intr/s
+interrupt2 rate = 67869.35 +/- 1018.86intr/s
+packet rate = 87638.39 +/- 181.03pckts/s
+sent avg = 112.329482 +/- 0.232036MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 584us, PACKET_SIZE is 168 (Mo 20. Jan 20:31:19 CET 2014)
+interrupt rate = 48015.65 +/- 1871.40intr/s
+interrupt2 rate = 67845.60 +/- 610.72intr/s
+packet rate = 87619.66 +/- 249.09pckts/s
+sent avg = 112.305478 +/- 0.319262MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 648us, PACKET_SIZE is 168 (Mo 20. Jan 20:31:43 CET 2014)
+interrupt rate = 47005.21 +/- 1917.52intr/s
+interrupt2 rate = 68025.64 +/- 660.57intr/s
+packet rate = 86051.16 +/- 184.25pckts/s
+sent avg = 110.295061 +/- 0.236163MB/s
+#### WINDOW_SIZE is 60, ACK_DELAY is 712us, PACKET_SIZE is 168 (Mo 20. Jan 20:32:07 CET 2014)
+interrupt rate = 42104.40 +/- 1380.47intr/s
+interrupt2 rate = 67835.87 +/- 444.98intr/s
+packet rate = 77626.93 +/- 201.13pckts/s
+sent avg = 99.497409 +/- 0.257799MB/s

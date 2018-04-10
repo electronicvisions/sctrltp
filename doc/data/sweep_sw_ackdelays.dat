@@ -1,0 +1,192 @@
+#### DEBUGLOGFILE is /tmp/tmp.rlKf60SKTL
+#### SWEEPTMPFILE is /tmp/tmp.EaFWqPDvwr
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 1230us, SW_ACK_DELAY is 614us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:52:44 CET 2014)
+interrupt rate = 55725.05 +/- 64.49intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 54936.46 +/- 17.84pckts/s
+recv avg = 73.767214 +/- 0.023955MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 1782us, SW_ACK_DELAY is 890us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:53:09 CET 2014)
+interrupt rate = 55850.07 +/- 406.75intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 55306.62 +/- 8.69pckts/s
+recv avg = 74.264255 +/- 0.011668MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 2334us, SW_ACK_DELAY is 1166us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:53:33 CET 2014)
+interrupt rate = 55712.34 +/- 798.55intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 55295.23 +/- 10.59pckts/s
+recv avg = 74.248966 +/- 0.014220MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 2886us, SW_ACK_DELAY is 1442us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:53:58 CET 2014)
+interrupt rate = 50567.32 +/- 16019.86intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 50162.08 +/- 16037.28pckts/s
+recv avg = 67.356312 +/- 21.534435MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 3438us, SW_ACK_DELAY is 1718us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:54:22 CET 2014)
+interrupt rate = 40294.55 +/- 2305.14intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 39928.35 +/- 2344.05pckts/s
+recv avg = 53.614722 +/- 3.147522MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 3990us, SW_ACK_DELAY is 1994us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:54:48 CET 2014)
+interrupt rate = 32960.12 +/- 1475.76intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 32645.91 +/- 1340.47pckts/s
+recv avg = 43.836066 +/- 1.799950MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 4542us, SW_ACK_DELAY is 2270us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:55:12 CET 2014)
+interrupt rate = 29909.88 +/- 2102.71intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 29636.01 +/- 2310.90pckts/s
+recv avg = 39.794447 +/- 3.103016MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 5094us, SW_ACK_DELAY is 2546us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:55:37 CET 2014)
+interrupt rate = 25271.27 +/- 610.31intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 25026.48 +/- 0.75pckts/s
+recv avg = 33.604888 +/- 0.001008MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 5646us, SW_ACK_DELAY is 2822us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:56:01 CET 2014)
+interrupt rate = 22804.52 +/- 1243.22intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 22584.63 +/- 2507.72pckts/s
+recv avg = 30.326048 +/- 3.367302MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 6198us, SW_ACK_DELAY is 3098us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:56:26 CET 2014)
+interrupt rate = 20787.50 +/- 323.82intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 20592.57 +/- 531.26pckts/s
+recv avg = 27.651150 +/- 0.713366MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 6750us, SW_ACK_DELAY is 3374us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:56:50 CET 2014)
+interrupt rate = 19079.61 +/- 42.12intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 18895.42 +/- 0.47pckts/s
+recv avg = 25.372267 +/- 0.000626MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 7302us, SW_ACK_DELAY is 3650us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:57:15 CET 2014)
+interrupt rate = 17650.29 +/- 1282.41intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 17480.40 +/- 2493.84pckts/s
+recv avg = 23.472219 +/- 3.348667MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 7854us, SW_ACK_DELAY is 3926us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:57:39 CET 2014)
+interrupt rate = 16463.95 +/- 1516.69intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 16325.35 +/- 1842.71pckts/s
+recv avg = 21.921241 +/- 2.474344MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 8406us, SW_ACK_DELAY is 4202us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:58:04 CET 2014)
+interrupt rate = 15332.94 +/- 442.19intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 15185.31 +/- 0.31pckts/s
+recv avg = 20.390435 +/- 0.000413MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 8958us, SW_ACK_DELAY is 4478us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:58:28 CET 2014)
+interrupt rate = 55818.74 +/- 54.36intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 55699.88 +/- 0.36pckts/s
+recv avg = 74.792316 +/- 0.000477MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 9510us, SW_ACK_DELAY is 4754us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:58:52 CET 2014)
+interrupt rate = 13568.03 +/- 399.54intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 13437.21 +/- 0.26pckts/s
+recv avg = 18.043128 +/- 0.000347MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 10062us, SW_ACK_DELAY is 5030us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:59:17 CET 2014)
+interrupt rate = 12824.69 +/- 41.00intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 12701.12 +/- 0.19pckts/s
+recv avg = 17.054722 +/- 0.000257MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 10614us, SW_ACK_DELAY is 5306us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 14:59:41 CET 2014)
+interrupt rate = 12159.32 +/- 530.74intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 12041.59 +/- 0.20pckts/s
+recv avg = 16.169127 +/- 0.000264MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 11166us, SW_ACK_DELAY is 5582us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:00:05 CET 2014)
+interrupt rate = 11811.67 +/- 2347.21intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 11819.98 +/- 3463.39pckts/s
+recv avg = 15.871560 +/- 4.650553MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 11718us, SW_ACK_DELAY is 5858us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:00:30 CET 2014)
+interrupt rate = 11379.08 +/- 2380.03intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 11280.84 +/- 2395.97pckts/s
+recv avg = 15.147614 +/- 3.217239MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 12270us, SW_ACK_DELAY is 6134us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:00:54 CET 2014)
+interrupt rate = 10604.08 +/- 946.25intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 10543.02 +/- 1263.41pckts/s
+recv avg = 14.156884 +/- 1.696469MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 22us, SW_ACK_DELAY is 10us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:01:18 CET 2014)
+interrupt rate = 67931.98 +/- 2891.73intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 37611.29 +/- 475.89pckts/s
+recv avg = 50.503440 +/- 0.639009MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 32us, SW_ACK_DELAY is 15us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:01:43 CET 2014)
+interrupt rate = 61583.76 +/- 2011.67intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 39468.85 +/- 30.85pckts/s
+recv avg = 52.997725 +/- 0.041423MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 42us, SW_ACK_DELAY is 20us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:02:07 CET 2014)
+interrupt rate = 61141.96 +/- 1804.19intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 43677.55 +/- 61.45pckts/s
+recv avg = 58.649059 +/- 0.082507MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 62us, SW_ACK_DELAY is 30us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:02:31 CET 2014)
+interrupt rate = 59165.04 +/- 1103.88intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 44953.61 +/- 12.46pckts/s
+recv avg = 60.362517 +/- 0.016737MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 102us, SW_ACK_DELAY is 50us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:02:56 CET 2014)
+interrupt rate = 57370.68 +/- 1034.64intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 49177.26 +/- 24.56pckts/s
+recv avg = 66.033921 +/- 0.032984MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 202us, SW_ACK_DELAY is 100us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:03:20 CET 2014)
+interrupt rate = 56406.75 +/- 505.29intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 52431.42 +/- 15.36pckts/s
+recv avg = 70.403521 +/- 0.020623MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 402us, SW_ACK_DELAY is 200us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:03:44 CET 2014)
+interrupt rate = 56158.25 +/- 995.81intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 54069.72 +/- 10.55pckts/s
+recv avg = 72.603386 +/- 0.014172MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 802us, SW_ACK_DELAY is 400us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:04:09 CET 2014)
+interrupt rate = 55826.29 +/- 127.57intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 54719.91 +/- 62.80pckts/s
+recv avg = 73.476443 +/- 0.084325MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 1602us, SW_ACK_DELAY is 800us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:04:33 CET 2014)
+interrupt rate = 55719.35 +/- 437.84intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 55151.86 +/- 29.48pckts/s
+recv avg = 74.056452 +/- 0.039583MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 3202us, SW_ACK_DELAY is 1600us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:04:57 CET 2014)
+interrupt rate = 45455.58 +/- 3968.75intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 45058.52 +/- 3946.12pckts/s
+recv avg = 60.503378 +/- 5.298747MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 6402us, SW_ACK_DELAY is 3200us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:05:22 CET 2014)
+interrupt rate = 20121.72 +/- 389.68intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 19927.38 +/- 0.47pckts/s
+recv avg = 26.757963 +/- 0.000627MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 12802us, SW_ACK_DELAY is 6400us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:05:46 CET 2014)
+interrupt rate = 10083.16 +/- 405.54intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 9985.77 +/- 0.13pckts/s
+recv avg = 13.408632 +/- 0.000172MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 25602us, SW_ACK_DELAY is 12800us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:06:15 CET 2014)
+interrupt rate = 5045.08 +/- 13.13intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 4996.29 +/- 0.06pckts/s
+recv avg = 6.708884 +/- 0.000082MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 33282us, SW_ACK_DELAY is 16640us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:06:39 CET 2014)
+interrupt rate = 3880.86 +/- 347.18intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 3843.85 +/- 0.03pckts/s
+recv avg = 5.161424 +/- 0.000045MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 51202us, SW_ACK_DELAY is 25600us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:07:04 CET 2014)
+interrupt rate = 2523.56 +/- 304.94intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 2498.96 +/- 0.02pckts/s
+recv avg = 3.355539 +/- 0.000027MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 66562us, SW_ACK_DELAY is 33280us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:07:28 CET 2014)
+interrupt rate = 1941.33 +/- 23.00intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 1922.43 +/- 0.01pckts/s
+recv avg = 2.581381 +/- 0.000016MB/s
+#### WINDOW_SIZE is 512, PACKET_SIZE is 176, HW_ACK_DELAY is 100us, HW_MASTER_TIMEOUT is 102402us, SW_ACK_DELAY is 51200us, SW_MASTER_TIMEOUT is 1000us (Mon Feb 17 15:07:53 CET 2014)
+interrupt rate = 2035.54 +/- 1684.11intr/s
+interrupt2 rate = 0.00 +/- 0.00intr/s
+packet rate = 2463.72 +/- 2493.49pckts/s
+recv avg = 3.308215 +/- 3.348194MB/s
