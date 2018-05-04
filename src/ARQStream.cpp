@@ -74,6 +74,10 @@ void ARQStream::stop() {}
 void ARQStream::trigger_send() {}
 void ARQStream::trigger_receive() {}
 
+std::string ARQStream::get_remote_ip() const {
+	return rip;
+}
+
 
 bool ARQStream::send(packet t, Mode mode) {
 	__s32 ret;

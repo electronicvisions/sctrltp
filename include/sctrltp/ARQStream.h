@@ -40,6 +40,8 @@ public:
 	void trigger_send();
 	void trigger_receive();
 
+	std::string get_remote_ip() const;
+
 	// queue packet or false (no false on hw, it blocks)
 	bool send(packet, Mode mode = FLUSH);       
 
