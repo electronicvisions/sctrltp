@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 from waflib.extras.test_base import summary
 
+def depends(ctx):
+    pass
+
 def options(opt):
     opt.load('compiler_c')
     opt.load('compiler_cxx')
     opt.load('boost')
+    opt.load('gtest')
 
     sopts = opt.add_option_group('SCtrlTP / Software ARQ')
     sopts.add_option('--nowarnings', action='store_true', default=False, help='Disable compiler warnings aka hardy-style')
@@ -66,6 +70,12 @@ def configure(conf):
     conf.check_boost(lib='system', uselib_store='BOOST4SCTRLTPARQSTREAM')
     conf.check_boost(lib='system program_options', uselib_store='BOOST4SCTRLTPTESTS')
 
+    conf.check_cxx(uselib_store='GTEST',
+                  mandatory=True,
+                  header_name='gtest/gtest.h',
+                  lib='gtest'
+    )
+
     conf.recurse('pysctrltp')
 
 
@@ -89,6 +99,27 @@ def build(bld):
         source          = 'src/ARQStream.cpp',
         use             = ['sctrltp_inc', 'sctrl_inc', 'hostarq', 'sctrl', 'BOOST4SCTRLTPARQSTREAM'],
         cxxflags        = '-fPIC', # HOLY SHIT
+    )
+
+    bld.objects (
+        target   = 'hostarq_loopback_test_obj',
+        source   = 'tools/LoopbackTest.cpp',
+        use      = ['arqstream_obj', 'BOOST4SCTRLTPTESTS'],
+        cxxflags = '-fPIC',
+    )
+
+    bld.program (
+        target       = 'hostarq_loopback_manual_test',
+        source       = ['tools/ManualTest.cpp'],
+        use          = ['hostarq_loopback_test_obj'],
+        install_path = '${PREFIX}/bin',
+    )
+
+    bld.program (
+        target       = 'hostarq_loopback_automated_test',
+        source       = ['tools/AutomatedTest.cpp'],
+        use          = ['GTEST', 'hostarq_loopback_test_obj'],
+        install_path = '${PREFIX}/bin',
     )
 
     bld.recurse('pysctrltp')
