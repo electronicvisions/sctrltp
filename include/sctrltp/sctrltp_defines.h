@@ -30,6 +30,7 @@
 #define PTYPE_CFG_TYPE     0x8002 /* configure fpga */
 #define PTYPE_SENDDUMMY    0x8003 /* set fpga to send dummy data */
 #define PTYPE_STATS        0x8004 /* fpga stats module */
+#define PTYPE_PERFTEST     0x8006 /* set fpga to send data */
 #define PTYPE_DUMMYDATA0   0x0000
 #define PTYPE_DUMMYDATA1   0x0001
 #define PTYPE_ARQSTAT      0x0002

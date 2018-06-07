@@ -26,6 +26,8 @@
 #endif
 #include "eth_if.h"
 
+#include <boost/array.hpp>
+
 namespace sctrltp
 {
 
