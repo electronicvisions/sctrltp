@@ -102,6 +102,35 @@ void ARQStream::start()
 	uint32_t payload = HW_HOSTARQ_MAGICWORD;
 	pimpl->eth_soft.sendUDP(pimpl->target_ip.to_ulong(), UDP_RESET_PORT, &payload, sizeof(payload));
 	wait(10.0, SC_US); // wait for memory to initialize
+	while (!received_packet_available()) {
+		wait(10.0, SC_US); // wait for reset response packet
+	}
+	packet response;
+	receive(response, ARQStream::Mode::NONBLOCK);
+	if (response.pid != PTYPE_CFG_TYPE) {
+		throw std::runtime_error(
+			"wrong reset response packet type: " + std::to_string(response.pid));
+	}
+	if (response.len < 3) {
+		throw std::runtime_error(
+			"reset response packet too short: " + std::to_string(response.len) +
+			", should be at least: 3");
+	}
+	if (response.pdu[0] != MAX_NRFRAMES) {
+		throw std::runtime_error(
+			"mismatch between FPGA(" + std::to_string(response.pdu[0]) + ") and host(" +
+			std::to_string(MAX_NRFRAMES) + ") sequence size");
+	}
+	if (response.pdu[1] != WINDOW_SIZE) {
+		throw std::runtime_error(
+			"mismatch between FPGA(" + std::to_string(response.pdu[1]) + ") and host(" +
+			std::to_string(WINDOW_SIZE) + ") window size");
+	}
+	if (response.pdu[2] != MAX_PDUWORDS) {
+		throw std::runtime_error(
+			"mismatch between FPGA(" + std::to_string(response.pdu[2]) + ") and host(" +
+			std::to_string(MAX_PDUWORDS) + ") max pdu size");
+	}
 }
 
 
