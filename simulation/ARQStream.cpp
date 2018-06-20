@@ -399,11 +399,10 @@ void ARQStreamImpl::trigger_receive()
 
 		p.seq = ntohl(p.seq);
 		p.pid = ntohs(p.pid);
-		size_t len = p.len; // save for loop
 		p.len = ntohs(p.len);
 
 		// all data is 64bit aligned
-		for (size_t idx = 0; idx < len; idx++)
+		for (size_t idx = 0; idx < p.len; idx++)
 			p.pdu[idx] = be64toh(p.pdu[idx]);
 		std::cout << name << " packet marked as valid with length " << p.len << std::endl;
 		// FIXME, for now we just accept sequential packets...
