@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <boost/asio/ip/address_v4.hpp>
 
 namespace sctrltp {
@@ -55,6 +56,13 @@ public:
 
 	// check whether a packet is in receive buffer
 	bool received_packet_available();
+
+	// drops all incoming packets. Returns when timeout since last received packet is reached
+	// returned value is number of dropped words
+	// if control packet is set, a loopback packet will be sent to FPGA and checked if packet is received
+	size_t drop_receive_queue(
+	    std::chrono::microseconds timeout = std::chrono::microseconds(10000),
+	    bool with_control_packet = false);
 
 	// check whether all packets have been sent from sender buffer
 	bool all_packets_sent();

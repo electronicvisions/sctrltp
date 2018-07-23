@@ -16,6 +16,9 @@ extern "C"{
 #include "sctrltp/ARQStream.h"
 #include "sctrltp/ARQFrame.h"
 
+using namespace std::chrono_literals;
+using namespace std::chrono;
+
 namespace sctrltp {
 
 struct ARQStreamImpl {
@@ -43,6 +46,25 @@ struct ARQStreamImpl {
 	}
 };
 
+// sleep for given number of nano seconds; sleeping >= 1s not supported
+void sleep(std::string const& name, nanoseconds const sleep)
+{
+	if (sleep > 1e9ns) {
+		std::stringstream err_msg;
+		err_msg << name + ": sleeping of " << sleep.count() << "ns >= 1s not supported";
+		throw std::runtime_error(err_msg.str());
+	}
+	timespec towait;
+	towait.tv_sec = 0;
+	towait.tv_nsec = sleep.count();
+	int ret;
+	do {
+		ret = nanosleep(&towait, NULL);
+	} while (ret == EINTR); // sleep again if interrupted ;)
+	if (ret > 0) {
+		throw std::runtime_error(name + ": cannot sleep (ret was " + std::to_string(ret) + ")");
+	}
+}
 
 ARQStream::ARQStream(
 		std::string const name,
@@ -179,6 +201,90 @@ void ARQStream::flush() {
 
 bool ARQStream::received_packet_available() {
 	return ! static_cast<bool>(rx_queues_empty(pimpl->desc));
+}
+
+size_t ARQStream::drop_receive_queue(microseconds timeout, bool with_control_packet)
+{
+	size_t dropped_words = 0;
+	microseconds accumulated_sleep(0);
+	size_t sleep_interval_idx = 0;
+
+	// sleep timings in us (back-off to longer times; don't use >= 1s!)
+	std::vector<microseconds> const sleep_intervals = {5us,    10us,   50us,    100us,   500us,
+	                                                   1000us, 5000us, 10000us, 50000us, 100000us};
+	packet my_packet;
+	// we need a random seed that differs between each experiment run
+	size_t const seed = duration_cast<milliseconds>(
+							system_clock::now().time_since_epoch())
+							.count();
+	std::srand(seed);
+	size_t const magic_number = std::rand();
+
+	if (with_control_packet) {
+		my_packet.pid = PTYPE_LOOPBACK;
+		my_packet.len = 1;
+		my_packet.pdu[0] = magic_number;
+		send(my_packet, Mode::FLUSH);
+
+		while (accumulated_sleep < timeout) {
+			if (!all_packets_sent()) {
+				sleep(name, duration_cast<nanoseconds>(sleep_intervals[sleep_interval_idx]));
+				accumulated_sleep += sleep_intervals[sleep_interval_idx];
+				if (sleep_interval_idx + 1 < sleep_intervals.size()) {
+					sleep_interval_idx++;
+				}
+			} else {
+				break;
+			}
+		}
+		if (!all_packets_sent()) {
+			throw std::runtime_error(name + ": not all packets send after timeout");
+		}
+	}
+
+	sleep_interval_idx = 0;
+	accumulated_sleep = 0ms;
+	bool loopback_found = false;
+	while (!loopback_found && accumulated_sleep < timeout) {
+		if (received_packet_available()) {
+			// fetch packet, analyse if loopback else drop
+			sleep_interval_idx = 0;
+			receive(my_packet);
+			if (with_control_packet && my_packet.pid == PTYPE_LOOPBACK) {
+				if (my_packet.len != 1) {
+					throw std::runtime_error(
+					    name + ": received loopback packet size larger 1: " +
+					    std::to_string(my_packet.len));
+				}
+				if (my_packet.pdu[0] != magic_number) {
+					throw std::runtime_error(
+					    name + ": received magic word " + std::to_string(my_packet.pdu[0]) +
+					    " differs from sent word " + std::to_string(magic_number));
+				}
+				if (received_packet_available()) {
+					throw std::runtime_error(
+					    name + ": still packets available after loopback received");
+				}
+				loopback_found = true;
+				break;
+			}
+			dropped_words += my_packet.len;
+		} else {
+			sleep(name, sleep_intervals[sleep_interval_idx]);
+			accumulated_sleep += sleep_intervals[sleep_interval_idx];
+			if (sleep_interval_idx + 1 < sleep_intervals.size()) {
+				sleep_interval_idx++;
+			}
+		}
+	}
+
+	if (with_control_packet && !loopback_found) {
+		throw std::runtime_error(
+		    name + ": no loopback packet response after timeout of " +
+		    std::to_string(timeout.count()) + "ms");
+	}
+
+	return dropped_words;
 }
 
 
