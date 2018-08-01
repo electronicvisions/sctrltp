@@ -77,7 +77,9 @@ ARQStream::ARQStream(
 	rip(rip),
 	max_wait_for_completion_upon_destruction_in_ms(500),
 	pimpl(new ARQStreamImpl(name, rip, reset))
-{}
+{
+	drop_receive_queue(1ms, true);
+}
 
 
 ARQStream::ARQStream(std::string const name, bool reset) :
@@ -85,7 +87,9 @@ ARQStream::ARQStream(std::string const name, bool reset) :
 	rip(name),
 	max_wait_for_completion_upon_destruction_in_ms(500),
 	pimpl(new ARQStreamImpl(name, name, reset))
-{}
+{
+	drop_receive_queue(1ms, true);
+}
 
 
 ARQStream::~ARQStream() {
