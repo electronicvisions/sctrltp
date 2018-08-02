@@ -50,7 +50,7 @@ int main (int argc, char **argv)
 	atexit(exit_handler);
 
 	printf ("Core %s to %s (init=%s)\n", rip, rip, init ? "y" : "n");
-	retval = SCTP_CoreUp<Parameters<>> (rip, rip, init);
+	retval = SCTP_CoreUp<Parameters<>>(rip, rip, 1234, 0xaffe, 0, init);
 	if (retval < 1) {
 		fprintf (stderr, "Error occurred. Please check if you have UID 0\n");
 		return EXIT_FAILURE;

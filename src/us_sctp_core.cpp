@@ -362,7 +362,7 @@ static void do_reset (bool fpga_reset) {
 
 		memset(&reset_addr, 0, sizeof(reset_addr));
 		reset_addr.sin_family = AF_INET;
-		reset_addr.sin_port = htons(UDP_RESET_PORT); /* reset source port => sets FPGA target port */
+		reset_addr.sin_port = htons(get_admin<P>()->sock.udp_port_reset);
 		reset_addr.sin_addr.s_addr = get_admin<P>()->sock.remote_ip;
 		b = sendto(get_admin<P>()->sock.sd, &resetframe, sizeof(struct arq_resetframe), /*flags*/ 0,
 		           (struct sockaddr *)&reset_addr, sizeof(reset_addr));
@@ -1018,7 +1018,13 @@ struct sctp_core<P> *SCTP_debugcore (void)
 /*This function prepares and start SCTP algorithm then returning a descriptor (on error returning a negative value)
 */
 template <typename P>
-__s8 SCTP_CoreUp (char const *name, char const *rip, __s8 wstartup)
+__s8 SCTP_CoreUp(
+    char const* name,
+    char const* rip,
+    __u16 data_port,
+    __u16 reset_port,
+    __u16 data_local_port,
+    __s8 wstartup)
 {
 	__s32 c;
 	__u32 k;
@@ -1120,7 +1126,7 @@ __s8 SCTP_CoreUp (char const *name, char const *rip, __s8 wstartup)
 	LOG_INFO ("> sub structures successfully initialized");
 
 	/*End of allocation, next we have to open the socket*/
-	c = sock_init (&(get_admin<P>()->sock), &remote_ip);
+	c = sock_init(&(get_admin<P>()->sock), &remote_ip, data_port, reset_port, data_local_port);
 	if (c != 0) {
 		deallocate(8);
 		return -4;
@@ -1265,7 +1271,7 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 #undef HOSTARQ_RESET_WAIT_SLEEP_INTERVAL
 
 #define PARAMETERISATION(Name)                                                                     \
-	template __s8 SCTP_CoreUp<Name>(char const*, char const*, __s8);                               \
+	template __s8 SCTP_CoreUp<Name>(char const*, char const*, __u16, __u16, __u16,  __s8);         \
 	template __s8 SCTP_CoreDown<Name>(void);                                                       \
 	template struct sctp_core<Name>* SCTP_debugcore<Name>(void);
 #include "sctrltp/parameters.def"

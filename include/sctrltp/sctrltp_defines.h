@@ -11,9 +11,6 @@
 #define PDU_SIZE          (MTU - ETH_HEADER_SIZE - ARQ_HEADER_SIZE)
 #define WORD_SIZE            8 /* 64-bit words! */
 
-#define UDP_DATA_PORT     1234
-#define UDP_RESET_PORT  0xaffe
-
 
 #define PTYPE_FLUSH        0x8000 /* flush data */
 #define PTYPE_LOOPBACK     0x8001 /* loopback data */

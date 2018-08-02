@@ -13,10 +13,17 @@ class packet;
 template<typename P>
 class ARQStreamImpl;
 
+typedef unsigned short udpport_t;
+
 struct ARQStreamSettings
 {
 	// IPv4 address of remote link partner; format "x.x.x.x"
 	std::string ip;
+	// remote UDP ports for data as well as reset packets
+	udpport_t port_data = 1234; // 0x04d2
+	udpport_t port_reset = 45054; // 0xaffe
+	// local UDP port; let OS choose by default
+	udpport_t local_port_data = 0;
 	// on startup send packet to reset SEQ/ACK and check parameter mismatch
 	bool reset = true;
 	// on construction send loopback packet to check receive queue flushing status
@@ -31,7 +38,6 @@ template<typename P>
 class ARQStream {
 public:
 	typedef boost::asio::ip::address_v4 ip_t;
-	typedef unsigned short udpport_t;
 
 	enum Mode {
 		// from Software ARQ!

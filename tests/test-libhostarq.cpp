@@ -45,13 +45,13 @@ void test_timeout() {
 	const char c_ip[] = "127.0.0.3";
 
 
-	hostarq_create_handle(&a, a_ip, a_ip, 1);
+	hostarq_create_handle(&a, a_ip, a_ip, 1234, 45054, 0, 1);
 	hostarq_open(&a);
 	check_pid(a.pid, true);
-	hostarq_create_handle(&b, b_ip, b_ip, 1);
+	hostarq_create_handle(&b, b_ip, b_ip, 1234, 45054, 0, 1);
 	hostarq_open(&b);
 	check_pid(b.pid, true);
-	hostarq_create_handle(&c, c_ip, c_ip, 1);
+	hostarq_create_handle(&c, c_ip, c_ip, 1234, 45054, 0, 1);
 	hostarq_open(&c);
 	check_pid(c.pid, true);
 
@@ -86,9 +86,9 @@ void test_closing() {
 	const char b_ip[] = "127.0.0.5";
 	const char c_ip[] = "127.0.0.6";
 
-	hostarq_create_handle(&a, a_ip, a_ip, 0);
-	hostarq_create_handle(&b, b_ip, b_ip, 0);
-	hostarq_create_handle(&c, c_ip, c_ip, 0);
+	hostarq_create_handle(&a, a_ip, a_ip, 1234, 45054, 0, 0);
+	hostarq_create_handle(&b, b_ip, b_ip, 1234, 45054, 0, 0);
+	hostarq_create_handle(&c, c_ip, c_ip, 1234, 45054, 0, 0);
 	hostarq_open(&a);
 	hostarq_open(&b);
 	hostarq_open(&c);

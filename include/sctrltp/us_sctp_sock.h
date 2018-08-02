@@ -67,10 +67,22 @@ struct sctp_sock {
 #endif
 	__u32 local_ip;
 	__u32 remote_ip;
+	__u16 udp_port_data;
+	__u16 udp_port_reset;
 };
 
-/*Initializes raw packet socket and bind it to the given device*/
-__s8 sock_init (sctp_sock *ssock, const __u32 *rip);
+/*Initializes raw packet socket and bind it to the given device
+ * @params ssock Socket struct to be filled
+ * @params rip Return IPv4
+ * @params data_port UDP data port
+ * @params reset_port UDP reset port
+ * @params data_local_port local UDP port*/
+__s8 sock_init(
+    struct sctp_sock *ssock,
+    const __u32 *rip,
+    const __u16 data_port,
+    const __u16 reset_port,
+    const __u16 data_local_port);
 
 /* returns number of bytes stored into buf (should be HEADER+NB*SCTRLCMD bytes)
  * filter = 1: filter enabled, will return -1 if frame has not passed filter checks*/

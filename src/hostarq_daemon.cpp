@@ -43,10 +43,17 @@ int main(int argc, const char *argv[])
 {
 	char const *remote_ip;
 	int fd;
+	__u16 port_data;
+	__u16 port_reset;
+	__u16 local_port_data;
 	bool init;
 
-	if (argc != 5) {
-		fprintf(stderr, "Usage: %s [SHM_NAME] [FD] [REMOTE_IP] [INIT]\n", argv[0]);
+	if (argc != 8) {
+		fprintf(
+		    stderr,
+		    "Usage: %s [SHM_NAME] [FD] [REMOTE_IP] [DATA_PORT] [RESET_PORT] [DATA_LOCAL_PORT] "
+		    "[INIT]\n",
+		    argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
@@ -54,7 +61,10 @@ int main(int argc, const char *argv[])
 	our_shm_name = argv[1];
 	fd = atoi(argv[2]);
 	remote_ip = argv[3];
-	init = atoi(argv[4]);
+	port_data = (__u16) atoi(argv[4]);
+	port_reset = (__u16) atoi(argv[5]);
+	local_port_data = (__u16) atoi(argv[6]);
+	init = atoi(argv[7]);
 
 	if (fd <= 2) {
 		fprintf(stderr, "Descriptor for lockfile seems broken: %d\n", fd);
@@ -89,7 +99,7 @@ int main(int argc, const char *argv[])
 #undef ADDSIGNALHANDLER
 
 	/* child me up */
-	if (SCTP_CoreUp<PARAMETERS>(our_shm_name, remote_ip, init) < 1) {
+	if (SCTP_CoreUp<PARAMETERS>(our_shm_name, remote_ip, port_data, port_reset, local_port_data, init) < 1) {
 		fprintf(stderr, "Error occurred when starting up HostARQ software\n");
 		return EXIT_FAILURE;
 	}

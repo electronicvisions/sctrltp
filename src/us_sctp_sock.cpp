@@ -18,7 +18,14 @@ double mytime() {
 	gettimeofday(&now, NULL);
 	return 1.0 * now.tv_sec + now.tv_usec / 1e6;
 }
-__s8 sock_init (struct sctp_sock *ssock, const __u32 *remote_ip)
+
+
+__s8 sock_init(
+    struct sctp_sock* ssock,
+    const __u32* remote_ip,
+    const __u16 data_port,
+    const __u16 reset_port,
+    const __u16 data_local_port)
 {
 	struct sockaddr_in opts;
 	struct in_addr rip; // ECM: remote ip TODO: add to arguments
@@ -94,7 +101,7 @@ __s8 sock_init (struct sctp_sock *ssock, const __u32 *remote_ip)
 	/* setup data socket: bind to some local port on 0.0.0.0 */
 	memset(&opts, 0, sizeof(opts));
 	opts.sin_family = AF_INET;
-	opts.sin_port = htons(0); // let OS choose our listening port
+	opts.sin_port = htons(data_local_port);
 	opts.sin_addr.s_addr = INADDR_ANY;
 	if (bind (ssock->sd, (struct sockaddr *)&opts, sizeof(opts)) < 0) {
 		perror ("binding local address failed");
@@ -104,13 +111,15 @@ __s8 sock_init (struct sctp_sock *ssock, const __u32 *remote_ip)
 	/* "connect" data socket to REMOTE_IP:UDP_DATA_PORT */
 	memset(&opts, 0, sizeof(opts));
 	opts.sin_family = AF_INET;
-	opts.sin_port = htons(UDP_DATA_PORT); /* remote port */
+	opts.sin_port = htons(data_port);        /* remote port */
 	opts.sin_addr.s_addr = ssock->remote_ip; /* remote address */
 	if (connect (ssock->sd, (struct sockaddr *)&opts, sizeof(opts)) != 0) {
 		perror ("connecting failed: ");
 		return SC_ABORT;
 	}
 
+	ssock->udp_port_data = data_port;
+	ssock->udp_port_reset = reset_port;
 
 #ifdef WITH_PACKET_MMAP
 	/* buffer indices init */

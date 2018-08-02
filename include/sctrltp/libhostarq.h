@@ -7,6 +7,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <linux/types.h>
 
 #define HOSTARQ_EXIT_SIGNAL SIGUSR2
 #define HOSTARQ_FAIL_SIGNAL SIGPIPE
@@ -19,6 +20,9 @@ struct hostarq_handle
 	char* shm_name;
 	char* shm_path;
 	char* remote_ip;
+	__u16 udp_data_port;
+	__u16 udp_reset_port;
+	__u16 udp_data_local_port;
 	bool init;
 };
 
@@ -31,9 +35,18 @@ struct hostarq_handle
  *                 (located under `/dev/shm`).
  * @param remote_ip The IP(v4) address as a char string.
  * @param init If true, a HostARQ reset frame is sent to the FPGA.
+ * @param udp_data_port The FPGA's HostARQ-via-UDP port.
+ * @param udp_reset_port The FPGA's UDP port for HostARQ reset frames.
+ * @param udp_data_local_port The local UDP port used.
  */
 void hostarq_create_handle(
-	struct hostarq_handle* handle, char const shm_name[], char const remote_ip[], bool const init);
+	struct hostarq_handle* handle,
+	char const shm_name[],
+	char const remote_ip[],
+	__u16 const udp_data_port,
+	__u16 const udp_reset_port,
+	__u16 const udp_data_local_port,
+	bool const init);
 
 
 /** `hostarq_free_handle` frees the data structure

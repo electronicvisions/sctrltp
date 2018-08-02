@@ -31,6 +31,9 @@ PYBIND11_PLUGIN(pysctrltp) {
 	settings.def(py::init<>())
 	    .def_readwrite("ip", &ARQStreamSettings::ip)
 	    .def_readwrite("reset", &ARQStreamSettings::reset)
+	    .def_readwrite("port_data", &ARQStreamSettings::port_data)
+	    .def_readwrite("port_reset", &ARQStreamSettings::port_reset)
+	    .def_readwrite("local_port_data", &ARQStreamSettings::local_port_data)
 	    .def_readwrite("init_flush_lb_packet", &ARQStreamSettings::init_flush_lb_packet)
 	    .def_readwrite("init_flush_timeout", &ARQStreamSettings::init_flush_timeout)
 	    .def_readwrite("destruction_timeout", &ARQStreamSettings::destruction_timeout);
@@ -46,8 +49,8 @@ PYBIND11_PLUGIN(pysctrltp) {
 	arqstream.def(py::init<std::string const, bool const>(), "name"_a, "reset"_a = true)
 	    .def(
 	        py::init<
-	            std::string const, std::string const, ARQStream<ParametersFcpBss1>::udpport_t const, std::string const,
-	            ARQStream<ParametersFcpBss1>::udpport_t const, bool const>(),
+	            std::string const, std::string const, udpport_t const, std::string const,
+	            udpport_t const, bool const>(),
 	        "name"_a, "source_ip"_a, "source_port"_a, "target_ip"_a, "target_port"_a,
 	        "reset"_a = true)
 	    .def(py::init<sctrltp::ARQStreamSettings const>(), "settings"_a)

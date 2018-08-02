@@ -65,7 +65,13 @@ struct sctp_core {
  *returning 1 on success otherwise a negative value*/
 
 template <typename P>
-__s8 SCTP_CoreUp (char const *name, char const *rip, __s8 wstartup);
+__s8 SCTP_CoreUp (
+    char const *name,
+    char const *rip,
+    __u16 data_port,
+    __u16 reset_port,
+    __u16 data_local_port,
+    __s8 wstartup);
 
 /*Stops algorithm, frees mem and gives statuscode back*/
 template <typename P>

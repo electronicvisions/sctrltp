@@ -1,3 +1,4 @@
+#include "sctrltp/ARQStream.h"
 #ifndef NCSIM
 // this is NOT for NCSIM
 
@@ -14,47 +15,11 @@
 #include "sctrltp/libhostarq.h"
 
 #include "sctrltp/ARQFrame.h"
-#include "sctrltp/ARQStream.h"
 
 using namespace std::chrono_literals;
 using namespace std::chrono;
 
-namespace sctrltp {
-
-// Keep in sync with list of names in wscript
-static std::unordered_map<std::type_index, std::string> hostarq_daemon_names = {
-    {std::type_index(typeid(ParametersFcpBss1)), "hostarq_daemon_fcp_bss1"},
-    {std::type_index(typeid(ParametersAnanasBss1)), "hostarq_daemon_ananas_bss1"},
-    {std::type_index(typeid(ParametersFcpBss2Cube)), "hostarq_daemon_fcp_bss2_cube"}};
-
-template<typename P>
-struct ARQStreamImpl {
-	sctp_descr<P> * desc;
-	hostarq_handle* handle;
-
-	ARQStreamImpl(std::string name, std::string rip, bool reset) {
-		if (name.empty() || rip.empty()) {
-			throw std::runtime_error("ARQStream name and IP have to be set");
-		}
-		// start HostARQ server (and reset link)
-		handle = new hostarq_handle;
-		hostarq_create_handle(handle, name.c_str(), rip.c_str(), reset /*reset HostARQ*/);
-		hostarq_open(handle, hostarq_daemon_names.at(std::type_index(typeid(P))).c_str());
-		desc = open_conn<P>(name.c_str()); // name of software arq session
-		if (!desc) {
-			std::ostringstream ss;
-			ss << "Error: Software ARQ Session " << name << " not found" << std::endl;
-			throw std::runtime_error(name + ": cannot open connection to Software ARQ daemon");
-		}
-	}
-
-	~ARQStreamImpl() {
-		close_conn(desc); // TODO: we should check the return value?
-		hostarq_close(handle);
-		hostarq_free_handle(handle);
-		delete handle;
-	}
-};
+namespace {
 
 // sleep for given number of nano seconds; sleeping >= 1s not supported
 void sleep(std::string const& name, nanoseconds const sleep)
@@ -76,38 +41,111 @@ void sleep(std::string const& name, nanoseconds const sleep)
 	}
 }
 
+
+// create a unique name for a ARQStream connection
+std::string create_name(sctrltp::ARQStreamSettings const s)
+{
+	return s.ip + "-" + std::to_string(s.port_data) + "-" + std::to_string(s.port_reset);
+}
+
+} // namespace
+
+namespace sctrltp {
+
+// Keep in sync with list of names in wscript
+static std::unordered_map<std::type_index, std::string> hostarq_daemon_names = {
+    {std::type_index(typeid(ParametersFcpBss1)), "hostarq_daemon_fcp_bss1"},
+    {std::type_index(typeid(ParametersAnanasBss1)), "hostarq_daemon_ananas_bss1"},
+    {std::type_index(typeid(ParametersFcpBss2Cube)), "hostarq_daemon_fcp_bss2_cube"}};
+
+template<typename P>
+struct ARQStreamImpl {
+	sctp_descr<P> * desc;
+	hostarq_handle* handle;
+
+	ARQStreamImpl(
+	    std::string name,
+	    std::string rip,
+	    udpport_t port_data,
+	    udpport_t port_reset,
+	    udpport_t local_port_data,
+	    bool reset)
+	{
+		if (name.empty() || rip.empty()) {
+			throw std::runtime_error("ARQStream name and IP have to be set");
+		}
+		// start HostARQ server (and reset link)
+		handle = new hostarq_handle;
+		hostarq_create_handle(
+		    handle, name.c_str(), rip.c_str(), port_data, port_reset, local_port_data, reset);
+		hostarq_open(handle, hostarq_daemon_names.at(std::type_index(typeid(P))).c_str());
+		desc = open_conn<P>(name.c_str()); // name of software arq session
+		if (!desc) {
+			std::ostringstream ss;
+			ss << "Error: Software ARQ Session " << name << " not found" << std::endl;
+			throw std::runtime_error(name + ": cannot open connection to Software ARQ daemon");
+		}
+	}
+
+	~ARQStreamImpl() {
+		close_conn(desc); // TODO: we should check the return value?
+		hostarq_close(handle);
+		hostarq_free_handle(handle);
+		delete handle;
+	}
+};
+
+
 template <typename P>
 ARQStream<P>::ARQStream(
-		std::string const name,
-		std::string const,
-		udpport_t,
-		std::string const rip,
-		udpport_t,
-		bool reset) :
-	name(name),
-	rip(rip),
-	max_wait_for_completion_upon_destruction_in_ms(500),
-	pimpl(new ARQStreamImpl<P>(name, rip, reset))
+    std::string const,
+    std::string const,
+    udpport_t,
+    std::string const rip,
+    udpport_t,
+    bool const reset) :
+    name(create_name(ARQStreamSettings{.ip = rip})),
+    rip(rip),
+    max_wait_for_completion_upon_destruction_in_ms(500),
+    pimpl(new ARQStreamImpl<P>(
+        name,
+        rip,
+        ARQStreamSettings().port_data,
+        ARQStreamSettings().port_reset,
+        ARQStreamSettings().local_port_data,
+        reset))
 {
 	drop_receive_queue(400ms, true);
 }
 
-template<typename P>
-ARQStream<P>::ARQStream(std::string const name, bool reset) :
-	name(name),
-	rip(name),
-	max_wait_for_completion_upon_destruction_in_ms(500),
-	pimpl(new ARQStreamImpl<P>(name, name, reset))
+template <typename P>
+ARQStream<P>::ARQStream(std::string const rip, bool const reset) :
+    name(create_name(ARQStreamSettings{.ip = rip})),
+    rip(rip),
+    max_wait_for_completion_upon_destruction_in_ms(500),
+    pimpl(new ARQStreamImpl<P>(
+        name,
+        rip,
+        ARQStreamSettings().port_data,
+        ARQStreamSettings().port_reset,
+        ARQStreamSettings().local_port_data,
+        reset))
 {
 	drop_receive_queue(400ms, true);
 }
 
 template<typename P>
 ARQStream<P>::ARQStream(ARQStreamSettings const settings) :
-    name(settings.ip),
+    name(create_name(settings)),
     rip(settings.ip),
     max_wait_for_completion_upon_destruction_in_ms(settings.destruction_timeout.count()),
-    pimpl(new ARQStreamImpl<P>(settings.ip, settings.ip, settings.reset))
+    pimpl(new ARQStreamImpl<P>(
+        name,
+        settings.ip,
+        settings.port_data,
+        settings.port_reset,
+        settings.local_port_data,
+        settings.reset))
 {
 	drop_receive_queue(settings.init_flush_timeout, settings.init_flush_lb_packet);
 }

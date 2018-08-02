@@ -26,11 +26,18 @@
 
 /* 20 bytes for integers-to-char-string conversion should be enough... */
 #define MAX_INT_STRING_SIZE 20
+#define MAX_PORT_STRING_SIZE 6
 
 using namespace sctrltp;
 
 void hostarq_create_handle(
-	struct hostarq_handle* handle, char const shm_name[], char const remote_ip[], bool const init)
+    struct hostarq_handle* handle,
+    char const shm_name[],
+    char const remote_ip[],
+    __u16 const udp_data_port,
+    __u16 const udp_reset_port,
+    __u16 const udp_data_local_port,
+    bool const init)
 {
 	const char shm_name_prefix[] = "/dev/shm/";
 
@@ -77,6 +84,10 @@ void hostarq_create_handle(
 	}
 	strcpy(handle->remote_ip, remote_ip);
 
+	handle->udp_data_port = udp_data_port;
+	handle->udp_reset_port = udp_reset_port;
+	handle->udp_data_local_port = udp_data_local_port;
+
 	handle->init = init;
 }
 
@@ -99,6 +110,8 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 	char fd_string[MAX_INT_STRING_SIZE], init_string[MAX_INT_STRING_SIZE];
 	char const lockdir[] = "/var/run/lock/hicann";
 	char lockdir_startupfile[] = "/var/run/lock/hicann/hostarq_startup_XXXXXX";
+	char udp_data_port_string[MAX_PORT_STRING_SIZE], udp_reset_port_string[MAX_PORT_STRING_SIZE],
+	    udp_data_local_port_string[MAX_PORT_STRING_SIZE];
 	struct stat lockdir_stat;
 
 	/* parameter checking */
@@ -165,7 +178,14 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 
 	/* convert other function parameters to strings... */
 	if ((snprintf(fd_string, MAX_INT_STRING_SIZE, "%d", fd) >= MAX_INT_STRING_SIZE) ||
-	    (snprintf(init_string, MAX_INT_STRING_SIZE, "%d", handle->init) >= MAX_INT_STRING_SIZE)) {
+	    (snprintf(init_string, MAX_INT_STRING_SIZE, "%d", handle->init) >= MAX_INT_STRING_SIZE) ||
+	    (snprintf(udp_data_port_string, MAX_PORT_STRING_SIZE, "%u", handle->udp_data_port) >=
+	     MAX_PORT_STRING_SIZE) ||
+	    (snprintf(udp_reset_port_string, MAX_PORT_STRING_SIZE, "%u", handle->udp_reset_port) >=
+	     MAX_PORT_STRING_SIZE) ||
+	    (snprintf(
+	         udp_data_local_port_string, MAX_PORT_STRING_SIZE, "%u", handle->udp_data_local_port) >=
+	     MAX_PORT_STRING_SIZE)) {
 		fprintf(stderr, "int to string conversion required too many bytes?\n");
 		abort();
 	}
@@ -181,10 +201,13 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 	/* the child shares the same set of file descriptors (except for those with O_CLOEXEC) */
 	if (handle->pid == 0 /* child */) {
 		/* execvp's params are `char * const *`, so we have to provide non-const parameters */
-		char* const params[6] = {const_cast<char*>(hostarq_daemon_string),
+		char* const params[9] = {const_cast<char*>(hostarq_daemon_string),
 		                         handle->shm_name,
 		                         fd_string,
 		                         handle->remote_ip,
+		                         udp_data_port_string,
+		                         udp_reset_port_string,
+		                         udp_data_local_port_string,
 		                         init_string,
 		                         NULL};
 		execvp(params[0], params);
