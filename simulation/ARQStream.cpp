@@ -34,7 +34,7 @@ ARQStream* arq_stream_ptr = NULL;
 
 ARQStream::ARQStream(std::string const name, std::string const source_ip, udpport_t source_port,
                      std::string const target_ip, udpport_t target_port, bool reset)
-    : name(name), pimpl(new ARQStreamImpl)
+    : name(name), max_wait_for_completion_upon_destruction_in_ms(0), pimpl(new ARQStreamImpl)
 {
 	pimpl->name = name;
 	pimpl->sender_drop_rate = 0.0;
