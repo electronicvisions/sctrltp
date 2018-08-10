@@ -2,20 +2,16 @@
 #define __ARQ_STREAM_WRAP_H__
 
 #include "systemc.h"
+#include "sctrltp/sctrltp_defines.h"
 
 // and we have to use HW toolset... gcc 4.1 :)
-#define WINDOW_SIZE 512
+#define WINDOW_SIZE 128
 #define RECEIVE_WINDOW_SIZE WINDOW_SIZE
 
-#define SEQ_SIZE 65536 // (UINT_MAX+1) // must be < maximum seq_t value / 2
-#define SEQ_MAX (SEQ_SIZE - 1)
+#define SEQ_MAX (MAX_NRFRAMES - 1)
 
-// payload is counted in quadwords (64-bit)
-#define MAX_PDUWORDS 180
-
-// 14 + 20 + 8; // size of header shit... just for calculating waiting time for sendUDP
+// 14 + 20 + 8; // size of header... just for calculating waiting time for sendUDP
 #define WAIT_SENDUDP 42
-
 
 #include "sctrltp/ARQStream.h"
 #include "sctrltp/ARQFrame.h"
@@ -144,11 +140,11 @@ struct ARQStreamImpl
 
 	struct cache
 	{
-		boost::array<bool, SEQ_SIZE>* status;
-		boost::array<packet, SEQ_SIZE>* data;
-		cache() : status(new boost::array<bool, SEQ_SIZE>), data(new boost::array<packet, SEQ_SIZE>)
+		boost::array<bool, MAX_NRFRAMES>* status;
+		boost::array<packet, MAX_NRFRAMES>* data;
+		cache() : status(new boost::array<bool, MAX_NRFRAMES>), data(new boost::array<packet, MAX_NRFRAMES>)
 		{
-			for (size_t i = 0; i < SEQ_SIZE; i++)
+			for (size_t i = 0; i < MAX_NRFRAMES; i++)
 				(*status)[i] = false;
 		}
 	} receive_cache;

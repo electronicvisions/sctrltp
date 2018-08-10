@@ -23,14 +23,14 @@ struct ack_frame
 } __attribute__((__packed__));
 
 
-/* next_seq: calculate next sequence number (incl. wrap around at SEQ_SIZE) */
+/* next_seq: calculate next sequence number (incl. wrap around at MAX_NRFRAMES) */
 inline sctrltp::packet::seq_t next_seq(sctrltp::packet::seq_t s) __attribute__((always_inline));
 sctrltp::packet::seq_t next_seq(sctrltp::packet::seq_t s)
 {
-#if SEQ_SIZE > UINT_MAX
+#if MAX_NRFRAMES > UINT_MAX
 	return s + 1;
 #else
-	return (s + 1) % SEQ_SIZE;
+	return (s + 1) % MAX_NRFRAMES;
 #endif
 }
 
@@ -40,7 +40,7 @@ inline bool in_window(sctrltp::packet::seq_t x, sctrltp::packet::seq_t a, sctrlt
     __attribute__((always_inline));
 bool in_window(sctrltp::packet::seq_t x, sctrltp::packet::seq_t a, sctrltp::packet::seq_t b)
 {
-	sctrltp::packet::seq_t bc = b % SEQ_SIZE; // constrained seq numbers
+	sctrltp::packet::seq_t bc = b % MAX_NRFRAMES; // constrained seq numbers
 	if (a == bc) {                            // window empty
 		return false;
 	} else if (a < bc) { // typical
@@ -60,7 +60,7 @@ size_t dist_window(sctrltp::packet::seq_t x, sctrltp::packet::seq_t a)
 	if (a < x)
 		ret = x - a;
 	else // x wrapped around
-		ret = x + (SEQ_SIZE - a);
+		ret = x + (MAX_NRFRAMES - a);
 	return ret;
 }
 

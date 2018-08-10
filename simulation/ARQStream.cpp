@@ -99,8 +99,8 @@ void ARQStream::start()
 
 	// reset the arq and ram
 	wait(110.0, SC_US); // wait for memory to initialize
-	uint32_t payload = 0xABABABAB;
-	pimpl->eth_soft.sendUDP(pimpl->target_ip.to_ulong(), 0xaffe, &payload, sizeof(payload));
+	uint32_t payload = HW_HOSTARQ_MAGICWORD;
+	pimpl->eth_soft.sendUDP(pimpl->target_ip.to_ulong(), UDP_RESET_PORT, &payload, sizeof(payload));
 	wait(10.0, SC_US); // wait for memory to initialize
 }
 
@@ -408,7 +408,7 @@ void ARQStreamImpl::trigger_receive()
 		// all data is 64bit aligned
 		for (size_t idx = 0; idx < p.len; idx++)
 			p.pdu[idx] = be64toh(p.pdu[idx]);
-		std::cout << name << " packet marked as valid with length " << p.len << std::endl;
+		std::cout << name << " packet marked as valid with length " << p.len << ", pid " << std::hex << p.pid << ", pdu[0]" << p.pdu[0] << std::endl;
 		// FIXME, for now we just accept sequential packets...
 		packet::seq_t l_rseq = next_seq(rseq);
 		if (p.seq == l_rseq) {
