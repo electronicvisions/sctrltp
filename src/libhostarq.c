@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include "sctrltp/libhostarq.h"
 #include "sctrltp/us_sctp_defs.h"
@@ -91,9 +92,11 @@ hostarq_free_handle(struct hostarq_handle* handle)
 void
 hostarq_open(struct hostarq_handle* handle)
 {
-	int i, fd, flag;
+	int ret, ret2, i, fd, flag;
 	char hostarq_daemon_string[] = "hostarq_daemon";
 	char fd_string[MAX_INT_STRING_SIZE], init_string[MAX_INT_STRING_SIZE];
+	char lockdir[] = "/var/run/lock/hicann";
+	struct stat lockdir_stat;
 
 	/* parameter checking */
 	if (handle->pid != 0) {
@@ -114,6 +117,34 @@ hostarq_open(struct hostarq_handle* handle)
 	if (handle->remote_ip == NULL) {
 		fprintf(stderr, "remote_ip is unset\n");
 		abort();
+	}
+
+	/* try create "hicann" lock dir if does not exist */
+	ret = mkdir(lockdir, 0777);
+	if ((ret < 0) && (errno == EEXIST)) {
+		/* path already exists */
+		ret2 = stat(lockdir, &lockdir_stat);
+		if (ret2 < 0) {
+			perror("stat()");
+			abort();
+		} else if (!S_ISDIR(lockdir_stat.st_mode)) {
+			fprintf(stderr, "lockdir path exists but is not a directory!\n");
+			abort();
+		} else if (!(lockdir_stat.st_mode  & (S_IRWXU | S_IRWXG | S_IRWXO))) {
+			fprintf(stderr, "lockdir exists but has wrong mode\n");
+			abort();
+		}
+	} else if (ret < 0) {
+		/* unknown error */
+		perror("mkdir()");
+		abort();
+	} else {
+		/* created directory; now set mode */
+		ret2 = chmod(lockdir, 0777);
+		if (ret2 != 0) {
+			perror("chmod()");
+			abort();
+		}
 	}
 
 	fd = open("/var/run/lock/hicann", O_TMPFILE | O_WRONLY | O_EXCL, S_IRUSR | S_IWUSR);
