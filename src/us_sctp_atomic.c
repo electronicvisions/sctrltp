@@ -119,7 +119,10 @@ void futex_wait (volatile __s32 *ptr, __s32 val)
 	ret = syscall (__NR_futex, ptr, FUTEX_WAIT, val, NULL, NULL, NULL);
 	if (ret != 0) {
 		if (likely(errno == EWOULDBLOCK)) return; /* ok to have variable changed in the meantime ;) */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
 		fprintf (stderr, "futex_wait terminated with %d (%m)\n", ret);
+#pragma GCC diagnostic pop
 		/* TODO: We should signal error conditions (return value != void)
 		 *       or pthread_exit(0);
 		 */
@@ -132,7 +135,10 @@ void futex_wake (volatile __s32 *ptr, __s32 howmany)
 	__s32 ret;
 	ret = syscall (__NR_futex, ptr, FUTEX_WAKE, howmany, NULL, NULL, NULL);
 	if (unlikely(ret < 0)) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
 		fprintf (stderr, "futex_wake returned with %d (%m)\n", ret);
+#pragma GCC diagnostic pop
 		/* TODO: We should signal error conditions (return value != void)
 		 *       or pthread_exit(0);
 		 */

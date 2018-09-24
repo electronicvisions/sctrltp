@@ -92,7 +92,10 @@ void * thread_sending (void * parm) {
 		no_frames++;
 	}
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 	printf("%s: %zu words sent in %zu frames\n", __PRETTY_FUNCTION__, words_sent, no_frames);
+#pragma GCC diagnostic pop
 	sleep(1);
 	pthread_exit(NULL);
 }
@@ -123,7 +126,10 @@ void receiving (void * parm) {
 
 	free(resp);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 	printf("%s: %zu words (errors: %zu) received in %zu packets\n",
 		__PRETTY_FUNCTION__, words_received, errors, no_frames);
+#pragma GCC diagnostic pop
 	sleep(1);
 }

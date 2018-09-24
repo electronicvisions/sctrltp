@@ -15,23 +15,41 @@
 #define LOGLEVEL 9
 #endif
 
-#define LOG_ERROR(M, ...) fprintf(stderr, "ERROR %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#define LOG_ERROR(...) do { \
+	fprintf(stderr, "ERROR %s:%d: ", __FILE__, __LINE__); \
+	fprintf(stderr, __VA_ARGS__); \
+	fprintf(stderr, "\n"); \
+} while(0)
 #if LOGLEVEL > 0
-#define LOG_WARN(M, ...)  fprintf(stderr, "WARN  %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define LOG_WARN(...) do { \
+	fprintf(stderr, "WARN  %s:%d: ", __FILE__, __LINE__); \
+	fprintf(stderr, __VA_ARGS__); \
+	fprintf(stderr, "\n"); \
+} while(0)
 #else
 #define LOG_WARN(...) do { } while(0)
 #endif
 #if LOGLEVEL > 1
-#define LOG_INFO(M, ...)  fprintf(stderr, "INFO  %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define LOG_INFO(...) do { \
+	fprintf(stderr, "INFO  %s:%d: ", __FILE__, __LINE__); \
+	fprintf(stderr, __VA_ARGS__); \
+	fprintf(stderr, "\n"); \
+} while(0)
 #else
 #define LOG_INFO(...) do { } while(0)
 #endif
 #if LOGLEVEL > 2
-#define LOG_DEBUG(M, ...) fprintf(stderr, "DEBUG %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define LOG_DEBUG(...) do { \
+	fprintf(stderr, "DEBUG %s:%d: ", __FILE__, __LINE__); \
+	fprintf(stderr, __VA_ARGS__); \
+	fprintf(stderr, "\n"); \
+} while(0)
 #else
 #define LOG_DEBUG(...) do { } while(0)
 #endif
-
+#pragma GCC diagnostic pop
 
 extern uint64_t const resetframe_var_values_check[6];
 

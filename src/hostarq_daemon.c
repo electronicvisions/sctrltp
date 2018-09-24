@@ -14,7 +14,7 @@ volatile sig_atomic_t post_init = 0;
 static __s32 exiting = 0;
 static char const* our_shm_name = NULL;
 
-void call_exit () {
+void call_exit() {
 	if (our_shm_name != NULL) {
 		/* thread unsafe... but who cares? let's delete it multiple times! */
 		shm_unlink(our_shm_name);
@@ -86,7 +86,7 @@ int main(int argc, const char *argv[])
 #undef ADDSIGNALHANDLER
 
 	/* register exit handler (handles shutdown of core) */
-	atexit((void*)&call_exit);
+	atexit(call_exit);
 
 	/* child me up */
 	if (SCTP_CoreUp(our_shm_name, remote_ip, init) < 1) {

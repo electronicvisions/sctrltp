@@ -1272,7 +1272,10 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 {
 	memfence();
 	if (admin == NULL) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 		fprintf(stderr, "%s: cannot do anything, my memory is already gone\n", __FUNCTION__);
+#pragma GCC diagnostic pop
 		return 0;
 	}
 
@@ -1286,7 +1289,10 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 	LOG_INFO ("Shutting down SCTP core: %s (pid %u)", admin->NAME, getpid());
 
 	if (my_admin == NULL) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 		fprintf(stderr, "%s: lost race, my memory is already gone\n", __FUNCTION__);
+#pragma GCC diagnostic pop
 		return 0;
 	}
 

@@ -15,6 +15,8 @@
 static __s32 post_init = 0;
 static __s32 exiting = 0;
 
+void exit_handler (void);
+
 int main (int argc, char **argv)
 {
 	__s8 retval;
@@ -60,8 +62,9 @@ int main (int argc, char **argv)
 		signal (SIGTERM, SIG_IGN);
 	if (signal (SIGQUIT, termination_handler) == SIG_IGN)
 		signal (SIGQUIT, SIG_IGN);
+
 	/* register exit handler (handles shutdown of core) */
-	atexit((void*) &exit_handler);
+	atexit(exit_handler);
 
 	printf ("Core %s to %s (init=%s)\n", rip, rip, init ? "y" : "n");
 	retval = SCTP_CoreUp (rip, rip, init);
@@ -231,7 +234,10 @@ int getInterface (const char *ifName, struct ifreq *ifHW) {
 	ifc.ifc_req = ifs;
 	if (ioctl(sockfd, SIOCGIFCONF, &ifc) < 0)
 	{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
 		printf("ioctl(SIOCGIFCONF): %m\n");
+#pragma GCC diagnostic pop
 		close(sockfd);
 		return 0;
 	}
@@ -239,7 +245,10 @@ int getInterface (const char *ifName, struct ifreq *ifHW) {
 	/* get hardware address by interface name (ifr_name) */
 	strncpy(ifreq.ifr_name, ifName, sizeof(ifreq.ifr_name));
 	if (ioctl (sockfd, SIOCGIFHWADDR, &ifreq) < 0) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
 		printf("SIOCGIFHWADDR(%s): %m\n", ifreq.ifr_name);
+#pragma GCC diagnostic pop
 		close(sockfd);
 		return 0;
 	}
@@ -270,7 +279,10 @@ void printInterfaces (void) {
 	ifc.ifc_req = ifs;
 	if (ioctl(sockfd, SIOCGIFCONF, &ifc) < 0)
 	{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
 		printf("ioctl(SIOCGIFCONF): %m\n");
+#pragma GCC diagnostic pop
 		close(sockfd);
 		return;
 	}
@@ -284,7 +296,10 @@ void printInterfaces (void) {
 			/* get hardware address by interface name (ifr_name) */
 			strncpy(ifreq.ifr_name, ifr->ifr_name, sizeof(ifreq.ifr_name));
 			if (ioctl (sockfd, SIOCGIFHWADDR, &ifreq) < 0) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
 				printf("SIOCGIFHWADDR(%s): %m\n", ifreq.ifr_name);
+#pragma GCC diagnostic pop
 				close(sockfd);
 				return;
 			}
