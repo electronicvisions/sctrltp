@@ -170,7 +170,7 @@ int main (int argc, char **argv)
 		push_frames (&(get_desc<Parameters<>>()->trans->allocrx), &outbuf_rx, get_desc<Parameters<>>()->trans, ptr, 1);
 
 		/*Push response frame to tx_queue*/
-		push_frames (&(get_desc<Parameters<>>()->trans->tx_queues[queue]), &outbuf_tx, get_desc<Parameters<>>()->trans, ptr_out, 1);
+		push_frames (&(get_desc<Parameters<>>()->trans->tx_queue), &outbuf_tx, get_desc<Parameters<>>()->trans, ptr_out, 1);
 
 		/*Wake TX*/
 		cond_signal (&(get_desc<Parameters<>>()->trans->waketx), 1, 1);

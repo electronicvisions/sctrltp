@@ -272,7 +272,7 @@ static void do_reset (bool fpga_reset) {
 	struct sctp_alloc<P> tmp1,tmp2;
 	struct sctp_interface<P> *inter = get_admin<P>()->inter;
 	struct sctp_alloc<P> *ptr;
-	__u32 queue;
+	__u64 queue;
 	__u32 offset;
 	struct arq_resetframe resetframe;
 	struct sockaddr_in reset_addr;
@@ -318,23 +318,27 @@ static void do_reset (bool fpga_reset) {
 	spin_unlock (&(get_admin<P>()->rxwin.lock.lock));
 	spin_unlock (&(get_admin<P>()->txwin.lock.lock));
 
-	/*Cycle through queues*/
-	for (queue = 0; queue < NUM_QUEUES; queue++) {
-		/*Reset tx and rx queues*/
-		spin_lock (&(inter->tx_queues[queue].nr_full.lock));
+	/*TX queue*/
+	spin_lock (&(inter->tx_queue.nr_full.lock));
+	if ((b = inter->tx_queue.nr_full.semval) > 0) {
+		/*There are buffers in tx_queue*/
+		/*Get pointer to buffer in shared mem*/
+		ptr = (sctp_alloc<P> *)get_abs_ptr(inter, inter->tx_queue.buf);
+		/*Calculate offset of non-empty buffers*/
+		offset = (inter->tx_queue.last_out + 1) % inter->tx_queue.nr_elem;
+		while (b > 0) {
+			fif_push (&(inter->alloctx), (__u8 *)(ptr+offset+b), inter);
+			b--;
+		}
+	}
+	fif_reset (&(inter->tx_queue));
+	spin_unlock (&(inter->tx_queue.nr_full.lock));
+
+	/*Cycle through RX queues*/
+	for (queue = 0; queue < inter->unique_queue_map.size + 1; queue++) {
+		/*Reset queue*/
 		spin_lock (&(inter->rx_queues[queue].nr_full.lock));
 
-		if ((b = inter->tx_queues[queue].nr_full.semval) > 0) {
-			/*There are buffers in tx_queue*/
-			/*Get pointer to buffer in shared mem*/
-			ptr = (sctp_alloc<P> *)get_abs_ptr(inter, inter->tx_queues[queue].buf);
-			/*Calculate offset of non-empty buffers*/
-			offset = (inter->tx_queues[queue].last_out + 1) % inter->tx_queues[queue].nr_elem;
-			while (b > 0) {
-				fif_push (&(inter->alloctx), (__u8 *)(ptr+offset+b), inter);
-				b--;
-			}
-		}
 		if ((b = inter->rx_queues[queue].nr_full.semval) > 0) {
 			/*There are buffers in rx_queue*/
 			/*Get pointer to buffer in shared mem*/
@@ -347,10 +351,8 @@ static void do_reset (bool fpga_reset) {
 			}
 		}
 
-		fif_reset (&(inter->tx_queues[queue]));
 		fif_reset (&(inter->rx_queues[queue]));
 
-		spin_unlock (&(inter->tx_queues[queue].nr_full.lock));
 		spin_unlock (&(inter->rx_queues[queue].nr_full.lock));
 
 		/*TODO: Maybe we have to wake someone here, but that is left open till signal mechanism is fully supported*/
@@ -458,8 +460,8 @@ void *SCTP_RX (void *core)
 	/*Local cache*/
 	sctp_alloc<P> in;
 	sctp_fifo *outfifo = NULL;
-	sctp_alloc<P> out[NUM_QUEUES];
-	__u16 queue = 0;
+	sctp_alloc<P> out[P::MAX_NUM_QUEUES];
+	__u64 queue = 0;
 	arq_frame<P> *curr_packet = NULL;
 	sctp_internal<P> outbuf_rx[P::MAX_WINSIZ];
 	sctp_fifo *infifo = &(ad->inter->allocrx);
@@ -483,7 +485,7 @@ void *SCTP_RX (void *core)
 
 	memset (outbuf_rx, 0, sizeof(struct sctp_internal<P>)*P::MAX_WINSIZ);
 	memset (&in, 0, sizeof (struct sctp_alloc<P>));
-	memset (out, 0, sizeof (struct sctp_alloc<P>)*NUM_QUEUES);
+	memset (out, 0, sizeof (struct sctp_alloc<P>) * P::MAX_NUM_QUEUES);
 
 	ad->ACK = (P::MAX_NRFRAMES-1);
 	ad->rACK = (P::MAX_NRFRAMES-1);
@@ -571,7 +573,7 @@ void *SCTP_RX (void *core)
 					if (rack != rack_old) {
 						/*Pass new ACK to TX and wake him up*/
 						rack_old = rack;
-						//printf("new rack: %d\n", rack);
+						/*printf("[CORE] new rack: %d\n", rack);*/
 
 						xchg ((__s32 *)&(ad->rACK), (__s32)rack);
 
@@ -582,6 +584,16 @@ void *SCTP_RX (void *core)
 						seq = sctpreq_get_seq (curr_packet);
 
 					queue = 0;
+
+					/*get the right queue according to packet type*/
+					for (__u64 n = 0; n < inter->unique_queue_map.size; ++n) {
+						if (sctpreq_get_typ(curr_packet) == inter->unique_queue_map.type[n]) {
+							/* queue 0 is reserved for all non-filtered packets */
+							queue = n + 1;
+							break;
+						}
+					}
+					outfifo = &(inter->rx_queues[queue]);
 
 					/*First check if seq valid and there is room in buffer ... if not, drop it! do NOT insert local_buf!!*/
 					if ((seq >= 0) && (outfifo->nr_full.semval <= (__s32)(outfifo->nr_elem - P::MAX_WINSIZ)) && (local == 0)) {
@@ -625,6 +637,17 @@ void *SCTP_RX (void *core)
 									break;
 								}
 
+								/*get the right queue according to packet type*/
+								queue = 0;
+								for (__u64 n = 0; n < inter->unique_queue_map.size; ++n) {
+									if (sctpreq_get_typ(curr_packet) == inter->unique_queue_map.type[n]) {
+										/* queue 0 is reserved for all non-filtered packets */
+										queue = n + 1;
+										break;
+									}
+								}
+								outfifo = &(inter->rx_queues[queue]);
+
 								/*Pass packet to upper layer*/
 								if ((i = out[queue].next) < PARALLEL_FRAMES) {
 									/*There is room in local_buf to check frame in*/
@@ -643,7 +666,7 @@ void *SCTP_RX (void *core)
 								a++;
 							}
 
-							for (queue = 0; queue < NUM_QUEUES; queue++) {
+							for (queue = 0; queue < inter->unique_queue_map.size + 1; queue++) {
 								outfifo = &(inter->rx_queues[queue]);
 								/*Flush any remaining frames*/
 								if ((i = out[queue].next) > 0) {
@@ -695,10 +718,8 @@ void *SCTP_TX (void *core)
 	__s32 a = 0;
 	sctp_core<P> *ad = (sctp_core<P>*) core;
 	sctp_interface<P> *inter = ad->inter;
-	struct sctp_fifo *infifo = ad->inter->tx_queues;
-	sctp_alloc<P> in[NUM_QUEUES];
-	__u16 queue = 0;
-	__u16 cycle = 0;
+	sctp_fifo *infifo = &(ad->inter->tx_queue);
+	sctp_alloc<P> in;
 	sctp_alloc<P> out;
 	arq_frame<P> *curr_packet = NULL;
 	struct sctp_fifo *outfifo = &(ad->inter->alloctx);
@@ -729,7 +750,7 @@ void *SCTP_TX (void *core)
 	if (prctl (PR_SET_NAME, "TX", NULL, NULL, NULL))
 		printf("Setting process name isn't supported on this system.\n");
 
-	memset (in, 0, sizeof (struct sctp_alloc<P>) * NUM_QUEUES);
+	memset (&in, 0, sizeof (struct sctp_alloc<P>));
 	memset (&out, 0, sizeof (struct sctp_alloc<P>));
 	memset (&ackpacket, 0, sizeof (struct arq_ackframe));
 	acksize = sizeof(struct arq_ackframe);
@@ -740,32 +761,25 @@ void *SCTP_TX (void *core)
 	while (1) {
 		/*Check, if we are allowed to operate normally*/
 		if (likely(ad->STATUS.empty[0] == STAT_NORMAL)) {
-			/*Try to fetch Paket from queues, if old one was processed before*/
-			cycle = 0;
-			/*Loop through tx_queues till frames found or one cycle passed unsuccessfully*/
-			while ((curr_packet == NULL) && (cycle < NUM_QUEUES)) {
-				infifo = &(inter->tx_queues[queue]);
-				if ((i = in[queue].next) < in[queue].num) {
+			/*Try to fetch Paket, if old one was processed before*/
+			if (curr_packet == NULL) {
+				infifo = &(inter->tx_queue);
+				if ((i = in.next) < in.num) {
 					/*We have a frame in local cache*/
-					in[queue].next++;
-					curr_packet = in[queue].fptr[i];
+					in.next++;
+					curr_packet = in.fptr[i];
 				} else {
 					/*We dont have an unprocessed frame, so lets fetch new ones*/
-					b = try_fif_pop (infifo, (__u8 *)&in[queue], inter);
+					b = try_fif_pop (infifo, (__u8 *)&in, inter);
 					if (b != SC_EMPTY) {
 						/*Yippey, we got frames to handle!*/
-						for (i = 0; i < in[queue].num; i++) {
-							in[queue].fptr[i] = static_cast<arq_frame<P>*>(get_abs_ptr (inter, in[queue].fptr[i]));
+						for (i = 0; i < in.num; i++) {
+							in.fptr[i] = static_cast<arq_frame<P>*>(get_abs_ptr (inter, in.fptr[i]));
 						}
-						in[queue].next = 1;
-						curr_packet = in[queue].fptr[0];
-					} else {
-						/*Update queue index and cycle counter*/
-						queue = (queue + 1) % NUM_QUEUES;
+						in.next = 1;
+						curr_packet = in.fptr[0];
 					}
 				}
-
-				cycle++;
 			}
 
 			/*Update values from RX*/
@@ -1024,7 +1038,9 @@ __s8 SCTP_CoreUp(
     __u16 data_port,
     __u16 reset_port,
     __u16 data_local_port,
-    __s8 wstartup)
+    __s8 wstartup,
+    __u16* unique_queues,
+    __u64 unique_queues_size)
 {
 	__s32 c;
 	__u32 k;
@@ -1035,8 +1051,8 @@ __s8 SCTP_CoreUp(
 	struct sctp_alloc<P> *rxbuf_ptr = NULL;
 	__u32 remote_ip;
 
-#define TX_BUFSPQ (P::TX_BUFSIZE/NUM_QUEUES)
-#define RX_BUFSPQ (P::RX_BUFSIZE/NUM_QUEUES)
+#define TX_BUFSPQ (P::TX_BUFSIZE)
+#define RX_BUFSPQ (P::RX_BUFSIZE/P::MAX_NUM_QUEUES)
 
 	LOG_INFO ("SCTP CORE OPEN CALLED");
 
@@ -1071,6 +1087,21 @@ __s8 SCTP_CoreUp(
 
 	remote_ip = inet_addr(rip);
 
+	get_admin<P>()->inter->unique_queue_map.size = unique_queues_size;
+	for (__u64 i=0; i<unique_queues_size; ++i) {
+		get_admin<P>()->inter->unique_queue_map.type[i] = (__u16)*(unique_queues + i);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_FLUSH);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_LOOPBACK);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_CFG_TYPE);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_SENDDUMMY);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_STATS);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_PERFTEST);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_DUMMYDATA0);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_DUMMYDATA1);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_ARQSTAT);
+		assert(get_admin<P>()->inter->unique_queue_map.type[i] != PTYPE_DO_ARQRESET);
+	}
+
 	/*Init conditional variable used by TX thread*/
 	cond_init (&(get_admin<P>()->inter->waketx));
 	get_admin<P>()->inter->waketx.semval = 0;
@@ -1091,22 +1122,32 @@ __s8 SCTP_CoreUp(
 #ifdef WITH_ROUTING
 	LOG_INFO ("> Routing capability enabled. Initializing multiqueues...");
 #endif
-	txbuf_ptr = interface->txq_buf;
-	rxbuf_ptr = interface->rxq_buf;
-	for (i = 0; i < NUM_QUEUES; i++) {
-		LOG_INFO ("> Init queue pair %u. Buffers per queue: %lu TX %lu RX", i, TX_BUFSPQ, RX_BUFSPQ);
-		ret = fif_init_wbuf(&(interface->tx_queues[i]),TX_BUFSPQ,sizeof(struct sctp_alloc<P>),(__u8*)txbuf_ptr,interface);
-		if (ret < 0) {
-			deallocate(3);
-			return -5;
-		}
 
+	/* TX fifo */
+	txbuf_ptr = interface->txq_buf;
+	LOG_INFO ("> Init TX queue. Buffer: %lu", TX_BUFSPQ);
+	ret = fif_init_wbuf(&(interface->tx_queue),TX_BUFSPQ,sizeof(struct sctp_alloc<P>),(__u8*)txbuf_ptr,interface);
+	if (ret < 0) {
+		deallocate(3);
+		return -5;
+	}
+	txbuf_ptr += TX_BUFSPQ;
+
+	rxbuf_ptr = interface->rxq_buf;
+	LOG_INFO("Number of unique queues %llu", interface->unique_queue_map.size);
+	for (i = 0; i < interface->unique_queue_map.size + 1; i++) {
+		if (i == 0) {
+			LOG_INFO("> Init RX default queue %u. Buffer: %lu", i, RX_BUFSPQ);
+		} else {
+			LOG_INFO(
+			    "> Init RX queue %u for packet type 0x%x. Buffer: %lu", i,
+			    interface->unique_queue_map.type[i - 1], RX_BUFSPQ);
+		}
 		ret = fif_init_wbuf(&(interface->rx_queues[i]),RX_BUFSPQ,sizeof(struct sctp_alloc<P>),(__u8*)rxbuf_ptr,interface);
 		if (ret < 0) {
 			deallocate(4);
 			return -5;
 		}
-		txbuf_ptr += TX_BUFSPQ;
 		rxbuf_ptr += RX_BUFSPQ;
 	}
 
@@ -1271,7 +1312,8 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 #undef HOSTARQ_RESET_WAIT_SLEEP_INTERVAL
 
 #define PARAMETERISATION(Name, name)                                                               \
-	template __s8 SCTP_CoreUp<Name>(char const*, char const*, __u16, __u16, __u16, __s8);          \
+	template __s8 SCTP_CoreUp<Name>(                                                               \
+	    char const*, char const*, __u16, __u16, __u16, __s8, __u16*, __u64);                       \
 	template __s8 SCTP_CoreDown<Name>(void);                                                       \
 	template struct sctp_core<Name>* SCTP_debugcore<Name>(void);
 #include "sctrltp/parameters.def"

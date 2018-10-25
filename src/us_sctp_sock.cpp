@@ -275,7 +275,7 @@ template <typename P>
 void print_stats () {
 	struct sctp_core<P> *ad = SCTP_debugcore<P>();
 	__s32 tmp;
-	int i;
+	__u64 i;
 	float ftmp;
 	double dtmp;
 	static size_t last_bytes_sent_payload = 0;
@@ -323,13 +323,11 @@ void print_stats () {
 		printf ("\r");
 		printf ("CORE: ");
 		printf ("txqs: ");
-		for (i = 0; i < NUM_QUEUES; i++) {
-			tmp = ad->inter->tx_queues[i].nr_full.semval;
-			if (tmp < 0) tmp = 0;
-			printf ("%3d%%(%5d) ", tmp*100/ad->inter->tx_queues[i].nr_elem, tmp);
-		}
+		tmp = ad->inter->tx_queue.nr_full.semval;
+		if (tmp < 0) tmp = 0;
+		printf ("%3d%%(%5d) ", tmp*100/ad->inter->tx_queue.nr_elem, tmp);
 		printf ("rxqs: ");
-		for (i = 0; i < NUM_QUEUES; i++) {
+		for (i = 0; i < ad->inter->unique_queue_map.size + 1; i++) {
 			tmp = ad->inter->rx_queues[i].nr_full.semval;
 			if (tmp < 0) tmp = 0;
 			printf ("%3d%%(%5d) ",tmp*100/ad->inter->rx_queues[i].nr_elem, tmp);

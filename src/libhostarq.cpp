@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <vector>
 
 #include "sctrltp/libhostarq.h"
 #include "sctrltp/us_sctp_defs.h"
@@ -27,8 +29,10 @@
 /* 20 bytes for integers-to-char-string conversion should be enough... */
 #define MAX_INT_STRING_SIZE 20
 #define MAX_PORT_STRING_SIZE 6
+#define MAX_PID_STRING_SIZE 6
+#define MAX_QUEUE_SIZE_STRING_SIZE 21
 
-using namespace sctrltp;
+namespace sctrltp {
 
 void hostarq_create_handle(
     struct hostarq_handle* handle,
@@ -37,7 +41,8 @@ void hostarq_create_handle(
     __u16 const udp_data_port,
     __u16 const udp_reset_port,
     __u16 const udp_data_local_port,
-    bool const init)
+    bool const init,
+    unique_queue_set_t unique_queues)
 {
 	const char shm_name_prefix[] = "/dev/shm/";
 
@@ -59,6 +64,8 @@ void hostarq_create_handle(
 		LOG_ERROR("remote_ip parameter is unset");
 		abort();
 	}
+
+	handle->unique_queues = unique_queues;
 
 	/* construction begins */
 	handle->pid = 0;
@@ -104,6 +111,7 @@ hostarq_free_handle(struct hostarq_handle* handle)
 }
 
 
+template<typename P>
 void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemon_string)
 {
 	int ret, ret2, i, fd, flag;
@@ -112,6 +120,7 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 	char lockdir_startupfile[] = "/var/run/lock/hicann/hostarq_startup_XXXXXX";
 	char udp_data_port_string[MAX_PORT_STRING_SIZE], udp_reset_port_string[MAX_PORT_STRING_SIZE],
 	    udp_data_local_port_string[MAX_PORT_STRING_SIZE];
+	std::vector<std::string> queue_string;
 	struct stat lockdir_stat;
 
 	/* parameter checking */
@@ -190,6 +199,20 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 		abort();
 	}
 
+	if (handle->unique_queues.size() >= MAX_QUEUE_SIZE_STRING_SIZE) {
+		fprintf(stderr, "u64 to string conversion required too many bytes?\n");
+		abort();
+	}
+
+	if (handle->unique_queues.size() > P::MAX_UNIQUE_QUEUES) {
+		fprintf(stderr, "too many unique unique_queues specified (limited by MAX_UNIQUE_QUEUES)\n");
+		abort();
+	}
+
+	for(auto queue_pid : handle->unique_queues) {
+		queue_string.push_back(std::to_string(queue_pid));
+	}
+
 	/* the child will signal its startup completion using fd */
 	flag = fcntl(fd, F_GETFL);
 	if (flag < 0) {
@@ -201,16 +224,23 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 	/* the child shares the same set of file descriptors (except for those with O_CLOEXEC) */
 	if (handle->pid == 0 /* child */) {
 		/* execvp's params are `char * const *`, so we have to provide non-const parameters */
-		char* const params[9] = {const_cast<char*>(hostarq_daemon_string),
-		                         handle->shm_name,
-		                         fd_string,
-		                         handle->remote_ip,
-		                         udp_data_port_string,
-		                         udp_reset_port_string,
-		                         udp_data_local_port_string,
-		                         init_string,
-		                         NULL};
+		char** params = static_cast<char**>(malloc(sizeof(char*) * (10 + handle->unique_queues.size())));
+		params[0] = const_cast<char*>(hostarq_daemon_string);
+		params[1] = handle->shm_name;
+		params[2] = fd_string;
+		params[3] = handle->remote_ip;
+		params[4] = udp_data_port_string;
+		params[5] = udp_reset_port_string;
+		params[6] = udp_data_local_port_string;
+		params[7] = init_string;
+		params[8] = const_cast<char*>(std::to_string(handle->unique_queues.size()).c_str());
+		for (__u64 i = 0; i < handle->unique_queues.size(); ++i) {
+			params[9 + i] = const_cast<char*>(queue_string.at(i).c_str());
+			LOG_INFO("unique queue pid %s specified", queue_string.at(i).c_str());
+		}
+		params[9 + handle->unique_queues.size()] = NULL;
 		execvp(params[0], params);
+		free(params);
 		perror("libhostarq tried to spawn HostARQ daemon");
 		abort();
 	} else if (handle->pid > 0 /* parent */) {
@@ -283,3 +313,9 @@ hostarq_close(struct hostarq_handle* handle)
 	}
 	return 0;
 }
+
+#define PARAMETERISATION(Name, name)                                                               \
+	template void hostarq_open<Name>(                                                              \
+	    struct hostarq_handle * handle, char const* const hostarq_daemon_string);
+#include "sctrltp/parameters.def"
+} // namespace sctrltp

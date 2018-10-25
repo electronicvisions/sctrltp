@@ -1,17 +1,17 @@
 /* Library for HostARQ communication */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <linux/types.h>
 
+#include "sctrltp/sctrltp_defines.h"
+
 #define HOSTARQ_EXIT_SIGNAL SIGUSR2
 #define HOSTARQ_FAIL_SIGNAL SIGPIPE
 
+
+namespace sctrltp {
 
 /** `hostarq_handle` represents a connection to a HostARQ daemon. */
 struct hostarq_handle
@@ -24,6 +24,7 @@ struct hostarq_handle
 	__u16 udp_reset_port;
 	__u16 udp_data_local_port;
 	bool init;
+	unique_queue_set_t unique_queues;
 };
 
 
@@ -34,10 +35,11 @@ struct hostarq_handle
  * @param shm_name A filename which will represent the shm region
  *                 (located under `/dev/shm`).
  * @param remote_ip The IP(v4) address as a char string.
- * @param init If true, a HostARQ reset frame is sent to the FPGA.
  * @param udp_data_port The FPGA's HostARQ-via-UDP port.
  * @param udp_reset_port The FPGA's UDP port for HostARQ reset frames.
  * @param udp_data_local_port The local UDP port used.
+ * @param init If true, a HostARQ reset frame is sent to the FPGA.
+ * @param unique_queues set of unique packet queues.
  */
 void hostarq_create_handle(
 	struct hostarq_handle* handle,
@@ -46,7 +48,8 @@ void hostarq_create_handle(
 	__u16 const udp_data_port,
 	__u16 const udp_reset_port,
 	__u16 const udp_data_local_port,
-	bool const init);
+	bool const init,
+	unique_queue_set_t unique_queues);
 
 
 /** `hostarq_free_handle` frees the data structure
@@ -65,6 +68,7 @@ void hostarq_free_handle(struct hostarq_handle* handle);
  *
  * @return The pid and shm_path are set after this call.
  */
+template<typename P>
 void hostarq_open(
 	struct hostarq_handle* handle, char const* hostarq_daemon_string = "hostarq_daemon");
 
@@ -83,6 +87,4 @@ void hostarq_open(
  */
 int hostarq_close(struct hostarq_handle* handle);
 
-#ifdef __cplusplus
-} // extern "C"
-#endif
+} // namespace sctrltp

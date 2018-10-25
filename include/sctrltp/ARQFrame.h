@@ -13,7 +13,7 @@ struct packet {
 
     seq_t ack;
     seq_t seq;
-    uint16_t pid;
+    packetid_t pid;
     uint16_t len;
 
     union {

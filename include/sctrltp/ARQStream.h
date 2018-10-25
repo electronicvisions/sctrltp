@@ -24,6 +24,8 @@ struct ARQStreamSettings
 	udpport_t port_reset = 45054; // 0xaffe
 	// local UDP port; let OS choose by default
 	udpport_t local_port_data = 0;
+	// set of packet types (pid) to be handled in unique queues, receivable via pid
+	unique_queue_set_t unique_queues{};
 	// on startup send packet to reset SEQ/ACK and check parameter mismatch
 	bool reset = true;
 	// on construction send loopback packet to check receive queue flushing status
@@ -75,13 +77,19 @@ public:
 	// receive packet or false (no false on hw, it blocks)
 	bool receive(packet<P>&, Mode mode = NONBLOCK);
 
-	// TODO: add queue cmd
+	// receive packet of a specific packet type
+	// throws if no unique queue present for given pid
+	bool receive(packet<P>&, packetid_t pid, Mode mode = NONBLOCK);
 
 	// no-op in simulation, flushed tx cache
 	void flush();
 
-	// check whether a packet is in receive buffer
-	bool received_packet_available();
+	// check whether a packet is in default receive buffer
+	bool received_packet_available() const;
+
+	// check if a specific queue has an available packet
+	// throws if no unique queue present for given pid
+	bool received_packet_available(packetid_t pid) const;
 
 	// drops all incoming packets. Returns when timeout since last received packet is reached
 	// returned value is number of dropped words
@@ -99,11 +107,15 @@ public:
 	// returns name of ARQStream
 	std::string get_name();
 
+	// check if a certain pid has a unique queue
+	bool has_unique_queue(packetid_t pid) const;
 
 private:
 	std::string name;
 	std::string rip;
 	int const max_wait_for_completion_upon_destruction_in_ms;
+
+	size_t get_unique_queue_idx(packetid_t pid) const;
 
 #ifdef NCSIM
 // NCSIM-based testmodes want it public

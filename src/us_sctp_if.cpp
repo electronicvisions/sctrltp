@@ -146,14 +146,12 @@ __s32 close_conn (sctp_descr<P> *desc)
 	__u32 i,j,k;
 
 	/*Clean local cache(s)*/
-	/*Cycle through send_buf(fers) and release frames if necessary*/
-	for (j = 0; j < NUM_QUEUES; j++) {
-		if ((i = desc->send_buf.out[j].next) > 0) {
-			/*there is something old in sending cache, lets recycle it*/
-			desc->send_buf.out[j].num = i;
-			desc->send_buf.out[j].next = 0;
-			fif_push (&(desc->trans->alloctx), (__u8 *)&(desc->send_buf.out[j]), desc->trans);
-		}
+	/*release frames of send_buf if necessary*/
+	if ((i = desc->send_buf.out.next) > 0) {
+		/*there is something old in sending cache, lets recycle it*/
+		desc->send_buf.out.num = i;
+		desc->send_buf.out.next = 0;
+		fif_push (&(desc->trans->alloctx), (__u8 *)&(desc->send_buf.out), desc->trans);
 	}
 
 	/*Are there already fetched empty frames in local cache?*/
@@ -182,7 +180,7 @@ __s32 close_conn (sctp_descr<P> *desc)
 	}
 
 	/*Cycle through recv_buf(fers) and recycle unprocessed frames if necessary*/
-	for (k = 0; k < NUM_QUEUES; k++) {
+	for (k = 0; k < desc->trans->unique_queue_map.size + 1; k++) {
 		if (desc->recv_buf.in[k].next < desc->recv_buf.in[k].num) {
 			/*There are unused frames in local cache*/
 			/*Transform buffer and calculate relative pointer*/
@@ -345,7 +343,6 @@ __s32 send_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 	__u32 i;
 	__s32 ret;
 	__u8 do_wake = 0;
-	__u32 queue = 0;
 
 	assert (desc != NULL);
 	if (!buf && !(mode & MODE_FLUSH)) return SC_INVAL;
@@ -359,39 +356,38 @@ __s32 send_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 
 
 	if (buf) {
-		/*queue now contains index in queue array where to put frames to*/
 
 		/*We have to register a buffer to pass to lower layer*/
-		if ((i = desc->send_buf.out[queue].next) < PARALLEL_FRAMES) {
-			desc->send_buf.out[queue].fptr[i] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
-			desc->send_buf.out[queue].next++;
+		if ((i = desc->send_buf.out.next) < PARALLEL_FRAMES) {
+			desc->send_buf.out.fptr[i] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
+			desc->send_buf.out.next++;
 		} else {
-			desc->send_buf.out[queue].num = PARALLEL_FRAMES;
-			desc->send_buf.out[queue].next = 0;
+			desc->send_buf.out.num = PARALLEL_FRAMES;
+			desc->send_buf.out.next = 0;
 			if (mode & MODE_NONBLOCK) {
 				/*non blocking IO*/
-				if ((ret = try_fif_push (&(desc->trans->tx_queues[queue]), (__u8 *)&(desc->send_buf.out[queue]), desc->trans)) < 0) {
+				if ((ret = try_fif_push (&(desc->trans->tx_queue), (__u8 *)&(desc->send_buf.out), desc->trans)) < 0) {
 					if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
 					return ret;
 				}
-			} else fif_push (&(desc->trans->tx_queues[queue]), (__u8 *)&(desc->send_buf.out[queue]), desc->trans);
+			} else fif_push (&(desc->trans->tx_queue), (__u8 *)&(desc->send_buf.out), desc->trans);
 			do_wake = 1;
-			desc->send_buf.out[queue].next = 1;
-			desc->send_buf.out[queue].fptr[0] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
+			desc->send_buf.out.next = 1;
+			desc->send_buf.out.fptr[0] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
 		}
 	}
 
-	if ((mode & MODE_FLUSH) && ((i = desc->send_buf.out[queue].next) > 0)) {
+	if ((mode & MODE_FLUSH) && ((i = desc->send_buf.out.next) > 0)) {
 		/*there is something to flush in cache*/
-		desc->send_buf.out[queue].num = i;
-		desc->send_buf.out[queue].next = 0;
+		desc->send_buf.out.num = i;
+		desc->send_buf.out.next = 0;
 		if (mode & MODE_NONBLOCK) {
 			/*non blocking IO*/
-			if ((ret = try_fif_push (&(desc->trans->tx_queues[queue]), (__u8 *)&(desc->send_buf.out[queue]), desc->trans)) < 0) {
+			if ((ret = try_fif_push (&(desc->trans->tx_queue), (__u8 *)&(desc->send_buf.out), desc->trans)) < 0) {
 				if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
 				return ret;
 			}
-		} else fif_push (&(desc->trans->tx_queues[queue]), (__u8 *)&(desc->send_buf.out[queue]), desc->trans);
+		} else fif_push (&(desc->trans->tx_queue), (__u8 *)&(desc->send_buf.out), desc->trans);
 		do_wake = 1;
 	}
 	/*end of critical section*/
@@ -407,47 +403,61 @@ __s32 send_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 }
 
 template<typename P>
-__s32 tx_queues_empty (sctp_descr<P> *desc)
+__s32 tx_queue_empty (sctp_descr<P> *desc)
 {
-	__u32 queue;
 	assert (desc != NULL);
-	for (queue = 0; queue < NUM_QUEUES; queue++)
-		if (desc->trans->tx_queues[queue].nr_full.semval != 0)
-			return 0;
-	return 1; // true
-}
-
-template<typename P>
-__s32 tx_queues_full (sctp_descr<P> *desc)
-{
-	__u32 queue;
-	assert (desc != NULL);
-	for (queue = 0; queue < NUM_QUEUES; queue++)
-		if (desc->trans->tx_queues[queue].nr_full.semval < (int)desc->trans->tx_queues[queue].nr_elem)
-			return 0;
-	return 1; // true
-}
-
-template<typename P>
-__s32 rx_queues_empty (sctp_descr<P> *desc)
-{
-	__u32 queue;
-	assert (desc != NULL);
-	for (queue = 0; queue < NUM_QUEUES; queue++)
-		if (desc->trans->rx_queues[queue].nr_full.semval != 0)
-			return 0;
+	if (desc->trans->tx_queue.nr_full.semval != 0)
+		return 0;
 	return 1; // true
 }
 
 
 template<typename P>
-__s32 rx_queues_full (sctp_descr<P> *desc)
+__s32 tx_queue_full (sctp_descr<P> *desc)
 {
-	__u32 queue;
 	assert (desc != NULL);
-	for (queue = 0; queue < NUM_QUEUES; queue++)
-		if (desc->trans->rx_queues[queue].nr_full.semval < (int)desc->trans->rx_queues[queue].nr_elem)
-			return 0;
+	if (desc->trans->tx_queue.nr_full.semval < (int)desc->trans->tx_queue.nr_elem)
+		return 0;
+	return 1; // true
+}
+
+template<typename P>
+__s32 rx_queue_empty (sctp_descr<P> *desc)
+{
+	assert (desc != NULL);
+	if (desc->trans->rx_queues[0].nr_full.semval != 0)
+		return 0;
+	return 1; // true
+}
+
+template<typename P>
+__s32 rx_queue_full (struct sctp_descr<P> *desc)
+{
+	assert (desc != NULL);
+	if (desc->trans->rx_queues[0].nr_full.semval < (int)desc->trans->rx_queues[0].nr_elem)
+		return 0;
+	return 1; // true
+}
+
+
+template<typename P>
+__s32 rx_queue_empty (sctp_descr<P> *desc, __u64 idx)
+{
+	assert (desc != NULL);
+	assert (idx < desc->trans->unique_queue_map.size);
+	if (desc->trans->rx_queues[idx + 1].nr_full.semval != 0)
+		return 0;
+	return 1; // true
+}
+
+
+template<typename P>
+__s32 rx_queue_full (sctp_descr<P> *desc, __u64 idx)
+{
+	assert (desc != NULL);
+	assert (idx < desc->trans->unique_queue_map.size);
+	if (desc->trans->rx_queues[idx + 1].nr_full.semval < (int)desc->trans->rx_queues[idx + 1].nr_elem)
+		return 0;
 	return 1; // true
 }
 
@@ -456,7 +466,6 @@ __s32 recv_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 {
 	__u32 i;
 	__s32 ret;
-	__u32 queue = 0;
 	arq_frame<P> *ptr_to_frame = NULL;
 
 	assert (desc != NULL);
@@ -466,6 +475,86 @@ __s32 recv_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 		if (mode & MODE_NONBLOCK) {
 			if (!mutex_try_lock(&(desc->mutex))) return SC_BUSY;
 		} else mutex_lock (&(desc->mutex));
+	}
+	/*critical section*/
+
+	if ((i = desc->recv_buf.in[0].next) < desc->recv_buf.in[0].num) {
+		desc->recv_buf.in[0].next++;
+		ptr_to_frame = desc->recv_buf.in[0].fptr[i];
+	} else {
+		if (mode & MODE_NONBLOCK) {
+			/*non blocking IO*/
+			if ((ret = try_fif_pop(
+			         &(desc->trans->rx_queues[0]), (__u8*) &(desc->recv_buf.in[0]), desc->trans)) <
+			    0) {
+				if (mode & MODE_SAFE)
+					mutex_unlock(&(desc->mutex));
+				return ret;
+			}
+		} else
+			fif_pop(&(desc->trans->rx_queues[0]), (__u8*) &(desc->recv_buf.in[0]), desc->trans);
+
+		for (i = 0; i < desc->recv_buf.in[0].num; i++) {
+			desc->recv_buf.in[0].fptr[i] =
+			    static_cast<arq_frame<P>*>(get_abs_ptr(desc->trans, desc->recv_buf.in[0].fptr[i]));
+		}
+
+		desc->recv_buf.in[0].next = 1;
+		ptr_to_frame = desc->recv_buf.in[0].fptr[0];
+	}
+
+	/*end of critical section*/
+	if (mode & MODE_SAFE)
+		mutex_unlock(&(desc->mutex));
+
+	/*Update pointer fields in buf_desc*/
+	buf->arq_sctrl = ptr_to_frame;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
+	buf->payload = buf->arq_sctrl->COMMANDS;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
+
+	return 1;
+}
+
+template <typename P>
+__s32 get_next_frame_pid(sctp_descr<P>* desc)
+{
+	assert(desc != NULL);
+	arq_frame<P>* ptr_to_frame = NULL;
+	if (desc->recv_buf.in[0].next < desc->recv_buf.in[0].num) {
+		ptr_to_frame = desc->recv_buf.in[0].fptr[desc->recv_buf.in[0].next];
+	} else {
+		sctp_alloc<P>* alloc = NULL;
+		fif_front(&(desc->trans->rx_queues[0]), (__u8*) &(alloc), desc->trans);
+		ptr_to_frame = static_cast<arq_frame<P>*>(get_abs_ptr(desc->trans, alloc->fptr[0]));
+	}
+	return ntohs(ptr_to_frame->PTYPE);
+}
+
+template <typename P>
+__s32 recv_buf(sctp_descr<P>* desc, buf_desc<P>* buf, const __u8 mode, __u64 idx)
+{
+	__u32 i;
+	__s32 ret;
+	__u64 queue;
+	arq_frame<P>* ptr_to_frame = NULL;
+
+	assert(desc != NULL);
+	assert(buf != NULL);
+	assert(idx < desc->trans->unique_queue_map.size);
+	queue = idx + 1;
+
+	if (mode & MODE_SAFE) {
+		if (mode & MODE_NONBLOCK) {
+			if (!mutex_try_lock(&(desc->mutex)))
+				return SC_BUSY;
+		} else
+			mutex_lock(&(desc->mutex));
 	}
 	/*critical section*/
 
@@ -584,7 +673,6 @@ __s64 SCTP_Send (sctp_descr<P> *desc, const __u16 typ, const __u32 num, const __
 	__u64 *sc_cmd;
 	__u32 i;
 	__u8 j;
-	int queue = 0;
 
 	if (!desc)
 		return -1;
@@ -613,10 +701,10 @@ __s64 SCTP_Send (sctp_descr<P> *desc, const __u16 typ, const __u32 num, const __
 		memcpy (sc_cmd, &cmd[i], sizeof (__u64) * j);
 		i += j;
 
-		push_frames<P> (&(desc->trans->tx_queues[queue]), &(desc->send_buf.out[0]), desc->trans, packet, 0);
+		push_frames<P> (&(desc->trans->tx_queue), &(desc->send_buf.out), desc->trans, packet, 0);
 	}
 	/*Flush any remaining frame(s)*/
-	push_frames<P> (&(desc->trans->tx_queues[queue]), &(desc->send_buf.out[0]), desc->trans, NULL, 1);
+	push_frames<P> (&(desc->trans->tx_queue), &(desc->send_buf.out), desc->trans, NULL, 1);
 	/*Wake TX*/
 	cond_signal (&(desc->trans->waketx), 1, 1);
 
@@ -659,13 +747,17 @@ __s32 SCTP_Recv (sctp_descr<P> *desc, __u16 *typ, __u16 *num, __u64 *resp)
 	template __s32 rel_buf(sctp_descr<Name>* desc, buf_desc<Name>* rel, const __u8 mode);          \
 	template __s32 send_buf(sctp_descr<Name>* desc, buf_desc<Name>* buf, const __u8 mode);         \
 	template __s32 recv_buf(sctp_descr<Name>* desc, buf_desc<Name>* buf, const __u8 mode);         \
+	template __s32 get_next_frame_pid(sctp_descr<Name>* desc);                                     \
+	template __s32 recv_buf(sctp_descr<Name>* desc, buf_desc<Name>* buf, __u8 mode, __u64 idx);    \
 	template __s32 init_buf(buf_desc<Name>* buf);                                                  \
 	template __s32 append_words(                                                                   \
 	    buf_desc<Name>* buf, const __u16 ptype, const __u32 num, const __u64* values);             \
-	template __s32 tx_queues_empty(sctp_descr<Name>* desc);                                        \
-	template __s32 tx_queues_full(sctp_descr<Name>* desc);                                         \
-	template __s32 rx_queues_empty(sctp_descr<Name>* desc);                                        \
-	template __s32 rx_queues_full(sctp_descr<Name>* desc);                                         \
+	template __s32 tx_queue_empty(sctp_descr<Name>* desc);                                         \
+	template __s32 tx_queue_full(sctp_descr<Name>* desc);                                          \
+	template __s32 rx_queue_empty(sctp_descr<Name>* desc);                                         \
+	template __s32 rx_queue_full(sctp_descr<Name>* desc);                                          \
+	template __s32 rx_queue_empty(sctp_descr<Name>* desc, __u64 idx);                              \
+	template __s32 rx_queue_full(sctp_descr<Name>* desc, __u64 idx);                               \
 	template sctp_descr<Name>* SCTP_Open(const char* corename);                                    \
 	template __s32 SCTP_Close(sctp_descr<Name>* desc);                                             \
 	template __s64 SCTP_Send(                                                                      \

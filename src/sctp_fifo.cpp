@@ -167,6 +167,22 @@ __s8 fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 	return -1;
 }
 
+__s8 fif_front (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
+{
+	__u8 *absptr;
+	if (fifo) {
+		__u32 offset = (fifo->last_out + 1) % fifo->nr_elem;
+
+		if (baseptr) {
+			absptr = (__u8 *)get_abs_ptr (baseptr, fifo->buf);
+		} else absptr = fifo->buf;
+
+		memcpy(elem, absptr + (offset *fifo->elem_size), fifo->elem_size);
+		return 0;
+	}
+	return -1;
+}
+
 __s8 try_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 {
 	__u32 offset;

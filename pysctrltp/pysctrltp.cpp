@@ -34,9 +34,26 @@ void add_parameterization(py::module& m)
 	        "reset"_a = true)
 	    .def(py::init<ARQStreamSettings const>(), "settings"_a)
 	    .def("send", &ARQStream<P>::send, "packet"_a, "mode"_a = ARQStream<P>::Mode::FLUSH)
-	    .def("receive", &ARQStream<P>::receive, "packet"_a, "mode"_a = ARQStream<P>::Mode::NONBLOCK)
+	    .def(
+	        "receive",
+	        py::overload_cast<typename sctrltp::packet<P>&, typename ARQStream<P>::Mode>(
+	            &ARQStream<P>::receive),
+	        "packet"_a, "mode"_a = ARQStream<P>::Mode::NONBLOCK)
+	    .def(
+	        "receive",
+	        py::overload_cast<
+	            typename sctrltp::packet<P>&, packetid_t, typename ARQStream<P>::Mode>(
+	            &ARQStream<P>::receive),
+	        "packet"_a, "pid"_a, "mode"_a = ARQStream<P>::Mode::NONBLOCK)
 	    .def("flush", &ARQStream<P>::flush)
-	    .def("received_packet_available", &ARQStream<P>::received_packet_available)
+	    .def(
+	        "received_packet_available",
+	        (bool (sctrltp::ARQStream<P>::*)() const) & ARQStream<P>::received_packet_available)
+	    .def(
+	        "received_packet_available",
+	        (bool (sctrltp::ARQStream<P>::*)(packetid_t) const) &
+	            ARQStream<P>::received_packet_available,
+	        "pid"_a)
 	    .def("all_packets_sent", &ARQStream<P>::all_packets_sent)
 	    .def("send_buffer_full", &ARQStream<P>::send_buffer_full);
 
@@ -88,7 +105,7 @@ PYBIND11_PLUGIN(pysctrltp) {
 	// handling functions
 	m.def("create_handle", &hostarq_create_handle);
 	m.def("free_handle", &hostarq_free_handle);
-	m.def("open", &hostarq_open);
+	m.def("open", &hostarq_open<ParametersFcpBss1>);
 	m.def("close", &hostarq_close);
 
 	py::class_<sctrltp::ARQStreamSettings> settings(m, "ARQStreamSettings");
@@ -98,6 +115,7 @@ PYBIND11_PLUGIN(pysctrltp) {
 	    .def_readwrite("port_data", &ARQStreamSettings::port_data)
 	    .def_readwrite("port_reset", &ARQStreamSettings::port_reset)
 	    .def_readwrite("local_port_data", &ARQStreamSettings::local_port_data)
+	    .def_readwrite("unique_queues", &ARQStreamSettings::unique_queues)
 	    .def_readwrite("init_flush_lb_packet", &ARQStreamSettings::init_flush_lb_packet)
 	    .def_readwrite("init_flush_timeout", &ARQStreamSettings::init_flush_timeout)
 	    .def_readwrite("destruction_timeout", &ARQStreamSettings::destruction_timeout);

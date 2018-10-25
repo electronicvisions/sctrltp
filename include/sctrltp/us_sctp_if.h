@@ -35,14 +35,14 @@ namespace sctrltp {
 
 template<typename P>
 struct sctp_rx_cache {
-	struct sctp_alloc<P> in[NUM_QUEUES];
+	struct sctp_alloc<P> in[P::MAX_NUM_QUEUES];
 	struct sctp_alloc<P> out;
 };
 
 template<typename P>
 struct sctp_tx_cache {
 	struct sctp_alloc<P> in;
-	struct sctp_alloc<P> out[NUM_QUEUES];
+	struct sctp_alloc<P> out;
 };
 
 template<typename P>
@@ -57,8 +57,7 @@ struct sctp_descr {
 	__u32                   my_lock_mask; /*Mask which determines nathans currently locked by me*/
 	__s32					ref_cnt;    /*reference counter*/
 
-	__u8                    pad[8192 - (248 + PTR_SIZE + sizeof(drepper_mutex) + 2*sizeof(sctp_tx_cache<P>) + 8)];
-
+	__u8                    pad[8192 - (248 + PTR_SIZE + sizeof(drepper_mutex) + sizeof(sctp_tx_cache<P>) + sizeof(sctp_rx_cache<P>) + 8)];
 };
 #define PARAMETERISATION(Name, name)                                                               \
 	static_assert(                                                                                 \
@@ -93,22 +92,34 @@ template<typename P>
 __s32 recv_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode);
 
 template<typename P>
-__s32 init_buf (buf_desc<P> *buf);
+__s32 recv_buf (struct sctp_descr<P> *desc, struct buf_desc<P> *buf, const __u8 mode, __u64 idx);
+
+template<typename P>
+__s32 get_next_frame_pid (struct sctp_descr<P> *desc);
+
+template<typename P>
+__s32 init_buf (struct buf_desc<P> *buf);
 
 template<typename P>
 __s32 append_words (buf_desc<P> *buf, const __u16 ptype, const __u32 num, const __u64 *values);
 
 template<typename P>
-__s32 tx_queues_empty (sctp_descr<P> *desc);
+__s32 tx_queue_empty (struct sctp_descr<P> *desc);
 
 template<typename P>
-__s32 tx_queues_full (sctp_descr<P> *desc);
+__s32 tx_queue_full (struct sctp_descr<P> *desc);
 
 template<typename P>
-__s32 rx_queues_empty (sctp_descr<P> *desc);
+__s32 rx_queue_empty (struct sctp_descr<P> *desc);
 
 template<typename P>
-__s32 rx_queues_full (sctp_descr<P> *desc);
+__s32 rx_queue_empty (struct sctp_descr<P> *desc, __u64 idx);
+
+template<typename P>
+__s32 rx_queue_full (struct sctp_descr<P> *desc);
+
+template<typename P>
+__s32 rx_queue_full (struct sctp_descr<P> *desc, __u64 idx);
 
 /*This function connects to SCTP Core and returning a descriptor (on error returning NULL)*/
 template<typename P>

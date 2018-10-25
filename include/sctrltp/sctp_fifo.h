@@ -54,6 +54,9 @@ __s8 fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 /*This function pops an element out after last_out*/
 __s8 fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 
+/*Get pointer to the next element in fifo
+ *Returns 0 on success -1 on error*/
+__s8 fif_front (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 
 /*Like funcs above, but they wont block/spin on unsuccessful syncs*/
 __s8 try_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);

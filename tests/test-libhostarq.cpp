@@ -5,8 +5,11 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include "sctrltp/libhostarq.h"
+#include "sctrltp/sctrltp_defines.h"
 
 static bool fail = false;
+
+using namespace sctrltp;
 
 int check_file(char const* filename, bool exists) {
 	char command[256];
@@ -45,14 +48,14 @@ void test_timeout() {
 	const char c_ip[] = "127.0.0.3";
 
 
-	hostarq_create_handle(&a, a_ip, a_ip, 1234, 45054, 0, 1);
-	hostarq_open(&a);
+	hostarq_create_handle(&a, a_ip, a_ip, 1234, 45054, 0, 1, unique_queue_set_t());
+	hostarq_open<sctrltp::ParametersFcpBss1>(&a);
 	check_pid(a.pid, true);
-	hostarq_create_handle(&b, b_ip, b_ip, 1234, 45054, 0, 1);
-	hostarq_open(&b);
+	hostarq_create_handle(&b, b_ip, b_ip, 1234, 45054, 0, 1, unique_queue_set_t());
+	hostarq_open<sctrltp::ParametersFcpBss1>(&b);
 	check_pid(b.pid, true);
-	hostarq_create_handle(&c, c_ip, c_ip, 1234, 45054, 0, 1);
-	hostarq_open(&c);
+	hostarq_create_handle(&c, c_ip, c_ip, 1234, 45054, 0, 1, unique_queue_set_t());
+	hostarq_open<sctrltp::ParametersFcpBss1>(&c);
 	check_pid(c.pid, true);
 
 	check_file(a_ip, true);
@@ -86,12 +89,12 @@ void test_closing() {
 	const char b_ip[] = "127.0.0.5";
 	const char c_ip[] = "127.0.0.6";
 
-	hostarq_create_handle(&a, a_ip, a_ip, 1234, 45054, 0, 0);
-	hostarq_create_handle(&b, b_ip, b_ip, 1234, 45054, 0, 0);
-	hostarq_create_handle(&c, c_ip, c_ip, 1234, 45054, 0, 0);
-	hostarq_open(&a);
-	hostarq_open(&b);
-	hostarq_open(&c);
+	hostarq_create_handle(&a, a_ip, a_ip, 1234, 45054, 0, 0, unique_queue_set_t());
+	hostarq_create_handle(&b, b_ip, b_ip, 1234, 45054, 0, 0, unique_queue_set_t());
+	hostarq_create_handle(&c, c_ip, c_ip, 1234, 45054, 0, 0, unique_queue_set_t());
+	hostarq_open<sctrltp::ParametersFcpBss1>(&a);
+	hostarq_open<sctrltp::ParametersFcpBss1>(&b);
+	hostarq_open<sctrltp::ParametersFcpBss1>(&c);
 	sleep(1);
 	check_file(a_ip, true);
 	check_file(b_ip, true);

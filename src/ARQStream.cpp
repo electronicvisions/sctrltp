@@ -61,6 +61,7 @@ template<typename P>
 struct ARQStreamImpl {
 	sctp_descr<P> * desc;
 	hostarq_handle* handle;
+	unique_queue_set_t unique_queue_set;
 
 	ARQStreamImpl(
 	    std::string name,
@@ -68,7 +69,9 @@ struct ARQStreamImpl {
 	    udpport_t port_data,
 	    udpport_t port_reset,
 	    udpport_t local_port_data,
-	    bool reset)
+	    unique_queue_set_t unique_queues,
+	    bool reset) :
+	    unique_queue_set(unique_queues)
 	{
 		if (name.empty() || rip.empty()) {
 			throw std::runtime_error("ARQStream name and IP have to be set");
@@ -76,8 +79,9 @@ struct ARQStreamImpl {
 		// start HostARQ server (and reset link)
 		handle = new hostarq_handle;
 		hostarq_create_handle(
-		    handle, name.c_str(), rip.c_str(), port_data, port_reset, local_port_data, reset);
-		hostarq_open(handle, hostarq_daemon_names.at(std::type_index(typeid(P))).c_str());
+		    handle, name.c_str(), rip.c_str(), port_data, port_reset, local_port_data, reset,
+		    unique_queue_set);
+		hostarq_open<P>(handle, hostarq_daemon_names.at(std::type_index(typeid(P))).c_str());
 		desc = open_conn<P>(name.c_str()); // name of software arq session
 		if (!desc) {
 			std::ostringstream ss;
@@ -112,6 +116,7 @@ ARQStream<P>::ARQStream(
         ARQStreamSettings().port_data,
         ARQStreamSettings().port_reset,
         ARQStreamSettings().local_port_data,
+        unique_queue_set_t(),
         reset))
 {
 	drop_receive_queue(400ms, true);
@@ -128,6 +133,7 @@ ARQStream<P>::ARQStream(std::string const rip, bool const reset) :
         ARQStreamSettings().port_data,
         ARQStreamSettings().port_reset,
         ARQStreamSettings().local_port_data,
+        unique_queue_set_t(),
         reset))
 {
 	drop_receive_queue(400ms, true);
@@ -144,6 +150,7 @@ ARQStream<P>::ARQStream(ARQStreamSettings const settings) :
         settings.port_data,
         settings.port_reset,
         settings.local_port_data,
+        settings.unique_queues,
         settings.reset))
 {
 	drop_receive_queue(settings.init_flush_timeout, settings.init_flush_lb_packet);
@@ -247,7 +254,7 @@ bool ARQStream<P>::receive(packet<P>& t, Mode mode) {
 	__s32 ret;
 	buf_desc<P> buffer;
 
-	ret = recv_buf(pimpl->desc, &buffer, mode);
+	ret = recv_buf<P>(pimpl->desc, &buffer, mode);
 	if (ret == SC_EMPTY)
 		return false;
 	else if (ret < 0)
@@ -260,7 +267,40 @@ bool ARQStream<P>::receive(packet<P>& t, Mode mode) {
 	for (size_t i = 0; i < t.len; i++)
 		t.pdu[i] = be64toh(buffer.payload[i]);
 
-	ret = rel_buf(pimpl->desc, &buffer, 0);
+	ret = rel_buf<P>(pimpl->desc, &buffer, 0);
+	if (ret < 0)
+		throw std::runtime_error(name + ": release error");
+
+	return true;
+}
+
+template<typename P>
+bool ARQStream<P>::receive(packet<P>& t, packetid_t pid, Mode mode)
+{
+	__s32 ret;
+	struct buf_desc<P> buffer;
+
+	if (!has_unique_queue(pid)) {
+		throw std::runtime_error(
+		    name + ": There exists no unique queue of pid " + std::to_string(pid));
+	}
+
+	size_t const idx = get_unique_queue_idx(pid);
+	ret = recv_buf<P>(pimpl->desc, &buffer, mode, idx);
+	if (ret == SC_EMPTY)
+		return false;
+	else if (ret < 0)
+		throw std::runtime_error(
+		    name + ": receive error for unique queue of pid " + std::to_string(pid));
+
+	t.pid = sctpreq_get_typ(buffer.arq_sctrl);
+	t.len = sctpreq_get_len(buffer.arq_sctrl);
+
+	// copy and change to host byte order (like ARQStream does)
+	for (size_t i = 0; i < t.len; i++)
+		t.pdu[i] = be64toh(buffer.payload[i]);
+
+	ret = rel_buf<P>(pimpl->desc, &buffer, 0);
 	if (ret < 0)
 		throw std::runtime_error(name + ": release error");
 
@@ -276,8 +316,20 @@ void ARQStream<P>::flush() {
 }
 
 template<typename P>
-bool ARQStream<P>::received_packet_available() {
-	return ! static_cast<bool>(rx_queues_empty(pimpl->desc));
+bool ARQStream<P>::received_packet_available() const
+{
+	return !static_cast<bool>(rx_queue_empty(pimpl->desc));
+}
+
+template<typename P>
+bool ARQStream<P>::received_packet_available(packetid_t pid) const
+{
+	if (!has_unique_queue(pid)) {
+		throw std::runtime_error(
+		    name + ": There exists no unique queue of pid " + std::to_string(pid));
+	}
+	size_t const idx = get_unique_queue_idx(pid);
+	return !static_cast<bool>(rx_queue_empty(pimpl->desc, idx));
 }
 
 template<typename P>
@@ -369,12 +421,30 @@ size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_
 
 template<typename P>
 bool ARQStream<P>::all_packets_sent() {
-	return static_cast<bool>(tx_queues_empty(pimpl->desc));
+	return static_cast<bool>(tx_queue_empty<P>(pimpl->desc));
 }
 
 template<typename P>
 bool ARQStream<P>::send_buffer_full() {
-	return static_cast<bool>(tx_queues_full(pimpl->desc));
+	return static_cast<bool>(tx_queue_full<P>(pimpl->desc));
+}
+
+template<typename P>
+bool ARQStream<P>::has_unique_queue(packetid_t pid) const
+{
+	return (pimpl->unique_queue_set.count(pid) > 0);
+}
+
+template<typename P>
+size_t ARQStream<P>::get_unique_queue_idx(packetid_t pid) const
+{
+	assert(pimpl->unique_queue_set.count(pid) > 0);
+	for (__u64 idx = 0; idx < pimpl->desc->trans->unique_queue_map.size; ++idx) {
+		if (pid == pimpl->desc->trans->unique_queue_map.type[idx]) {
+			return idx;
+		}
+	}
+	throw std::runtime_error("Queue definitions of ARQStream and sctp_core do not match.");
 }
 
 template<typename P>

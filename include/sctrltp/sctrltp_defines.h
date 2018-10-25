@@ -1,5 +1,8 @@
 #pragma once
 
+#include <linux/types.h>
+#include <unordered_set>
+
 #define MTU               1500
 #define MIN_PACKET_SIZE      4
 #define MIN_PACKET_SEND_SIZE (1*8+12)
@@ -31,6 +34,9 @@
 
 namespace sctrltp {
 
+typedef __u16 packetid_t;
+typedef std::unordered_set<packetid_t> unique_queue_set_t;
+
 template<
 	size_t I_MAX_WINSIZ = 128,   /* Can be specified in the range of 1 till (MAX_NRFRAMES-1)/2 (compile-time check exists) */
 	size_t I_MAX_NRFRAMES = 256, /* Maximum number of frames in buffer equals maximum SEQ number + 1 */
@@ -51,8 +57,12 @@ struct Parameters
 	constexpr static size_t HW_DELAY_ACK = I_HW_DELAY_ACK;
 	constexpr static size_t HW_FLUSH_COUNT = I_HW_FLUSH_COUNT;
 
-	constexpr static size_t ALLOCTX_BUFSIZE = I_MAX_WINSIZ * /* NUM_QUEUES * */ 4;
-	constexpr static size_t ALLOCRX_BUFSIZE = ALLOCTX_BUFSIZE * 2;
+	constexpr static size_t MAX_UNIQUE_QUEUES = 10;
+	/* queue 0 is reserved for all non-unique packet types */
+	constexpr static size_t MAX_NUM_QUEUES = MAX_UNIQUE_QUEUES + 1;
+
+	constexpr static size_t ALLOCTX_BUFSIZE = I_MAX_WINSIZ * 4;
+	constexpr static size_t ALLOCRX_BUFSIZE = ALLOCTX_BUFSIZE * MAX_NUM_QUEUES * 2;
 	constexpr static size_t TX_BUFSIZE = ALLOCTX_BUFSIZE;
 	constexpr static size_t RX_BUFSIZE = ALLOCRX_BUFSIZE;
 

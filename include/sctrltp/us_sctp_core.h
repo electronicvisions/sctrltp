@@ -71,7 +71,9 @@ __s8 SCTP_CoreUp (
     __u16 data_port,
     __u16 reset_port,
     __u16 data_local_port,
-    __s8 wstartup);
+    __s8 wstartup,
+    __u16* unique_queues,
+    __u64 unique_queues_size);
 
 /*Stops algorithm, frees mem and gives statuscode back*/
 template <typename P>

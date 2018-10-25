@@ -47,13 +47,17 @@ int main(int argc, const char *argv[])
 	__u16 port_reset;
 	__u16 local_port_data;
 	bool init;
+	__u64 unique_queues_size;
+	__u16* unique_queues;
 
-	if (argc != 8) {
+	__u64 const min_args = 9;
+	if ((__u64)argc < min_args) {
 		fprintf(
-		    stderr,
-		    "Usage: %s [SHM_NAME] [FD] [REMOTE_IP] [DATA_PORT] [RESET_PORT] [DATA_LOCAL_PORT] "
-		    "[INIT]\n",
+		    stderr, "Usage: %s [SHM_NAME] [FD] [REMOTE_IP] [DATA_PORT] [RESET_PORT] [DATA_LOCAL_PORT] [INIT] [QUEUE_SIZE] [QUEUES ...]\n",
 		    argv[0]);
+		for (int i=0; i<argc; ++i) {
+			fprintf(stderr, "%s\n", argv[i]);
+		}
 		exit(EXIT_FAILURE);
 	}
 
@@ -65,6 +69,25 @@ int main(int argc, const char *argv[])
 	port_reset = (__u16) atoi(argv[5]);
 	local_port_data = (__u16) atoi(argv[6]);
 	init = atoi(argv[7]);
+	unique_queues_size = atoi(argv[8]);
+	if ((argc - min_args) != unique_queues_size) {
+		fprintf(
+		    stderr, "Queue size %llu but only %llu provided\n", unique_queues_size,
+		    (argc - min_args));
+		exit(EXIT_FAILURE);
+	}
+	if (PARAMETERS::MAX_UNIQUE_QUEUES < unique_queues_size) {
+		fprintf(
+		    stderr, "MAX_UNIQUE_QUEUES is %lu but %llu requested\n", PARAMETERS::MAX_UNIQUE_QUEUES,
+		    unique_queues_size);
+		exit(EXIT_FAILURE);
+	}
+	unique_queues = static_cast<__u16*>(malloc(unique_queues_size * sizeof(__u16)));
+	for (__u64 i = 0; i < unique_queues_size; ++i) {
+		*(unique_queues + i) = atoi(argv[9 + i]);
+		printf("%d;", *(unique_queues + i));
+	}
+	printf("\n");
 
 	if (fd <= 2) {
 		fprintf(stderr, "Descriptor for lockfile seems broken: %d\n", fd);
@@ -99,7 +122,7 @@ int main(int argc, const char *argv[])
 #undef ADDSIGNALHANDLER
 
 	/* child me up */
-	if (SCTP_CoreUp<PARAMETERS>(our_shm_name, remote_ip, port_data, port_reset, local_port_data, init) < 1) {
+	if (SCTP_CoreUp<PARAMETERS>(our_shm_name, remote_ip, port_data, port_reset, local_port_data, init, unique_queues, unique_queues_size) < 1) {
 		fprintf(stderr, "Error occurred when starting up HostARQ software\n");
 		return EXIT_FAILURE;
 	}
@@ -110,6 +133,10 @@ int main(int argc, const char *argv[])
 	/* Signal parent that core is up, by changing file status flag */
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	close(fd);
+
+	free(unique_queues);
+	unique_queues = NULL;
+	unique_queues_size = 0;
 
 	while (true)
 		pause();

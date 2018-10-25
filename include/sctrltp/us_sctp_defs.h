@@ -62,14 +62,7 @@
 #define STAT_WAITRESET      2   /*Disables all threads excpt rx to fetch reset signal from FPGA*/
 
 #define PARALLEL_FRAMES (L1D_CLS/PTR_SIZE)  /*Number of max frame ptrs per queue entry*/
-#define NUM_QUEUES               1
 #define LOCK_MASK_ALL   0x0001FFFF
-
-/*Internal buffer sizes*/
-//#define ALLOCTX_BUFSIZE   (MAX_WINSIZ * NUM_QUEUES * 4)
-//#define ALLOCRX_BUFSIZE   (ALLOCTX_BUFSIZE*2)
-//#define TX_BUFSIZE        (ALLOCTX_BUFSIZE)
-//#define RX_BUFSIZE        (ALLOCRX_BUFSIZE)
 
 /*Return values of internal funcs*/
 #define SC_INVAL        -1
@@ -126,6 +119,18 @@ struct sctp_alloc {
 #include "sctrltp/parameters.def"
 
 template<typename P>
+struct sctp_unique_queue_map {
+	__u64 size;
+	__u16 type[P::MAX_UNIQUE_QUEUES];
+	__u8 pad[4096 - 2 * P::MAX_UNIQUE_QUEUES - 8]; /*Keep page size alignment (TODO: configurable
+	                                                  page size?)*/
+};
+
+#define PARAMETERISATION(Name, name) static_assert(sizeof(sctp_unique_queue_map<Name>) == 4096, "");
+#include "sctrltp/parameters.def"
+
+
+template<typename P>
 struct sctp_interface {                 /*Bidirectional interface between layers (lays in shared mem region)*/
 	/*0-4095*/
 	struct semaphore        waketx;     /*This var is used to wake TX by USER or RX*/
@@ -135,9 +140,11 @@ struct sctp_interface {                 /*Bidirectional interface between layers
 	struct sctp_fifo        alloctx;
 	struct sctp_fifo        allocrx;
 
-	/*multiple tx and rx queues to enable nathan based routing*/
-	struct sctp_fifo        tx_queues[NUM_QUEUES];
-	struct sctp_fifo        rx_queues[NUM_QUEUES];
+	struct sctp_unique_queue_map<P> unique_queue_map;
+
+	/*multiple packet type based rx queues as defined in unique_queue_map*/
+	struct sctp_fifo        tx_queue;
+	struct sctp_fifo        rx_queues[P::MAX_NUM_QUEUES];
 
 	struct sctp_alloc<P>    alloctx_buf[P::ALLOCTX_BUFSIZE];
 	struct sctp_alloc<P>    allocrx_buf[P::ALLOCRX_BUFSIZE];

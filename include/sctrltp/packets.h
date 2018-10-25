@@ -64,7 +64,7 @@ template<typename P>
 struct arq_frame {
 	__u32   ACK;                /*Acknowledge to packet with sequenceno = ACK (other direction)*/
 	__u32   SEQ;                /*Sequencenumber*/
-	__u16   PTYPE;              /*Type of packet (called "packet id" in docs)*/
+	packetid_t PTYPE;           /*Type of packet (called "packet id" in docs)*/
 	__u16   LEN;                /*Length (64-bit words)*/
 	__u64   COMMANDS[P::MAX_PDUWORDS];
 }__attribute__ ((packed));
