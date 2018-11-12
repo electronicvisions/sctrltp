@@ -32,20 +32,20 @@ void hostarq_create_handle(
 
 	/* parameter checking */
 	if (handle == NULL) {
-		fprintf(stderr, "handle parameter is unset\n");
+		LOG_ERROR("handle parameter is unset");
 		abort();
 	}
 
 	if (shm_name == NULL) {
-		fprintf(stderr, "shm_name parameter is unset\n");
+		LOG_ERROR("shm_name parameter is unset");
 		abort();
 	} else if (strlen(shm_name) >= NAME_MAX) {
-		fprintf(stderr, "Filename for shared-memory communication is too long\n");
+		LOG_ERROR("Filename for shared-memory communication is too long");
 		abort();
 	}
 
 	if (remote_ip == NULL) {
-		fprintf(stderr, "remote_ip parameter is unset\n");
+		LOG_ERROR("remote_ip parameter is unset");
 		abort();
 	}
 
@@ -100,22 +100,22 @@ hostarq_open(struct hostarq_handle* handle)
 
 	/* parameter checking */
 	if (handle->pid != 0) {
-		fprintf(stderr, "pid is already set\n");
+		LOG_ERROR("pid is already set");
 		abort();
 	}
 
 	if (handle->shm_name == NULL) {
-		fprintf(stderr, "shm_name is unset\n");
+		LOG_ERROR("shm_name is unset");
 		abort();
 	}
 
 	if (handle->shm_path == NULL) {
-		fprintf(stderr, "shm_path is unset\n");
+		LOG_ERROR("shm_path is unset");
 		abort();
 	}
 
 	if (handle->remote_ip == NULL) {
-		fprintf(stderr, "remote_ip is unset\n");
+		LOG_ERROR("remote_ip is unset");
 		abort();
 	}
 
@@ -199,19 +199,18 @@ hostarq_close(struct hostarq_handle* handle)
 	int i, ret;
 
 	if (handle->pid == 0) {
-		fprintf(stderr, "pid isn't set\n");
+		LOG_ERROR("pid isn't set");
 		abort();
 	}
 
 	if (handle->shm_path == NULL) {
-		fprintf(stderr, "shm_path isn't set\n");
+		LOG_ERROR("shm_path isn't set");
 		abort();
 	}
 
 	/* check if shared memory file exists */
 	if (access(handle->shm_path, F_OK) < 0) {
-		perror("testing for shm_path failed");
-		fprintf(stderr, "shm_path points to \"%s\"\n", handle->shm_path);
+		LOG_ERROR("shm_path invalid: \"%s\"?", handle->shm_path);
 		return -1;
 	}
 
@@ -238,10 +237,9 @@ hostarq_close(struct hostarq_handle* handle)
 		/* shm file still there => wait for a bit longer */
 		usleep(HOSTARQ_PARENT_SLEEP_INTERVAL);
 	}
-	fprintf(
-	    stderr, "Shared memory file %s still existing after 1s wait; "
-	            "unlinking anyways...\n",
-	    handle->shm_path);
+	LOG_WARN("Shared memory file %s still existing after 1s wait; "
+	         "unlinking anyways...",
+	         handle->shm_path);
 	if (unlink(handle->shm_path) < 0) {
 		perror("Failed to unlink shared mem file");
 		return -1;

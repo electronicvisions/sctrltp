@@ -53,7 +53,7 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 	ret = ftruncate (fd, size);
 	if (ret < 0)
 	{
-		printf ("ERROR: Failed to allocate mem for shared mem object.\n");
+		LOG_ERROR("Failed to allocate mem for shared mem object (NAME: %s)", NAME);
 		close (fd);
 		ret = shm_unlink (NAME);
 		return NULL;
@@ -65,20 +65,20 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 		ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 		if (ptr == MAP_FAILED) {
 			/* total fail */
-			printf("ERROR: Could not map mem to process space\n");
+			LOG_ERROR("Could not map mem to process space (NAME: %s)", NAME);
 			close(fd);
 			ret = shm_unlink(NAME);
 			return NULL;
 		} else {
 			/* continue with pageable shmem, but warn the user */
-			printf("WARNING: Could not lock shared mem to process space "
-			       "(maybe max memlock too small?)\n");
+			LOG_WARN("Could not lock shared mem to process space "
+			         "(maybe max memlock too small? NAME: %s)", NAME);
 		}
 	}
 #ifdef __i386__
-	if ((((__u32)ptr)%4) != 0) printf ("Warning: adress not int aligned\n");
+	if ((((__u32)ptr)%4) != 0) LOG_WARN("Address not int aligned");
 #else
-	if ((((__u64)ptr)%4) != 0) printf ("Warning: adress not int aligned\n");
+	if ((((__u64)ptr)%4) != 0) LOG_WARN("Address not int aligned");
 #endif
 	close(fd);
 	return ptr;
@@ -276,12 +276,12 @@ static void do_hard_exit() {
 
 /*timeout for fpga +reset response*/
 static void *fpga_reset_timeout() {
-	LOG_INFO("Start new reset timer");
+	LOG_INFO("Start new reset timer (NAME: %s)", admin->NAME);
 	usleep(RESET_TIMEOUT);
 	if (admin->STATUS.empty[0] == STAT_NORMAL) {
 		pthread_exit(NULL);
 	} else {
-		fprintf(stderr, "No reset response from FPGA!");
+		LOG_ERROR("No reset response from FPGA (NAME: %s)", admin->NAME);
 		do_hard_exit();
 	}
 	return NULL;
@@ -387,10 +387,10 @@ static void do_reset (bool fpga_reset) {
 		b = sendto(admin->sock.sd, &resetframe, sizeof(struct arq_resetframe), /*flags*/ 0,
 		           (struct sockaddr *)&reset_addr, sizeof(reset_addr));
 		if (b <= 0) {
-			fprintf (stderr, "Could not write to socket(reset)\n");
+			LOG_ERROR("Could not send reset frame (write to socket failed for NAME: %s)", admin->NAME);
 			pthread_exit(NULL);
 		} else {
-			LOG_INFO("Sent reset frame. Waiting for response...");
+			LOG_INFO("Sent reset frame. Waiting for response... (NAME: %s)", admin->NAME);
 		}
 		/*Signal thread should wait for reset respones*/
 		xchg (&(admin->STATUS.empty[0]), STAT_WAITRESET);
@@ -539,7 +539,7 @@ void *SCTP_RX (void *core)
 		/*Read packet from socket*/
 		nread = sock_read (sock, curr_packet, 1);
 		if (nread == SC_ABORT) {
-			fprintf (stderr, "> RX: Read failed! Aborting RX Thread ...\n");
+			LOG_ERROR("Read from socket failed! Aborting RX thread... (NAME: %s)", admin->NAME);
 			pthread_exit (NULL);
 		}
 		stats->nr_received++;
@@ -547,7 +547,7 @@ void *SCTP_RX (void *core)
 			stats->nr_protofault++;
 			nread = sock_read (sock, curr_packet, 1);
 			if (nread == SC_ABORT) {
-				fprintf (stderr, "> RX: Read failed! Aborting RX Thread ...\n");
+				LOG_ERROR("Read from socket failed! Aborting RX thread... (NAME: %s)", admin->NAME);
 				pthread_exit (NULL);
 			}
 			stats->nr_received++;
@@ -555,7 +555,8 @@ void *SCTP_RX (void *core)
 
 		size = sctpsomething_get_size(curr_packet, nread);
 		if ((__u32)nread != size) {
-			fprintf (stderr, "> RX: bytes on-wire and sctp.size do not match: %d != %d (dropping!)\n", nread, size);
+			LOG_WARN("Received bytes on-wire and sctp.size do not match: %d != %d (dropping!) "
+				     "(NAME: %s)", nread, size, admin->NAME);
 			continue;
 		}
 
@@ -615,16 +616,18 @@ void *SCTP_RX (void *core)
 								/* Check if Packet is reset answer from FPGA*/
 								if (unlikely(sctpreq_get_typ(curr_packet) == PTYPE_CFG_TYPE)) {
 									/* Fromating variables */
-									LOG_INFO("got reset answer, dropping data\n");
+									LOG_INFO("Got reset answer, dropping data (NAME: %s)", admin->NAME);
 									const char *resetframe_var_names[] = {"MAX_NRFRAMES\t","MAX_WINSIZ\t","MAX_PDUWORDS\t"};
 									bool wrong_hw_settings = false;
 
 									for (j = 0; j < sctpreq_get_len(curr_packet); j++){
 										data = be64toh(sctpreq_get_pload(curr_packet)[j]);
 										if (data == resetframe_var_values_check[j])
-											LOG_INFO("\t%s\t%llu\t OK!\n", resetframe_var_names[j], data);
+											LOG_INFO("\t%s\t%llu\t OK!", resetframe_var_names[j], data);
 										else {
-											fprintf(stderr, "\t%s\t Sent by FPGA: %llu\t Expected by Host: %lu\n", resetframe_var_names[j], data, resetframe_var_values_check[j]);
+											LOG_ERROR("\t%s\t Sent by FPGA: %llu\t Expected by Host: %lu (NAME: %s)",
+												resetframe_var_names[j], data, resetframe_var_values_check[j],
+												admin->NAME);
 											wrong_hw_settings = true;
 										}
 									}
@@ -825,7 +828,7 @@ void *SCTP_TX (void *core)
 					ad->REQ = 0;
 					b = sock_write (sock, (struct arq_frame *)&ackpacket, acksize);
 					if (b<0) {
-						fprintf (stderr, "> TX: Could not write to socket(ack)\n");
+						LOG_ERROR("Could not send ack (write to socket failed for NAME: %s)", admin->NAME);
 						pthread_exit(NULL);
 					}
 				}
@@ -843,7 +846,7 @@ void *SCTP_TX (void *core)
 //				case PTYPE_DO_ARQRESET:
 						/* Check for ARQ reset command */
 						if (sctpreq_get_typ(curr_packet) == PTYPE_DO_ARQRESET && sctpreq_get_pload(curr_packet)[0] == htobe64(HW_HOSTARQ_MAGICWORD)) {
-							fprintf(stderr, "Got reset command, resetting FPGA...\n");
+							LOG_INFO("Got reset command, resetting FPGA (NAME: %s)...", admin->NAME);
 							curr_packet = NULL;
 							spin_unlock (wlock);
 							do_reset(true);
@@ -861,7 +864,7 @@ void *SCTP_TX (void *core)
 						b = new_frame_tx (outwin, curr_packet, ad->currtime);
 
 						if (unlikely(b == SC_ABORT)) {
-							fprintf (stderr, "> TX: Could not register frame in window!\n");
+							LOG_ERROR("Could not register frame in window (NAME: %s)", admin->NAME);
 							pthread_exit(NULL);
 						}
 
@@ -879,7 +882,7 @@ void *SCTP_TX (void *core)
 							debug_write (sock, curr_packet, size);
 #endif
 							if (b<0) {
-								fprintf (stderr, "> TX: Could not write to socket(data)\n");
+								LOG_ERROR("Could not write data to socket (NAME: %s)", admin->NAME);
 								pthread_exit(NULL);
 							}
 
@@ -896,7 +899,7 @@ void *SCTP_TX (void *core)
 								ad->REQ = 0;
 								b = sock_write (sock, (struct arq_frame *)&ackpacket, acksize);
 								if (b<0) {
-									fprintf (stderr, "> TX: Could not write to socket(ack)\n");
+									LOG_ERROR("Could not send ack (write to socket failed for NAME: %s)", admin->NAME);
 									pthread_exit(NULL);
 								}
 							}
@@ -1046,7 +1049,7 @@ void *SCTP_RESEND (void *core)
 						b = sock_write (sock, packet, size);
 						assert(b % 4 == 0); // assert on alignment
 						if (b<0) {
-							fprintf (stderr, "> RESEND: Could not write to socket(data)\n");
+							LOG_ERROR("Could not resend frame (write to socket failed for NAME: %s)", admin->NAME);
 							pthread_exit(NULL);
 						}
 
@@ -1283,15 +1286,15 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 
 	/* use admin pointer locally, but destroy global before finishing */
 	struct sctp_core * my_admin = admin;
+	LOG_INFO ("Shutting down SCTP core: %s (pid %u)", my_admin->NAME, getpid());
+
 	admin = NULL;
 	memfence();
-
-	LOG_INFO ("Shutting down SCTP core: %s (pid %u)", admin->NAME, getpid());
 
 	if (my_admin == NULL) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-		fprintf(stderr, "%s: lost race, my memory is already gone\n", __FUNCTION__);
+		LOG_ERROR("Lost race, my memory is already gone");
 #pragma GCC diagnostic pop
 		return 0;
 	}
