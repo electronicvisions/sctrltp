@@ -95,7 +95,8 @@ hostarq_open(struct hostarq_handle* handle)
 	int ret, ret2, i, fd, flag;
 	char hostarq_daemon_string[] = "hostarq_daemon";
 	char fd_string[MAX_INT_STRING_SIZE], init_string[MAX_INT_STRING_SIZE];
-	char lockdir[] = "/var/run/lock/hicann";
+	char const lockdir[] = "/var/run/lock/hicann";
+	char lockdir_startupfile[] = "/var/run/lock/hicann/hostarq_startup_XXXXXX";
 	struct stat lockdir_stat;
 
 	/* parameter checking */
@@ -147,7 +148,8 @@ hostarq_open(struct hostarq_handle* handle)
 		}
 	}
 
-	fd = open("/var/run/lock/hicann", O_TMPFILE | O_WRONLY | O_EXCL, S_IRUSR | S_IWUSR);
+
+	fd = mkstemp(lockdir_startupfile);
 	if (fd < 0) {
 		perror("Could not create/open startup lockfile");
 		abort();
