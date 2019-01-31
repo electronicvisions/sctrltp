@@ -78,7 +78,7 @@ ARQStream::ARQStream(
 	max_wait_for_completion_upon_destruction_in_ms(500),
 	pimpl(new ARQStreamImpl(name, rip, reset))
 {
-	drop_receive_queue(1ms, true);
+	drop_receive_queue(400ms, true);
 }
 
 
@@ -88,7 +88,7 @@ ARQStream::ARQStream(std::string const name, bool reset) :
 	max_wait_for_completion_upon_destruction_in_ms(500),
 	pimpl(new ARQStreamImpl(name, name, reset))
 {
-	drop_receive_queue(1ms, true);
+	drop_receive_queue(400ms, true);
 }
 
 
@@ -242,7 +242,9 @@ size_t ARQStream::drop_receive_queue(microseconds timeout, bool with_control_pac
 			}
 		}
 		if (!all_packets_sent()) {
-			throw std::runtime_error(name + ": not all packets send after timeout");
+			throw std::runtime_error(
+				name + ": not all packets send after timeout of " +
+				std::to_string(duration_cast<milliseconds>(timeout).count()) + "ms");
 		}
 	}
 
@@ -285,7 +287,7 @@ size_t ARQStream::drop_receive_queue(microseconds timeout, bool with_control_pac
 	if (with_control_packet && !loopback_found) {
 		throw std::runtime_error(
 		    name + ": no loopback packet response after timeout of " +
-		    std::to_string(timeout.count()) + "ms");
+		    std::to_string(duration_cast<milliseconds>(timeout).count()) + "ms");
 	}
 
 	return dropped_words;
