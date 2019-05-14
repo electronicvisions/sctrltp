@@ -1,0 +1,9 @@
+@Library("jenlib") _
+
+wafDefaultPipeline(projects: ["sctrltp"],
+                   container: [app: "visionary-wafer"],
+                   notificationChannel: "#softies")
+
+wafDefaultPipeline(projects: ["sctrltp"],
+                   container: [app: "visionary-dls"],
+                   notificationChannel: "#dls-software")
