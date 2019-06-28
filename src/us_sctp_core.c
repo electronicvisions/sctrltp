@@ -26,6 +26,41 @@ double shitmytime() {
 	return 1.0 * now.tv_sec + now.tv_usec / 1e6;
 }
 
+
+/** Try to unlink shared memory file.
+ *  @return true if removal worked out, false otherwise.
+ */
+static bool try_unlink_shmfile (const char *NAME)
+{
+	__s32 fd;
+	__s32 ret;
+
+	fd = shm_open(NAME, O_CREAT | O_RDWR, 0666);
+	if (fd < 0) {
+		LOG_ERROR("Cannot non-exclusively open shared memory file (NAME: %s)", NAME);
+		return false;
+	}
+
+	ret = flock(fd, LOCK_EX | LOCK_NB);
+	if (ret < 0) {
+		LOG_ERROR("Shared memory file is locked by running process (NAME: %s)", NAME);
+		close(fd);
+		return false;
+	}
+
+	/* we are the only lock-holder of the shared memory file, we may delete it */
+	ret = shm_unlink(NAME);
+	if (ret < 0) {
+		LOG_ERROR("Could not unlink shared memory file (NAME: %s)", NAME);
+		return false;
+	}
+
+	/* to be sure (lock gone and stuff) */
+	close(fd);
+
+	return true;
+}
+
 static void *create_shared_mem (const char *NAME, __u32 size)
 {
 	void *ptr = NULL;
@@ -35,8 +70,19 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 	char *cmd;
 
 	mode_t prev = umask(0000);
+
 	fd = shm_open (NAME, O_CREAT | O_EXCL | O_RDWR, 0666);
+	if ((fd < 0) && (errno == EEXIST)) {
+		/* try again after trying to delete the shm file */
+		if (try_unlink_shmfile(NAME)) {
+			fd = shm_open (NAME, O_CREAT | O_EXCL | O_RDWR, 0666);
+		} else {
+			umask(prev);
+			return NULL;
+		}
+	}
 	umask(prev);
+
 	if (fd < 0)
 	{
 		perror ("ERROR: Failed to create new shared mem object");
@@ -53,6 +99,8 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 		return NULL;
 	}
 
+	/* if two daemons start up at the same time one might finally fail here, i.e.
+	 * it's racy but does not trigger illegal behavior */
 	ret = flock(fd, LOCK_SH);
 	if (ret < 0) {
 		LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
