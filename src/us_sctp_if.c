@@ -2,18 +2,27 @@
 
 #include <arpa/inet.h>
 #include <assert.h>
+#include <sys/file.h>
 #include "sctrltp/us_sctp_if.h"
 
 
 static void *open_shared_mem (const char *NAME, __u32 size)
 {
 	void *ptr = NULL;
-	__s32 fd;
+	__s32 fd, ret;
 
 	fd = shm_open (NAME, O_RDWR, 0666);
 	if (fd < 0)
 	{
 		LOG_ERROR("Failed to open shared mem object (NAME: %s)", NAME);
+		return NULL;
+	}
+
+	ret = flock(fd, LOCK_SH);
+	if (ret < 0) {
+		LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
+		close(fd);
+		shm_unlink (NAME);
 		return NULL;
 	}
 

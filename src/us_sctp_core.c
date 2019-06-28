@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include <signal.h>
+#include <sys/file.h>
 #include <sys/time.h>
 
 #include "sctrltp/us_sctp_core.h"
@@ -50,6 +51,15 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 
 		return NULL;
 	}
+
+	ret = flock(fd, LOCK_SH);
+	if (ret < 0) {
+		LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
+		close(fd);
+		shm_unlink(NAME);
+		return NULL;
+	}
+
 	ret = ftruncate (fd, size);
 	if (ret < 0)
 	{
