@@ -4,7 +4,6 @@ def options(opt):
     opt.load('compiler_c')
     opt.load('compiler_cxx')
     opt.load('boost')
-    opt.load('post_task')
 
     sopts = opt.add_option_group('SCtrlTP / Software ARQ')
     sopts.add_option('--nowarnings', action='store_true', default=False, help='Disable compiler warnings aka hardy-style')
@@ -26,7 +25,6 @@ def configure(conf):
     conf.load('compiler_c')
     conf.load('compiler_cxx')
     conf.load('boost')
-    conf.load('post_task')
     conf.find_program('ctags', var='CTAGS', mandatory=False)
     if (conf.env.CTAGS):
         conf.env.CTAGS_DIRS = (conf.path.bld_dir(), '.')
