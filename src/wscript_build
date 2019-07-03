@@ -30,15 +30,15 @@ bld(
 
 # SHMEM server (library-version)
 bld(
-    features = 'c cstlib post_task',
+    features = 'c cstlib',
     source='libhostarq.c',
     target='hostarq',
     includes = '.',
     export_includes = '.',
     use = ['PTHREAD', 'RT', 'sctrltp_inc'],
+    depends_on = ['hostarq_daemon'],
     install_path='lib',
     defines = 'LOGLEVEL=1',
-    post_task = 'hostarq_daemon',
 )
 
 # The daemon is dead, long live the daemon!

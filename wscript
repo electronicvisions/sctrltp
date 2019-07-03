@@ -89,3 +89,14 @@ def build(bld):
     )
 
     bld.recurse('pysctrltp')
+
+
+# for hostarq's runtime dependency on hostarq_daemon
+from waflib.TaskGen import feature, after_method
+@feature('*')
+@after_method('process_use')
+def post_the_other_dependencies(self):
+    deps = getattr(self, 'depends_on', [])
+    for name in set(self.to_list(deps)):
+        other = self.bld.get_tgen_by_name(name)
+        other.post()
