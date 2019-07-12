@@ -13,8 +13,9 @@ extern "C"{
 #include "sctrltp/libhostarq.h"
 }
 
-#include "sctrltp/ARQStream.h"
 #include "sctrltp/ARQFrame.h"
+#include "sctrltp/ARQStream.h"
+#include "sctrltp/fpga_ip_list.h"
 
 using namespace std::chrono_literals;
 using namespace std::chrono;
@@ -88,6 +89,23 @@ ARQStream::ARQStream(std::string const name, bool reset) :
 	max_wait_for_completion_upon_destruction_in_ms(500),
 	pimpl(new ARQStreamImpl(name, name, reset))
 {
+	drop_receive_queue(400ms, true);
+}
+
+
+ARQStream::ARQStream(bool reset_fpga) : max_wait_for_completion_upon_destruction_in_ms(500)
+{
+	auto ip_list = get_fpga_ip_list();
+	if (ip_list.empty()) {
+		throw std::runtime_error("No FPGA IP found in environment (SLURM_FPGA_IPS) to connect to.");
+	} else if (ip_list.size() != 1) {
+		throw std::runtime_error(
+		    "More than one FPGA IP found in environment (SLURM_FPGA_IPS) to connect to.");
+	}
+	name = ip_list.at(0);
+	rip = name;
+	pimpl = new ARQStreamImpl(name, rip, reset_fpga);
+
 	drop_receive_queue(400ms, true);
 }
 

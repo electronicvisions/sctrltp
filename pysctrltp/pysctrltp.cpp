@@ -35,6 +35,7 @@ PYBIND11_PLUGIN(pysctrltp) {
 		.export_values();
 
 	arqstream
+	    .def(py::init<bool const>(), "reset"_a = true)
 		.def(py::init<std::string const, bool const>(), "name"_a, "reset"_a = true)
 		.def(py::init<std::string const,
 		              std::string const,

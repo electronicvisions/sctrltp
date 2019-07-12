@@ -98,3 +98,11 @@ bld(
     use=['RT','sctrl'],
     install_path='bin',
 )
+
+bld(
+    features = 'cxx cxxshlib',
+    source='fpga_ip_list.cpp',
+    target='fpga_ip_list',
+    use = ['sctrltp_inc'],
+    install_path='lib',
+)

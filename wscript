@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from waflib.extras.test_base import summary
 
 def options(opt):
     opt.load('compiler_c')
@@ -84,11 +85,13 @@ def build(bld):
     bld.objects (
         target          = 'arqstream_obj',
         source          = 'src/ARQStream.cpp',
-        use             = ['sctrltp_inc', 'sctrl_inc', 'hostarq', 'sctrl', 'BOOST4SCTRLTPARQSTREAM'],
+        use             = ['sctrltp_inc', 'sctrl_inc', 'hostarq', 'sctrl', 'BOOST4SCTRLTPARQSTREAM', 'fpga_ip_list'],
         cxxflags        = '-fPIC', # HOLY SHIT
     )
 
     bld.recurse('pysctrltp')
+
+    bld.add_post_fun(summary)
 
 
 # for hostarq's runtime dependency on hostarq_daemon
