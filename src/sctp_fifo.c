@@ -14,7 +14,6 @@
 #else
 	tmp = (void *)(((__u64)baseptr)+((__u64)relptr));
 #endif
-	/*if (!relptr) fprintf (stderr, "%s,%s,%d: rel ptr was passed containing NULL!!\n", __TIME__,__FILE__, __LINE__);*/
 	return tmp;
 }
 
@@ -26,7 +25,6 @@
 #else
 	tmp = (void *)(((__u64)absptr)-((__u64)baseptr));
 #endif
-	/*if (absptr == baseptr) fprintf (stderr, "%s,%s,%d: rel ptr was calculated to NULL!!\n", __TIME__,__FILE__, __LINE__);*/
 	return tmp;
 }
 
@@ -100,15 +98,11 @@ __s8 fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 		/*Check, if there are empty elements available*/
 		spin_lock (&(fifo->nr_full.lock));
 		while ((c = fifo->nr_full.semval) >= (__s32)fifo->nr_elem) {
-			/*fifo->nr_full.waiter++;*/
 			spin_unlock (&(fifo->nr_full.lock));
 
-			/*We tell the kernel we want to sleep ...*/
-			/*futex_wait (&(fifo->nr_full.semval), c);*/
 			assert(cond_wait(&(fifo->signals), FIF_SIG_DATAOUT) == FIF_SIG_DATAOUT);
 
 			spin_lock (&(fifo->nr_full.lock));
-			/*fifo->nr_full.waiter--;*/
 		}
 
 		/*Increase pointer to last element registered*/
@@ -124,11 +118,6 @@ __s8 fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 
 		/*Signal, that there is a new full element*/
 		fifo->nr_full.semval++;
-		/*if (fifo->nr_full.waiter) {*/
-			/*spin_unlock (&(fifo->nr_full.lock));*/
-			/*futex_wake (&(fifo->nr_full.semval), 1000);*/
-			/*return 0;*/
-		/*}*/
 		spin_unlock (&(fifo->nr_full.lock));
 
 		/*Wake at least one consumer*/
@@ -148,14 +137,11 @@ __s8 fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 		/*Check, if there are full elements*/
 		spin_lock (&(fifo->nr_full.lock));
 		while ((c = fifo->nr_full.semval) <= 0) {
-			/*fifo->nr_full.waiter++;*/
 			spin_unlock (&(fifo->nr_full.lock));
 
-			/*futex_wait (&(fifo->nr_full.semval), c);*/
 			assert(cond_wait(&(fifo->signals), FIF_SIG_DATAIN) == FIF_SIG_DATAIN);
 
 			spin_lock (&(fifo->nr_full.lock));
-			/*fifo->nr_full.waiter--;*/
 		}
 
 		fifo->last_out = (fifo->last_out + 1) % fifo->nr_elem;
@@ -170,11 +156,6 @@ __s8 fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 
 		/*Signal, that there is a new empty element*/
 		fifo->nr_full.semval--;
-		/*if (fifo->nr_full.waiter) {*/
-			/*spin_unlock (&(fifo->nr_full.lock));*/
-			/*futex_wake (&(fifo->nr_full.semval), 1000);*/
-			/*return 0;*/
-		/*}*/
 		spin_unlock (&(fifo->nr_full.lock));
 
 		/*Wake at least one producer*/
@@ -209,11 +190,6 @@ __s8 try_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 
 		/*Signal, that there is a new full element*/
 		fifo->nr_full.semval++;
-		/*if (fifo->nr_full.waiter) {*/
-			/*spin_unlock (&(fifo->nr_full.lock));*/
-			/*futex_wake (&(fifo->nr_full.semval), 1000);*/
-			/*return 0;*/
-		/*}*/
 		spin_unlock (&(fifo->nr_full.lock));
 
 		/*Wake at least one consumer*/
@@ -247,11 +223,6 @@ __s8 try_fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 		memcpy (elem, absptr+(offset *fifo->elem_size), fifo->elem_size);
 
 		fifo->nr_full.semval--;
-		/*if (fifo->nr_full.waiter) {*/
-			/*spin_unlock (&(fifo->nr_full.lock));*/
-			/*futex_wake (&(fifo->nr_full.semval), 1000);*/
-			/*return 0;*/
-		/*}*/
 		spin_unlock (&(fifo->nr_full.lock));
 
 		/*Wake at least one producer*/

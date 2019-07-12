@@ -20,7 +20,6 @@ void parse_mac (char *in, __u8 *out) {
 	for (i = 0; pch != NULL; i++) {
 		out[i] = strtol(pch, NULL, 16);
 		pch = strtok (NULL, ":");
-		/*printf("%02x%s", out[i], (pch != NULL) ? ":" : "\n");*/
 	}
 }
 

@@ -1,6 +1,5 @@
 /*Program to start SCTP-Core safely*/
 
-/*#include <linux/types.h>*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,7 +19,6 @@ void exit_handler (void);
 int main (int argc, char **argv)
 {
 	__s8 retval;
-	//struct ifreq ifHW;
 	char *rip;
 	__s8 init = 1;
 	char blubb;
@@ -28,24 +26,10 @@ int main (int argc, char **argv)
 	printf ("SCTP Core startup program\n");
 	if (argc < 3 || argc > 3) {
 		printf ("Usage: %s <Remote IP> (<FPGA mode>)\n", argv[0]);
-		//printf ("E.g. %s bplane eth1 40:00:03:00:00:0X 1\n", argv[0]); // FIXME
 		printf ("Network interfaces found:\n");
 		printInterfaces();
 		return 1;
 	}
-
-	/* get/parse MAC addresses */
-	//if (! getInterface(argv[2], &ifHW)) {
-	//	fprintf (stderr, "Could not find device \"%s\".\n", argv[2]);
-	//	return 1;
-	//}
-	//memcpy(txmac, ifHW.ifr_hwaddr.sa_data, 6);
-	//print_mac ("My MAC", txmac);
-	//parse_mac (argv[3], rxmac);
-	//print_mac ("Remote", rxmac);
-
-	///* protocol number (eth header field)*/
-	//proto = 0xaffe; //SCTP_PROTO; // FIXME
 
 	rip = argv[1];
 
@@ -75,11 +59,9 @@ int main (int argc, char **argv)
 
 	xchg(&post_init, 1);
 
-	/*printf ("Core up :)\n");*/
 	while (1) {
 		int n = scanf("%c",&blubb);
 		if (n < 0) break;
-		/*usleep(1000000);*/
 		/*TODO: Print core stats*/
 		print_core  ();
 #ifdef WITH_PACKET_MMAP
@@ -188,15 +170,6 @@ void print_core (void)
 	printf ("rACK: %05d ", ad->rACK);
 	printf ("REQ: %d ", ad->REQ);
 	printf ("\n");
-
-	/* Window debugging... */
-	/*
-	 * printf ("\r");
-	 * printf ("TXWIN: ");
-	 * for (i = 0; i < ad->txwin.max_frames; i++) printf ("|%d:%d|", i, sctpreq_get_seq(ad->txwin.frames[i].req));
-	 * printf ("RXWIN: ");
-	 * for (i = 0; i < ad->rxwin.max_frames; i++) printf ("|%d:%d|", i, sctpreq_get_seq(ad->rxwin.frames[i].resp));
-	 */
 }
 
 

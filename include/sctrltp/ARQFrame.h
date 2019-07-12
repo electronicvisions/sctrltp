@@ -25,7 +25,6 @@ struct packet {
 
     seq_t ack;
     seq_t seq;
-    //uint32_t valid;
     uint16_t pid;
     uint16_t len;
 
@@ -50,7 +49,6 @@ struct packet {
         size_t tmp = 0;
         tmp += sizeof(ack);
         tmp += sizeof(seq);
-        //tmp += sizeof(valid);
         tmp += sizeof(pid);
         tmp += sizeof(len);
         tmp += len * 8; // length is 64bit-wise!
@@ -58,7 +56,6 @@ struct packet {
     }
 
     packet() :
-        //valid(true),
         pid(0xDEAD),
         len(1) // minimum length
     {}

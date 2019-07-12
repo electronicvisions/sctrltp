@@ -24,7 +24,6 @@
 
 /* Berkeley Packet Filter */
 #ifdef WITH_BPF
-/*#include <pcap/bpf.h>*/
 #include "bpf.h"
 #endif
 

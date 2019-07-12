@@ -92,7 +92,6 @@ void atomic_write (struct atomic_var *ptr, __s32 new_val)
 void sem_up (struct atomic_var *sem)
 {
 	__s32 old_val;
-	/*atomic_inc (sem);*/
 	while (1) {
 		old_val = sem->val;
 		if (cmpxchg(sem, old_val, old_val+1) == old_val) return;
@@ -115,7 +114,6 @@ void sem_down (struct atomic_var *sem)
 
 void cond_wait (struct atomic_var *sem)
 {
-	/*__s32 c;*/
 	while (1) {
 		while (sem->val != 1) sched_yield();
 		if (cmpxchg(sem, 1, 0) == 1) return;

@@ -49,16 +49,7 @@ void timer_poll (struct sctp_timer *desc)
 		perror ("timer_poll");
 	static int run = 0;
 	run++;
-	/*if (! (run % 1000))*/
-		/*printf("p %d\n", run);*/
 }
-
-/* Enables/Disables periodic interrupts (flag > 0: enable flag <= 0: disable)*/
-/*__s32 timer_disenable (struct sctp_timer *desc, __u8 flag)
-{
-	fprintf (stderr, "timer_disenable (%d): not implemented\n", flag);
-	return -1;
-}*/
 
 /* Closes timer device file */
 void timer_close (struct sctp_timer *desc)

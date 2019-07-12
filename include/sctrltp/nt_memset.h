@@ -71,12 +71,6 @@ void* malloc_safe (size_t size)
 	
 	/* There could be unwritten bytes (<CLS) now and we will write them with normal movs.
 	   Here we would make at least one cache-line dirty, but its ok :)*/
-	/*while (nr-bytes_written > 0)*/
-	/*{*/
-		/**tmp = c;*/
-		/*tmp++;*/
-		/*bytes_written++;*/
-	/*} */
 	if ((nr-bytes_written) > 0) {
 		memset (tmp, c, (nr-bytes_written));
 	}

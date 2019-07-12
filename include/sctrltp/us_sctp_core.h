@@ -45,7 +45,6 @@ struct sctp_core {
 	struct sctp_timer txtimer;              /*RTC/HPET timer for TX*/
 
 	struct sctp_interface *inter;           /*Includes tx_queue, rx_queue, alloc queue and buffer pool (SHARED)*/
-	/*pthread_t   rackthr;*/
 	pthread_t	txthr;			            /*The thread ids*/
 	pthread_t	rxthr;
 	pthread_t	rsthr;

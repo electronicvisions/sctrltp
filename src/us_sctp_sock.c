@@ -168,25 +168,17 @@ __s32 sock_read (struct sctp_sock *ssock, struct arq_frame *buf, __u8 filter)
 
 	__s32 nread = 0;
 	__u8 *tmp;
-	/*__u32 tmplen;*/
-#ifndef WITH_BPF
-	//__u8 tx[6], rx[6];
-#endif
 #ifdef WITH_PACKET_MMAP
 	struct tpacket_hdr *hdr; /* pointer to a packet header */
 	int retval, loop;
 #endif
 	tmp = (__u8 *)buf;
-	/*tmplen = sizeof(struct arq_frame);*/
 
 	(void) filter; /* TODO: unused parameter */
 
 #ifdef WITH_PACKET_MMAP
 	/* try to read packets || poll for packets */
 
-
-	/* force a poll */
-	/*goto poll_for_packet;*/
 
 check_rx_ring:
 	loop = 1;
@@ -218,18 +210,6 @@ check_rx_ring:
 			/* TODO: for now, we copy for upper layers and release slot
 			 * => later: handle memory up and call /free-slot/ from upper layer */
 			memcpy (buf, tmp, nread);
-			/*memfence();*/
-
-			/*
-			printf("hdr->tp_status:  %lu\n", hdr->tp_status);
-			printf("hdr->tp_len:      %u\n", hdr->tp_len);
-			printf("hdr->tp_snaplen:  %u\n", hdr->tp_snaplen);
-			printf("hdr->tp_mac:     %hu\n", hdr->tp_mac);
-			printf("hdr->tp_net:     %hu\n", hdr->tp_net);
-			printf("hdr->tp_sec:      %u\n", hdr->tp_sec);
-			printf("hdr->tp_usec:     %u\n", hdr->tp_usec);
-			printf("\n\n");
-			*/
 
 			/* received a frame - leave the loop (single frame read ;)) */
 			loop = 0;
@@ -237,11 +217,8 @@ check_rx_ring:
 
 		/* release frame */
 		hdr->tp_status = TP_STATUS_KERNEL;
-		/*memfence();*/
 
-		///*
 		printf("rx: f%2d - read %4d\n", ssock->ring_idx, nread);
-		//*/
 	}
 
 	if (unlikely(! nread)) {
@@ -260,27 +237,6 @@ check_rx_ring:
 #else /* end of WITH_PACKET_MMAP */
 	nread = read (ssock->sd, tmp, sizeof(struct arq_frame));
 	if (nread <= 0) return SC_ABORT;
-#endif
-
-#ifndef WITH_BPF
-	if (filter) {
-// FIXME
-//		/* perform additional filter checks */
-//		if (unlikely(ssock->prototyp != eth_get_prototyp(buf))) {
-//			return SC_INVAL;
-//		}
-//		/* TODO: Create a Berkely Packet Filter to suppress wrong packets/proto etc.pp.
-//		 * Socket filtering: see /usr/src/linux-source/Documentation/networking/filter.txt
-//		 * setsockopt(sockfd, SOL_SOCKET, SO_ATTACH_FILTER, &Filter, sizeof(Filter)); */
-//
-//		eth_get_source      (buf, (__u8 *) &rx);
-//		eth_get_destination (buf, (__u8 *) &tx);
-//
-//		if (strncmp ((char *) ssock->rxmac, (char *) rx, 6) || strncmp ((char *) ssock->txmac, (char *) tx, 6)) {
-//			printf ("received packet with wrong prototype\n");
-//			return SC_INVAL;
-//		}
-	}
 #endif
 
 	return nread;
@@ -322,7 +278,6 @@ __s32 sock_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len)
 		len = MIN_PACKET_SEND_SIZE;
 	}
 
-//	eth_set_header (buf, ssock->rxmac, ssock->txmac, ssock->prototyp); // FIXME
 	/* TODO: use PACKET_TX_RING (2.6.31)
 	 *       - implement sendfile/splice in sending code => zero-copy sending */
 
@@ -350,7 +305,6 @@ __s32 sock_writev (struct sctp_sock *ssock, const struct iovec *iov, int iovcnt)
 	int i;
 
 	for (i = 0; i < iovcnt; i++) {
-//		eth_set_header (iov[i].iov_base, ssock->rxmac, ssock->txmac, ssock->prototyp); // FIXME
 		len += iov[i].iov_len;
 	}
 
@@ -389,7 +343,6 @@ __s32 debug_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len)
 	memset(s, '\0', 256);
 	for (i = 0; i < sl; i++) {
 		sll = sprintf (s, "%02hhx ", sf->COMMANDS[i]);
-		/*printf ("%x", sf->COMMANDS[i]);*/
 		write (ssock->debug_fd, s, sll);
 		assert(buf+14+len > sf->COMMANDS + i);
 	}

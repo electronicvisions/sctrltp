@@ -3,7 +3,6 @@
 #define _GNU_SOURCE
 
 #include "sctrltp/build-config.h"
-/*#include <linux/types.h>*/
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -45,7 +44,6 @@ double get_elapsed_time (struct timeval starttime, struct timeval endtime)
 void *consumer () {
 	__u64 amount = 0;
 	struct entry tmp;
-	/*unsigned long mask = (1 << (NUM_CPUS-1));*/
 	cpu_set_t cpuset;
 
 	CPU_ZERO(&cpuset);
@@ -74,7 +72,6 @@ void *producer () {
 	/*Produce 100 MB traffic*/
 	gettimeofday (&last, NULL);
 	while (amount < BUF_SIZE) {
-		/*memset (curr_ptr, 25, shmem.elemsize);*/
 		nt_memset64 (curr_ptr, 25, shmem.elemsize);
 		tmp.ptr_to_buf = curr_ptr;
 		fif_push (&(shmem.full), (__u8 *)&tmp, &shmem);
@@ -92,18 +89,13 @@ int main (int argc, char **argv)
 	__u32 elemsize = 1;
 	__u32 nr = BUF_SIZE/elemsize;
 
-	/*printf ("Fifo benchmark started\n");*/
-
 	if (argc < 2) {
-		/*printf ("Using element size 1\n");*/
 	} else {
 		elemsize = (__u32)atoi(argv[1]);
 		nr = BUF_SIZE / elemsize;
 	}
 
 	if (nr > MAX_ELEM) nr = MAX_ELEM;
-
-	/*printf ("#Elements: %u #Elementsize: %u\n", nr, elemsize);*/
 
 	memset (&shmem, 0, sizeof (struct shared_res));
 	shmem.elemsize = elemsize;

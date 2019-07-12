@@ -314,15 +314,6 @@ __s32 rel_buf (struct sctp_descr *desc, struct buf_desc *rel, const __u8 mode)
 	return 1;
 }
 
-//static __u8 check_perm (struct sctp_descr *desc, __u32 mask)
-//{
-//	if ((desc->my_lock_mask & mask) != mask) {
-//		fprintf(stderr, "Access to non-locked nathan (my %x) mask %x\n", desc->my_lock_mask, mask);
-//		return 0;
-//	}
-//	return 1;
-//}
-
 __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 {
 	__u32 i;
@@ -342,39 +333,6 @@ __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 
 
 	if (buf) {
-//		switch ((buf->arq_sctrl->SFLAGS & 0x0F)) {
-//			case SFLAG_PTYP_CFG:
-//				/*If we want to configure a backplane we need ALL nathans locked!*/
-//				if (!check_perm(desc, LOCK_MASK_ALL)) {
-//					if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//					return SC_INVAL;
-//				}
-//				/*destination queue(s) could be any queue but not multiple queues*/
-//				buf->arq_sctrl->NAT = nathan;
-//			break;
-//			default:
-//				/*BALU at 16 (fixes also entry in frame)*/
-//				if (nathan > NR_NATHANS) {
-//					nathan = NR_NATHANS;
-//				}
-//				buf->arq_sctrl->NAT = nathan;
-//
-//				/*Check if we have locked desired destination nathan before*/
-//				if (!check_perm(desc, (1 << nathan))) {
-//					if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//					return SC_INVAL;
-//				}
-//
-//				/*Make sure global bit is set or not set*/
-//				if (nathan == NR_NATHANS) {
-//					/*Delete global bit if it was set errorneously*/
-//					if (buf->arq_sctrl->SFLAGS & SFLAG_GLOBALBIT) buf->arq_sctrl->SFLAGS ^= SFLAG_GLOBALBIT;
-//				} else {
-//					/*Set global bit*/
-//					buf->arq_sctrl->SFLAGS |= SFLAG_GLOBALBIT;
-//				}
-//
-//		}
 		/*queue now contains index in queue array where to put frames to*/
 
 		/*We have to register a buffer to pass to lower layer*/
@@ -395,12 +353,6 @@ __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 			desc->send_buf.out[queue].next = 1;
 			desc->send_buf.out[queue].fptr[0] = get_rel_ptr (desc->trans, buf->arq_sctrl);
 		}
-	} else {
-		/*Check if we have locked desired destination nathan before*/
-//		if (!check_perm(desc, (1 << nathan))) {
-//			if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//			return SC_INVAL;
-//		}
 	}
 
 	if ((mode & MODE_FLUSH) && ((i = desc->send_buf.out[queue].next) > 0)) {
@@ -490,12 +442,6 @@ __s32 recv_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 	}
 	/*critical section*/
 
-	/*check if we have locked that nathan before*/
-//	if (!check_perm(desc, (1 << nathan))) {
-//		if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//		return SC_INVAL;
-//	}
-
 	if ((i = desc->recv_buf.in[queue].next) < desc->recv_buf.in[queue].num) {
 		desc->recv_buf.in[queue].next++;
 		ptr_to_frame = desc->recv_buf.in[queue].fptr[i];
@@ -568,8 +514,6 @@ __s32 append_words (struct buf_desc *buf, const __u16 ptype, const __u32 num, co
 		max_num = MAX_PDUWORDS;
 	count = max_num - curr_num;
 
-	/*printf ("curr_num: %u num: %u max_num: %u\n", curr_num, num, max_num);*/
-
 	/* append as many words to packet as possible */
 	if (values)
 		memcpy(ptr+curr_num, values, count * WORD_SIZE);
@@ -579,86 +523,6 @@ __s32 append_words (struct buf_desc *buf, const __u16 ptype, const __u32 num, co
 
 	return count;
 }
-
-//__s32 lock_nathan (struct sctp_descr *desc, __u32 nat_mask, const __u8 mode)
-//{
-//	__u32 a, b;
-//
-//	/*fix a bad mask*/
-//	nat_mask &= LOCK_MASK_ALL;
-//
-//	if (mode & MODE_SAFE) {
-//		if (mode & MODE_NONBLOCK) {
-//			if (!mutex_try_lock(&(desc->mutex))) return SC_BUSY;
-//		} else mutex_lock (&(desc->mutex));
-//	}
-//
-//	/*We cannot lock the same nathans twice so we just signal success*/
-//	/*This is a shortcut!*/
-//	if ((desc->my_lock_mask & nat_mask) == nat_mask) {
-//		if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//		return 1;
-//	}
-//
-//	do {
-//		a = desc->trans->lock_mask;
-//
-//		/*If someone (not us) has locked nat in nat_mask already, exit!*/
-//		if ((a & (nat_mask & (~desc->my_lock_mask)))) {
-//			/*printf ("nathan already locked\n");*/
-//			if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//			return SC_FULL;
-//		}
-//
-//		b = a | nat_mask;
-//		/*set new mask atomically*/
-//	} while (cmpxchg((__s32 *)&(desc->trans->lock_mask), (__s32)a, (__s32)b) != (__s32)a);
-//
-//	/*Update our own nat mask*/
-//	desc->my_lock_mask |= nat_mask;
-//
-//	if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//
-//	return 1;
-//}
-
-//__s32 unlock_nathan (struct sctp_descr *desc, __u32 nat_mask, const __u8 mode)
-//{
-//	__u32 a, b;
-//
-//	/*fix a bad mask*/
-//	nat_mask &= LOCK_MASK_ALL;
-//
-//	if (mode & MODE_SAFE) {
-//		if (mode & MODE_NONBLOCK) {
-//			if (!mutex_try_lock(&(desc->mutex))) return SC_BUSY;
-//		} else mutex_lock (&(desc->mutex));
-//	}
-//
-//	/*We cannot unlock, what we have never locked before, fix mask!*/
-//	nat_mask &= desc->my_lock_mask;
-//
-//	do {
-//		a = desc->trans->lock_mask;
-//
-//		/*For safety we also check global mask and fixed nat_mask: if we end up here, one mask was corrupted*/
-//		if ((desc->trans->lock_mask & nat_mask) != nat_mask) {
-//			if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//			fprintf (stderr, "FATAL ERROR: local lock mask seems to have been corrupted!\n");
-//			return SC_CORRUPT;
-//		}
-//
-//		b = a ^ nat_mask;
-//		/*Update mask with unlocked nathan(s) atomically*/
-//	} while (cmpxchg((__s32 *)&(desc->trans->lock_mask), (__s32)a, (__s32)b) != (__s32)a);
-//
-//	/*Update our own mask*/
-//	desc->my_lock_mask ^= nat_mask;
-//
-//	if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
-//
-//	return 1;
-//}
 
 /*Older but easier to use interface functions*/
 

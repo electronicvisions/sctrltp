@@ -8,7 +8,6 @@
 #ifndef _US_SCTP_IF
 #define _US_SCTP_IF
 
-/*#include <linux/types.h>*/
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>

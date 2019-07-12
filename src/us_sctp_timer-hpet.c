@@ -61,12 +61,8 @@ void timer_poll (struct sctp_timer *desc)
 
 	assert (retval >= 0); /* 0 == timeout, negative indicates error */
 
-	/*fprintf(stderr, "hpet_poll: revents = 0x%x\n", desc->pfd.revents);*/
-
 	if (read(desc->fd, &tmp, sizeof(tmp)) != sizeof(tmp)) {
 		fprintf(stderr, "hpet_poll: read failed\n");
-	} else {
-		/*fprintf(stderr, "hpet_poll: data 0x%lx\n", (long unsigned int)tmp);*/
 	}
 }
 

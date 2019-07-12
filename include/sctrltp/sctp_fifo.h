@@ -53,21 +53,10 @@ __s8 fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 /*This function pops an element out after last_out*/
 __s8 fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 
-/*As above but multiwriter safe*/
-/*__s8 mw_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);*/
-
-/*As above but multireader safe*/
-/*__s8 mr_fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);*/
-
 
 /*Like funcs above, but they wont block/spin on unsuccessful syncs*/
 __s8 try_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 
 __s8 try_fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
-
-/*__s8 mw_try_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);*/
-
-/*__s8 mr_try_fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);*/
-
 
 #endif

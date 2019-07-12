@@ -91,23 +91,6 @@ static void deallocate (__u8 state)
 	/*No need to deallocate in Userspace*/
 }
 
-/*static struct arq_frame *mr_fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf) {*/
-	/*__u32 i;*/
-	/*if ((i = local_buf->next) < local_buf->num) {*/
-		/*[>We have a frame in local cache<]*/
-		/*local_buf->next++;*/
-		/*return local_buf->fptr[i];*/
-	/*} else {*/
-		/*[>We dont have an unprocessed frame, so lets fetch new ones<]*/
-		/*fif_pop (fifo, (__u8 *)local_buf, admin->inter);*/
-		/*for (i = 0; i < local_buf->num; i++) {*/
-			/*local_buf->fptr[i] = get_abs_ptr (admin->inter, local_buf->fptr[i]);*/
-		/*}*/
-		/*local_buf->next = 1;*/
-		/*return local_buf->fptr[0];*/
-	/*}*/
-/*}*/
-
 static void mw_push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, struct arq_frame *ptr, __u8 flush) {
 	__u32 i;
 	if (!ptr) {
@@ -143,23 +126,6 @@ static void mw_push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf
 		}
 	}
 }
-
-/*static struct arq_frame *netch_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf) {*/
-	/*__u32 i;*/
-	/*if ((i = local_buf->next) < local_buf->num) {*/
-		/*[>We have a frame in local cache<]*/
-		/*local_buf->next++;*/
-		/*return local_buf->fptr[i];*/
-	/*} else {*/
-		/*[>We dont have an unprocessed frame, so lets fetch new ones<]*/
-		/*fif_pop (fifo, (__u8 *)local_buf, admin->inter);*/
-		/*for (i = 0; i < local_buf->num; i++) {*/
-			/*local_buf->fptr[i] = get_abs_ptr (admin->inter, local_buf->fptr[i]);*/
-		/*}*/
-		/*local_buf->next = 1;*/
-		/*return local_buf->fptr[0];*/
-	/*}*/
-/*}*/
 
 static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, struct arq_frame *ptr, __u8 flush) {
 	__u32 i;
@@ -199,67 +165,6 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, s
 
 static __s32 do_startup (bool fpga_reset){
 	do_reset(fpga_reset);
-
-//	struct arq_frame buf;
-//	struct arq_frame *sc_header;
-//	struct sctrl_cmd *sc_cmd; (void)sc_cmd; // FIXME
-//	__s32 ret;
-//
-//	sc_header = &buf; // FIXME
-//	sc_cmd = (struct sctrl_cmd *) sc_header->COMMANDS;
-//	memset (&buf, 0, sizeof(struct arq_frame));
-//
-//	/*Send reset frame to backplane (ARQ/SEQ reset and ETH Core reset*/
-//	//sc_header->AFLAGS = AFLAG_ARQRESET | AFLAG_ETHRESET; // FIXME
-//	ret = sock_write (&(admin->sock), &buf, sctpreq_get_size(&buf));
-//	if (ret < 0) {
-//		fprintf (stderr, "Could not access socket\n");
-//		return SC_ABORT;
-//	}
-//
-//	/*Send packet with write commands to special registers to initialize Core correctly*/
-//	sctpreq_set_seq (&buf, 0);
-////	sc_header->AFLAGS = 0; // FIXME
-////	sc_header->NB = 8; // FIXME
-////	/*Disbale promiscous mode and set operation mode properly*/
-////	sc_cmd[0] = sctrl_set_cmd (SCTRL_WRITE, 0, M0_REG_OPMODE, 0x0000a403);
-////	sc_cmd[1] = sctrl_set_cmd (SCTRL_WRITE, 0, M0_REG_IRQS, 0x00000000);
-////	/*Set Buffer descriptor value to support frames of 256 Bytes (change carefully!!)*/
-////	sc_cmd[2] = sctrl_set_cmd (SCTRL_WRITE, 0, M0_REG_PSIZE, (MTU << 16) + 0xd800);
-////	sc_cmd[3] = sctrl_set_cmd (SCTRL_WRITE, 0, M0_REG_TXRAMH, 0x00000040);
-////	/*Give the backplane my MAC addr*/
-////	sc_cmd[4] = sctrl_set_cmd (SCTRL_WRITE, 0, M0_REG_MAC0, ((__u32)txmac[2] << 24) + ((__u32)txmac[3] << 16) + ((__u32)txmac[4] << 8) + txmac[5]);
-////	sc_cmd[5] = sctrl_set_cmd (SCTRL_WRITE, 0, M0_REG_MAC1, 0x07ff0000 + ((__u32)txmac[0] << 8) + txmac[1]);
-////	/*Optimize rx_timeout (ACK Rate) and tx_timeout (Retransmission rate) values*/
-////	sc_cmd[6] = sctrl_set_cmd (SCTRL_WRITE, 4, M4_REG_RXTO, 62500);   /*= 500 us (equals to MAX_WINSIZ / 4 * transmission delay (16 * 72us ~= 1 ms))*/
-////	sc_cmd[7] = sctrl_set_cmd (SCTRL_WRITE, 4, M4_REG_TXTO, 125000000);  /*= 1000 ms*/
-//
-//	ret = sock_write (&(admin->sock), &buf, sctpreq_get_size(&buf));
-//	if (ret < 0) {
-//		fprintf (stderr, "Could not access socket\n");
-//		return SC_ABORT;
-//	}
-//
-//	/*Retrieve answer (could block infinitly, should have timeout, implement select with timeout)*/
-//	sc_header->SEQ = 0;
-//	while (sctpreq_get_seq(&buf) != 0) {
-//		ret = sock_read (&(admin->sock), &buf, 1);
-//		if (ret < 0) {
-//			fprintf (stderr, "Could not access socket\n");
-//			return SC_ABORT;
-//		}
-//		/*Maybe check responses here later to test correct writing*/
-//	}
-//
-//	/*Send ARQ reset frame*/
-//	memset (&buf, 0, sizeof (struct arq_frame));
-////	sc_header->AFLAGS = AFLAG_ARQRESET;
-//	ret = sock_write (&(admin->sock), &buf, sctpreq_get_size(&buf));
-//	if (ret < 0) {
-//		fprintf (stderr, "Could not access socket\n");
-//		return SC_ABORT;
-//	}
-
 	return 0;
 }
 
@@ -422,7 +327,6 @@ void *SCTP_PREALLOC (void *core)
 		/*Push to shared fifo with passing baseptr to recalculate absolute pointer to entry*/
 		mw_push_frames (&(ad->inter->alloctx), &tmp, buf, 0);
 
-		/*printf ("element %d allocated\n", i);*/
 		buf++;
 		i++;
 		num++;
@@ -438,7 +342,6 @@ void *SCTP_PREALLOC (void *core)
 		/*Push to shared fifo with passing baseptr to recalculate absolute pointer to entry*/
 		mw_push_frames (&(ad->inter->allocrx), &tmp, buf, 0);
 
-		/*printf ("element %d allocated\n", i);*/
 		buf++;
 		i++;
 		num++;
@@ -575,12 +478,6 @@ void *SCTP_RX (void *core)
 
 		/*Check if we can operate normally*/
 		if (likely(ad->STATUS.empty[0] == STAT_NORMAL)) {
-//			switch (sctpreq_get_aflags(curr_packet)) {
-//
-//				case AFLAG_STATRESET:
-//					/*Reset my statistics*/
-//					memset (stats, 0, sizeof (struct sctp_stats));
-//				case 0:
 					/*Determine attributes of packet*/
 					rack = sctpreq_get_ack (curr_packet);
 
@@ -598,13 +495,7 @@ void *SCTP_RX (void *core)
 					if (size > sizeof(struct arq_ackframe))
 						seq = sctpreq_get_seq (curr_packet);
 
-//#ifdef WITH_ROUTING
-//					/*Determine queue to put frame in according to nathannr.*/
-//					queue = sctpreq_get_nat(curr_packet);
-//					outfifo = &(inter->rx_queues[queue]);
-//#else
 					queue = 0;
-//#endif
 
 					/*First check if seq valid and there is room in buffer ... if not, drop it! do NOT insert local_buf!!*/
 					if ((seq >= 0) && (outfifo->nr_full.semval <= (__s32)(outfifo->nr_elem - MAX_WINSIZ)) && (local == 0)) {
@@ -641,15 +532,6 @@ void *SCTP_RX (void *core)
 									a++;
 									break;
 								}
-
-
-								/*Save timestamp of arrival*/
-								/*outbuf_rx[a].time = ad->currtime;*/
-//#ifdef WITH_ROUTING
-//								/*Determine queue to put frame in according to nathannr.*/
-//								queue = sctpreq_get_nat(outbuf_rx[a].resp);
-//								outfifo = &(inter->rx_queues[queue]);
-//#endif
 
 								/*Pass packet to upper layer*/
 								if ((i = out[queue].next) < PARALLEL_FRAMES) {
@@ -707,23 +589,6 @@ void *SCTP_RX (void *core)
 						/*Congested case: We have to drop this frame :(*/
 						if (seq >= 0) stats->nr_congdrop++;
 					}
-//					break;
-//
-//				case (AFLAG_ARQRESET | AFLAG_STATRESET):
-//					/*Reset my statistics*/
-//					memset (stats, 0, sizeof (struct sctp_stats));
-//				case AFLAG_ARQRESET:
-//					/*React on remote reset frames!!*/
-//					printf ("> RX: Got ARQ/SEQ reset frame! Reset in progress ...\n");
-//					do_reset (NULL);
-//					printf ("> RX: Reset done.\n");
-//					break;
-//
-//				default:
-//					fprintf (stderr, "Warning: Packet received could not be handled and will be dropped (ARQFLAGS: %x)\n", sctpreq_get_aflags(curr_packet));
-//					stats->nr_unknownf++;
-//					break;
-//			}
 		} else stats->nr_congdrop++;
 		/*Nothing more to do, so may fetch another buffer*/
 	}
@@ -837,13 +702,11 @@ void *SCTP_TX (void *core)
 				if (a <= 0) {
 					/*There is really nothing to do for us, so we wait :)*/
 					cond_wait (sig, 1);
-					/*sig->semval = 0;*/
 				}
 			} else {
 				/*Handle Packet by type*/
 //				TODO check for: sctpreq_get_pload(curr_packet)[0] == htobe64(HW_HOSTARQ_MAGICWORD)) {
 						spin_lock (wlock);
-//				case PTYPE_DO_ARQRESET:
 						/* Check for ARQ reset command */
 						if (sctpreq_get_typ(curr_packet) == PTYPE_DO_ARQRESET && sctpreq_get_pload(curr_packet)[0] == htobe64(HW_HOSTARQ_MAGICWORD)) {
 							LOG_INFO("Got reset command, resetting FPGA (NAME: %s)...", admin->NAME);
@@ -853,7 +716,6 @@ void *SCTP_TX (void *core)
 							continue;
 						}
 
-//				case default:
 						/*Check, if we can slide our window*/
 						if (curr_rack != old_rack) {
 							a = mark_frame (outwin, curr_rack, outbuf_tx);
@@ -908,28 +770,8 @@ void *SCTP_TX (void *core)
 								/*There is really nothing to do for us, so we wait :)*/
 								cond_wait (sig, 1);
 								sched_yield();
-								/*sig->semval = 0;*/
 							}
 						}
-//						break;
-//
-//					case (AFLAG_ARQRESET | AFLAG_STATRESET):
-//						/*Reset my statistics*/
-//						memset (stats, 0, sizeof(struct sctp_stats));
-//					case AFLAG_ARQRESET:
-//						/*Handle RESET*/
-//						printf ("> TX: Got ARQ/SEQ reset frame!! Reset in progress...\n");
-//						do_reset (curr_packet);
-//						printf ("> TX: Reset done.\n");
-//						curr_packet = NULL;
-//						break;
-//
-//					default:
-//						fprintf (stderr, "> TX: WARNING: Packet got from user could not be handled and will be suppressed\n");
-//						push_frames (outfifo, &out, curr_packet, 0);
-//						curr_packet = NULL;
-//						break;
-//				}
 			}
 
 #ifdef WITH_RTTADJ
@@ -1014,7 +856,6 @@ void *SCTP_RESEND (void *core)
 
 		/*Update current time*/
 		ad->currtime += TO_RES;
-		/*memfence();*/
 
 		/*Update remaining wait time*/
 		if (time2wait > TO_RES)
@@ -1037,9 +878,7 @@ void *SCTP_RESEND (void *core)
 				{
 					a = 0;
 					while (a < (__u32)ret) {
-						//printf("resending 1 packet\n");
 						packet = resend[a].req;
-						//printf("resending seq %d\n", sctpreq_get_seq(packet));
 
 						size = sctpreq_get_size(packet);
 
@@ -1219,7 +1058,6 @@ __s8 SCTP_CoreUp (char const *name, char const *rip, __s8 wstartup)
 
 #ifdef WITH_HPET
 	/* Before we start RESEND, we need to set up his timer */
-	/*c = timer_init (&(admin->txtimer), "/dev/rtc0", 1000);*/
 	c = timer_init (&(admin->txtimer), "/dev/hpet", 1000000/TO_RES);
 	if (c < 0) {
 		deallocate(13);

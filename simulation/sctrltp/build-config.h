@@ -9,7 +9,6 @@
 #define HAVE_PYEXT 0
 #define HAVE_PYTHON_H 0
 #define HAVE_GTEST 0
-/* #undef HAVE_ZLIB */
 #define HAVE_JTAG_LIB_H 1
 #define L1D_CLS 64
 #define WITH_RTTADJ 1

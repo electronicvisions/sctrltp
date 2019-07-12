@@ -174,8 +174,6 @@ void mutex_lock (volatile struct drepper_mutex *dm)
 			c = xchg (lock, 2);
 		}
 	}
-	/*assert (!dm->owner);*/
-	/*dm->owner = 1;*/
 }
 
 __s32 mutex_try_lock (volatile struct drepper_mutex *dm)
@@ -192,7 +190,6 @@ void mutex_unlock (volatile struct drepper_mutex *dm)
 	__vs32 *lock = &(dm->lock_waiter);
 
 	assert (dm->type == SYNC_TYPE_DREPPER);
-	/*dm->owner = 0;*/
 
 	/*Decrement lock atomically*/
 	while (1) {
@@ -331,9 +328,6 @@ void tlock_lock (volatile struct ticket_lock *tl)
 
 	/*Wait for lock*/
 	while (tl->curr_ticket != c) cpu_relax();
-
-	/*assert(!tl->owner);*/
-	/*tl->owner = 1;*/
 }
 
 void tlock_unlock (volatile struct ticket_lock *tl)
@@ -341,7 +335,6 @@ void tlock_unlock (volatile struct ticket_lock *tl)
 	__s32 c;
 
 	assert (tl->type == SYNC_TYPE_TICKET);
-	/*tl->owner = 0;*/
 
 	/*atomic inc*/
 	do {
@@ -383,10 +376,6 @@ __s32 qspin_lock (volatile struct queue_lock *ql)
 	/*Wait till holder of lock wakes us*/
 	while (ql->place[c].empty[0]) cpu_relax();
 
-	/*Catch a possible corruption*/
-	/*assert (!ql->owner);*/
-	/*ql->owner = 1;*/
-
 	return c;
 }
 
@@ -394,7 +383,6 @@ void qspin_unlock (volatile struct queue_lock *ql, __s32 myplace)
 {
 	assert (ql->type == SYNC_TYPE_QUEUE);
 
-	/*ql->owner = 0;*/
 	/*Relock our place in queue*/
 	ql->place[myplace].empty[0] = 1;
 	/*Unlock next waiter*/
