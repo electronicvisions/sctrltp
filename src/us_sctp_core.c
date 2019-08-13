@@ -2,6 +2,7 @@
  *Compile with -lpthread and -lrt*/
 
 #include <assert.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <pthread.h>
@@ -302,7 +303,7 @@ static void do_reset (bool fpga_reset) {
 		b = sendto(admin->sock.sd, &resetframe, sizeof(struct arq_resetframe), /*flags*/ 0,
 		           (struct sockaddr *)&reset_addr, sizeof(reset_addr));
 		if (b <= 0) {
-			LOG_ERROR("Could not send reset frame (write to socket failed for NAME: %s)", admin->NAME);
+			LOG_ERROR("Could not send reset frame (write to socket failed for NAME: %s); error %s", admin->NAME, strerror(errno));
 			pthread_exit(NULL);
 		} else {
 			LOG_INFO("Sent reset frame. Waiting for response... (NAME: %s)", admin->NAME);
