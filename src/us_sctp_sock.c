@@ -1,5 +1,6 @@
 /**/
 
+#include <errno.h>
 #include <time.h>
 #include <sched.h>
 #include "sctrltp/us_sctp_sock.h"
@@ -236,7 +237,13 @@ check_rx_ring:
 
 #else /* end of WITH_PACKET_MMAP */
 	nread = read (ssock->sd, tmp, sizeof(struct arq_frame));
-	if (nread <= 0) return SC_ABORT;
+	if (nread < 0) {
+		LOG_ERROR("Failed to read from socket: %s\n", strerror(errno));
+		return SC_ABORT;
+	} else if (nread == 0) {
+		LOG_ERROR("Read 0 bytes from socket!?\n");
+		return SC_ABORT;
+	}
 #endif
 
 	return nread;
