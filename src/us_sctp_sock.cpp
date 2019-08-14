@@ -247,7 +247,9 @@ check_rx_ring:
 	}
 
 #else /* end of WITH_PACKET_MMAP */
-	nread = read (ssock->sd, tmp, sizeof(arq_frame));
+	do {
+		nread = read (ssock->sd, tmp, sizeof(arq_frame));
+	} while ((nread < 0) && (errno == EINTR));
 	if (nread < 0) {
 		LOG_ERROR("Failed to read from socket: %s\n", strerror(errno));
 		return SC_ABORT;
@@ -392,11 +394,10 @@ __s32 sock_write (struct sctp_sock *ssock,  arq_frame *buf, __u32 len)
 	/* TODO: use PACKET_TX_RING (2.6.31)
 	 *       - implement sendfile/splice in sending code => zero-copy sending */
 
-	errno = 0;
 	do {
 		nwritten = write (ssock->sd, buf, len);
 		i++;
-	} while (errno == EAGAIN);
+	} while ((nwritten < 0) && ((errno == EINTR) || (errno == EAGAIN)));
 
 	if (i > 1)
 		printf ("%d times buffer full on write\n", i);

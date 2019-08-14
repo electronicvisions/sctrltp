@@ -63,7 +63,10 @@ void timer_poll (struct sctp_timer *desc)
 
 	assert (retval >= 0); /* 0 == timeout, negative indicates error */
 
-	if (read(desc->fd, &tmp, sizeof(tmp)) != sizeof(tmp)) {
+	do {
+		retval = read(desc->fd, &tmp, sizeof(tmp));
+	} while ((retval < 0) && (errno == EINTR));
+	if (retval != sizeof(tmp)) {
 		fprintf(stderr, "hpet_poll: read failed\n");
 	}
 }

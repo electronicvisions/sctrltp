@@ -44,7 +44,9 @@ void timer_poll (struct sctp_timer *desc)
 {
 	__s32 tmp;
 	__s32 retval;
-	retval = read (desc->fd, &tmp, sizeof (__s32));
+	do {
+		retval = read (desc->fd, &tmp, sizeof (__s32));
+	} while ((retval < 0) && (errno == EINTR));
 	if (retval < 0)
 		perror ("timer_poll");
 	static int run = 0;

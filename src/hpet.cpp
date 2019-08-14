@@ -101,6 +101,7 @@ error:
 
 void hpet_poll () {
 	int i;
+	int retval;
 
 	for (i = 0; i < iterations; i++) {
 		pfd.revents = 0;
@@ -120,7 +121,10 @@ void hpet_poll () {
 			fprintf(stderr, "hpet_poll: revents = 0x%x\n",
 				pfd.revents);
 
-			if (read(fd, &data, sizeof(data)) != sizeof(data)) {
+			do {
+				retval = read(fd, &data, sizeof(data));
+			} while ((retval < 0) && (errno == EINTR));
+			if (retval != sizeof(data)) {
 				fprintf(stderr, "hpet_poll: read failed\n");
 			}
 			else
