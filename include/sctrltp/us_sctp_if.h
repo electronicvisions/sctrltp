@@ -36,12 +36,12 @@
 struct sctp_rx_cache {
 	struct sctp_alloc in[NUM_QUEUES];
 	struct sctp_alloc out;
-} __attribute__ ((packed));
+};
 
 struct sctp_tx_cache {
 	struct sctp_alloc in;
 	struct sctp_alloc out[NUM_QUEUES];
-} __attribute__ ((packed));
+};
 
 struct sctp_descr {
 	struct drepper_mutex    mutex;      /*a mutex similar to pthread mutexes*/
@@ -55,13 +55,14 @@ struct sctp_descr {
 	__s32					ref_cnt;    /*reference counter*/
 
 	__u8                    pad[8192 - (248 + PTR_SIZE + sizeof(struct drepper_mutex) + 2*sizeof(struct sctp_tx_cache) + 8)];
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct sctp_descr) == (2*4096), ""); // 2 pages (TODO: page size should be configurable)
 
 struct buf_desc {
 	/* TODO: do we need raw UDP frame? */
 	struct arq_frame *arq_sctrl;
 	__u64 *payload;
-} __attribute__ ((packed));
+};
 
 /*abstract functions to use framework more efficiently*/
 struct sctp_descr *open_conn (const char *corename);

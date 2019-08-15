@@ -111,7 +111,7 @@ ARQStream::ARQStream(bool reset_fpga) : max_wait_for_completion_upon_destruction
 
 
 ARQStream::~ARQStream() {
-	STATIC_ASSERT(sizeof(__u64) == sizeof(uint64_t));
+	static_assert(sizeof(__u64) == sizeof(uint64_t), "Non-matching typedefs");
 
 	// ECM (2018-02-14): send one last packet to flush (there's no dedicated tear down)
 	{
@@ -176,7 +176,14 @@ bool ARQStream::send(packet t, Mode mode) {
 	init_buf(&buffer);
 
 	// will fail if previous packet wasn't flushed
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
 	ret = append_words(&buffer, t.pid, t.len, reinterpret_cast<__u64*>(&t.pdu[0]));
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
 	if (ret < 0)
 		throw std::runtime_error(name + ": payload error");
 

@@ -2,6 +2,8 @@
 #define _SCTP_ATOMIC
 
 #include "sctrltp/build-config.h"
+
+#include <assert.h>
 #include <linux/types.h>
 #include <limits.h>
 
@@ -35,7 +37,8 @@ typedef volatile __s32 __vs32;
 /*dummy for an empty cache line*/
 struct empty_cl {
 	__vs32 empty[L1D_CLS/4];
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct empty_cl) == L1D_CLS, "");
 
 /*famous blocking drepper mutex using futex syscall (NEEDS TO BE PAGE ALIGNED!)*/
 struct drepper_mutex {
@@ -43,7 +46,8 @@ struct drepper_mutex {
 	__vs32 owner;
 	__vs32 type;
 	__vs32 pad[L1D_CLS/4 - 3];
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct drepper_mutex) == L1D_CLS, "");
 
 /*a semaphore implementation using futex syscall (if blocking, PAGE ALIGNMENT REQUIRED!)*/
 struct semaphore {
@@ -53,7 +57,8 @@ struct semaphore {
 	__vs32 waiter;
 	__vs32 type;
 	__vs32 pad[L1D_CLS/4 - 5];
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct semaphore) == L1D_CLS, "");
 
 /*a ticket lock implementation (if blocking, see above)*/
 struct ticket_lock {
@@ -63,7 +68,8 @@ struct ticket_lock {
 	__vs32 waiter;
 	__vs32 type;
 	__vs32 pad[L1D_CLS/4 - 5];
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct ticket_lock) == L1D_CLS, "");
 
 #define MAX_PROC 255
 
@@ -75,7 +81,9 @@ struct queue_lock {
 	__vs32 type;
 	__vs32 pad[L1D_CLS/4 - 4];
 	struct empty_cl place[MAX_PROC];
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct queue_lock) == (L1D_CLS + sizeof(struct empty_cl) * MAX_PROC), "");
+static_assert((sizeof(struct queue_lock) % L1D_CLS) == 0, "");
 
 /*Some special fences supported by common hardware*/
 void memfence (void);

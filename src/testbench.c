@@ -137,10 +137,17 @@ int main (int argc, char **argv)
 
 		/*Handle frame*/
 		sc_header = ptr;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
 		sc_cmds = sc_header->COMMANDS;
 
 		sc_header_out = ptr_out;
 		sc_resps = sc_header_out->COMMANDS;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
 
 		/*Process content of recv. packet*/
 		sc_header_out->LEN = sc_header->LEN;

@@ -20,7 +20,7 @@ struct sctp_timer {
 	/* HPET / polling stuff */
 	struct hpet_info info;
 	struct pollfd pfd;
-} __attribute__ ((packed));
+};
 
 /* Opens timer device file and tests if periodic interrupts can be enabled*/
 __s32 timer_init (struct sctp_timer *desc, char *dev, __u32 freq);

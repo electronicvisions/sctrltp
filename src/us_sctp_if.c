@@ -250,7 +250,14 @@ __s32 acq_buf (struct sctp_descr *desc, struct buf_desc *acq, const __u8 mode)
 
 	/*Update pointer fields of buf_desc to point to newly acquired buffer*/
 	acq->arq_sctrl = ptr_to_frame;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
 	acq->payload = acq->arq_sctrl->COMMANDS;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
 
 	return 1;
 }
@@ -476,7 +483,14 @@ __s32 recv_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 
 	/*Update pointer fields in buf_desc*/
 	buf->arq_sctrl = ptr_to_frame;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
 	buf->payload = buf->arq_sctrl->COMMANDS;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
 
 	return 1;
 }
@@ -566,7 +580,14 @@ __s64 SCTP_Send (struct sctp_descr *desc, const __u16 typ, const __u32 num, cons
 		packet = fetch_frames (&(desc->trans->alloctx), &(desc->send_buf.in), desc->trans);
 
 		sc_packet = packet;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
 		sc_cmd = sc_packet->COMMANDS;
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
 		if ((num - i) >= MAX_PDUWORDS)
 			j = MAX_PDUWORDS;
 		else

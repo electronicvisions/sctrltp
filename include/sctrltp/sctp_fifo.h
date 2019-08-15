@@ -30,7 +30,8 @@ struct sctp_fifo {
 	/*320-4096*/
 	__u8	*buf;						/*Pointer to beginning of buffer, which can hold all elements*/
 	__u8    pad4[4096-5*L1D_CLS-PTR_SIZE];/*Keep page size alignment*/
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct sctp_fifo) == 4096, ""); // 1x4k page (TODO: configurable page size?)
 
 void *get_abs_ptr (void *baseptr, void *relptr);
 

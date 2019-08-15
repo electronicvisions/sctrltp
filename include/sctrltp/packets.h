@@ -7,6 +7,8 @@
 
 #include <linux/types.h>
 #include <arpa/inet.h>
+#include <assert.h>
+#include <stddef.h>
 
 #include "sctrltp_defines.h"
 
@@ -53,6 +55,10 @@
 
 extern uint64_t const resetframe_var_values_check[6];
 
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
 struct arq_frame {
 	__u32   ACK;                /*Acknowledge to packet with sequenceno = ACK (other direction)*/
 	__u32   SEQ;                /*Sequencenumber*/
@@ -60,15 +66,18 @@ struct arq_frame {
 	__u16   LEN;                /*Length (64-bit words)*/
 	__u64   COMMANDS[MAX_PDUWORDS];
 }__attribute__ ((packed));
-
+static_assert(offsetof(struct arq_frame, COMMANDS) == (sizeof(__u32)*2 + sizeof(__u16)*2), "");
+// TODO: check for uint64_t ptr alignment requirements too!
 
 struct arq_ackframe {
 	__u32   ACK;                /*Acknowledge to packet with sequenceno = ACK (other direction)*/
-}__attribute__ ((packed));
+};
+static_assert(sizeof(struct arq_ackframe) == 4, "");
 
 struct arq_resetframe {
 	uint32_t magic_word;
-}__attribute__ ((packed));
+};
+static_assert(sizeof(struct arq_resetframe) == 4, "");
 
 
 /**** FUNCS USED BY SCTP LAYER ****/
@@ -148,3 +157,7 @@ __attribute__((always_inline)) static inline __u32 sctpsomething_get_size (struc
 		size = MIN_PACKET_SIZE;
 	return size;
 }
+
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif

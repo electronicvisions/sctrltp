@@ -61,14 +61,14 @@ PYBIND11_PLUGIN(pysctrltp) {
 				if (idx >= p.len) {
 					throw py::index_error();
 				}
-				return p[idx];
+				return p.pdu[idx];
 			}
 		)
 		.def("__setitem__", [](sctrltp::packet& p, size_t const idx, sctrltp::packet::entry_t const e) {
 				if (idx >= p.len) {
 					throw py::index_error();
 				}
-				p[idx] = e;
+				p.pdu[idx] = e;
 			}
 		)
 	;

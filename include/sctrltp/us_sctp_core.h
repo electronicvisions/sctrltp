@@ -30,13 +30,14 @@
 
 struct sctp_core {
 	char const* NAME;                       /* name of core */
+	__u32       pad0[L1D_CLS/4 - (sizeof(char const*)/4)];
 	struct      empty_cl STATUS;            /*Is read by all threads and modifies their behaviour*/
 	__u32       ACK;                        /*Is updated by RX and equals to the last valid sequencenr received*/
 	__s32       REQ;                        /*Request bit: 1 ack transmission requested 0 no pending request*/
-	__u8        pad0[L1D_CLS-8];
+	__u32       pad1[L1D_CLS/4-2];
 	__u32       rACK;                       /*Is updated by RX and equals the last new ACK received*/
 	__s32       NEW;                        /*New bit: 1 new remote ACK recvd 0 opposite*/
-	__u8        pad1[L1D_CLS-8];
+	__u32       pad2[L1D_CLS/4-2];
 	__u64       currtime;                   /*current time (CURRENTLY UPDATED BY RESEND THREAD)*/
 
 	struct sctp_window txwin;		        /*sliding window of TX/RX*/
@@ -49,7 +50,10 @@ struct sctp_core {
 	pthread_t	rxthr;
 	pthread_t	rsthr;
 	pthread_t	allocthr;
-} __attribute__ ((packed));
+};
+static_assert(offsetof(struct sctp_core, ACK) == (2*L1D_CLS), "");
+static_assert(offsetof(struct sctp_core, rACK) == (3*L1D_CLS), "");
+static_assert(offsetof(struct sctp_core, currtime) == (4*L1D_CLS), "");
 
 /*Main interface functions to SCTP Core*/
 

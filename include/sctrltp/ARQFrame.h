@@ -12,10 +12,6 @@ extern "C" {
 #endif
 #endif
 
-#ifndef STATIC_ASSERT
-#define STATIC_ASSERT(x) do{switch(0){case 0:case x:;}}while(false)
-#endif
-
 namespace sctrltp {
 
 /* standard packet type: with payload */
@@ -32,18 +28,7 @@ struct packet {
         entry_t pdu[MAX_PDUWORDS];
         uint8_t rawpdu[MAX_PDUWORDS*8];
     };
-
-	void compile_time_assert() {
-		STATIC_ASSERT(sizeof(pdu) == sizeof(rawpdu));
-	}
-
-	entry_t const& operator[](std::size_t const idx) const {
-		return pdu[idx];
-	}
-
-	entry_t& operator[](std::size_t const idx) {
-		return pdu[idx];
-	}
+    static_assert(sizeof(pdu) == sizeof(rawpdu), "");
 
     size_t size() const {
         size_t tmp = 0;

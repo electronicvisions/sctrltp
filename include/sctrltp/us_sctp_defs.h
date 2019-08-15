@@ -3,6 +3,8 @@
 #define _US_SCTP_DEFS
 
 #include <linux/types.h>
+#include <stddef.h>
+
 #include "packets.h"
 #include "sctp_fifo.h"
 #include "sctp_atomic.h"
@@ -86,7 +88,8 @@ struct sctp_stats {
 	__u64	bytes_recv_payload;	/*Total Number of bytes received (without dropped packets)*/
 	__u64	bytes_recv_oow;	/*Total Number of bytes received out of window (without dropped packets)*/
 	__u64	RTT;		    /*Current estimated round trip time in milliseconds*/
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct sctp_stats) == (sizeof(__u64)*12), "");
 
 struct sctp_internal {
 	struct arq_frame *req;   /*pointer to packet to transmit or to packet was transmitted*/
@@ -95,20 +98,22 @@ struct sctp_internal {
 	__u32	ntrans;			    /*Number of transmissions (send/resend(s))*/
 	__u8    acked;              /*0 = not acknowledged 1 = otherwise*/
 	__u8    pad[L1D_CLS-2*PTR_SIZE-13];
-} __attribute__ ((packed));
+};
+static_assert(sizeof(struct sctp_internal) == L1D_CLS, "");
 
 struct sctp_alloc {
 	struct arq_frame  *fptr[PARALLEL_FRAMES]; /*Pointer to preallocated/recycled buffer(s)*/
 	__u32 num;                                  /*Number of valid frame ptr in fptr array*/
 	__u32 next;
 	__u8 pad[L1D_CLS-8];                        /*We want Cachelinesize alignment*/
-} __attribute__ ((packed));
+};
+static_assert((sizeof(struct sctp_alloc) % L1D_CLS) == 0, "");
 
 struct sctp_interface {                 /*Bidirectional interface between layers (lays in shared mem region)*/
 	/*0-4095*/
 	struct semaphore        waketx;     /*This var is used to wake TX by USER or RX*/
 	__u32                   lock_mask;
-	__u8                    pad0[4096-L1D_CLS-4];
+	__u32                   pad0[4096/4-L1D_CLS/4-1];
 	/*4096*/
 	struct sctp_fifo        alloctx;
 	struct sctp_fifo        allocrx;
@@ -126,6 +131,8 @@ struct sctp_interface {                 /*Bidirectional interface between layers
 
 	struct sctp_stats       stats;
 	struct arq_frame        pool[ALLOCTX_BUFSIZE+ALLOCRX_BUFSIZE];
-} __attribute__ ((packed));
+};
+static_assert(offsetof(struct sctp_interface, alloctx) == 4096, ""); // TODO: page size should be configurable
+// TODO: check for more?
 
 #endif
