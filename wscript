@@ -50,11 +50,13 @@ def configure(conf):
 
     # compile flags for libsctrl
     from waflib import Options
-    conf.env.CFLAGS  = ('-Os -g -fPIC -DSCTRL_PARALLEL').split()
+    if not conf.env.CFLAGS:
+        conf.env.CFLAGS  = ('-Os -g -fPIC').split()
     if not Options.options.nowarnings:
         conf.env.CFLAGS += ('-Wall -Wextra -Winline').split()
         #conf.env.CFLAGS += ('-Werror -Wstrict-overflow=5').split() # old-gcc whines: -Wstrict-overflow=5
         #conf.env.CFLAGS += ('-Wno-long-long -Wno-sign-compare').split()
+    conf.env.CFLAGS += ['-DSCTRL_PARALLEL']
 
     # library definitions
     conf.check_cxx(lib='rt', uselib_store='RT', mandatory=1)

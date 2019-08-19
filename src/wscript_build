@@ -3,6 +3,7 @@ bld.objects(
     target =   'us_sctp_if_obj',
     use    =   'sctrl_inc',
     includes = '.',
+    cflags = '-fPIC',
 )
 
 
@@ -14,7 +15,8 @@ bld(
     use    =   'sctrl_inc',
     includes = '.',
     install_path = 'lib',
-    defines = 'LOGLEVEL=9'
+    defines = 'LOGLEVEL=9',
+    cflags = '-fPIC',
 )
 
 # SHMEM server (standalone version)
@@ -39,6 +41,7 @@ bld(
     depends_on = ['hostarq_daemon'],
     install_path='lib',
     defines = 'LOGLEVEL=1',
+    cflags = '-fPIC',
 )
 
 # The daemon is dead, long live the daemon!
@@ -105,4 +108,5 @@ bld(
     target='fpga_ip_list',
     use = ['sctrltp_inc'],
     install_path='lib',
+    cxxflags = '-fPIC',
 )
