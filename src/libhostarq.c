@@ -126,24 +126,29 @@ hostarq_open(struct hostarq_handle* handle)
 		/* path already exists */
 		ret2 = stat(lockdir, &lockdir_stat);
 		if (ret2 < 0) {
-			perror("stat()");
+			LOG_ERROR("Could not perform stat() on lockdir (%s): %s\n",
+			          lockdir, strerror(errno));
 			abort();
 		} else if (!S_ISDIR(lockdir_stat.st_mode)) {
-			fprintf(stderr, "lockdir path exists but is not a directory!\n");
+			LOG_ERROR("lockdir (%s) exists but is not a directory!\n",
+			          lockdir);
 			abort();
 		} else if (!(lockdir_stat.st_mode  & (S_IRWXU | S_IRWXG | S_IRWXO))) {
-			fprintf(stderr, "lockdir exists but has wrong mode\n");
+			LOG_ERROR("lockdir (%s) exists but has wrong mode\n",
+			          lockdir);
 			abort();
 		}
 	} else if (ret < 0) {
 		/* unknown error */
-		perror("mkdir()");
+		LOG_ERROR("Failed to create lockdir (%s): %s\n",
+		          lockdir, strerror(errno));
 		abort();
 	} else {
 		/* created directory; now set mode */
 		ret2 = chmod(lockdir, 0777);
 		if (ret2 != 0) {
-			perror("chmod()");
+			LOG_ERROR("Could not set lockdir (%s) mode: %s\n",
+			          lockdir, strerror(errno));
 			abort();
 		}
 	}
@@ -151,7 +156,8 @@ hostarq_open(struct hostarq_handle* handle)
 
 	fd = mkstemp(lockdir_startupfile);
 	if (fd < 0) {
-		perror("Could not create/open startup lockfile");
+		LOG_ERROR("Could not create/open startup lockfile (template: %s): %s\n",
+		          lockdir_startupfile, strerror(errno));
 		abort();
 	}
 
