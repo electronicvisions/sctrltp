@@ -83,9 +83,7 @@ __s32 sock_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len);
 /*returns number of bytes actually written (should be equal to len, if its not -4 is returned)*/
 __s32 sock_writev (struct sctp_sock *ssock, const struct iovec *iov, int iovcnt);
 
-#ifdef WITH_PACKET_MMAP
-void print_sock_stats ();
-#endif
+void print_stats ();
 
 #ifdef DEBUG
 __s32 debug_write(struct sctp_sock *ssock, struct arq_frame *buf, __u32 len);

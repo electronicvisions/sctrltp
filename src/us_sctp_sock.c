@@ -3,8 +3,10 @@
 #include <errno.h>
 #include <time.h>
 #include <sched.h>
-#include "sctrltp/us_sctp_sock.h"
 #include <sys/time.h>
+
+#include "sctrltp/us_sctp_sock.h"
+#include "sctrltp/us_sctp_core.h"
 
 double mytime() {
 	struct timeval now;
@@ -249,8 +251,103 @@ check_rx_ring:
 	return nread;
 }
 
+void print_stats () {
+	struct sctp_core *ad = SCTP_debugcore();
+	__s32 tmp;
+	int i;
+	float ftmp;
+	double dtmp;
+	static double start_time = 0.0;
+	static size_t last_bytes_sent_payload = 0;
+	static size_t last_bytes_recv_payload = 0;
+	static size_t last_update_time = 0;
+	if (ad == NULL) {
+		fprintf (stderr, "Core already down.\n");
+	} else {
+		if (start_time < 1.0)
+			start_time = shitmytime();
+
+		printf ("****** CORE STATS ******\n");
+		printf ("%15lld packets received\n", ad->inter->stats.nr_received);
+		ftmp = 100.0*ad->inter->stats.nr_received_payload/ad->inter->stats.nr_received;
+		printf ("%15lld payload packets received                    %5.1f%%\n", ad->inter->stats.nr_received_payload, ftmp);
+		ftmp = 100.0*ad->inter->stats.nr_protofault/ad->inter->stats.nr_received;
+		printf ("%15lld non SCTP packets dropped                    %5.1f%%\n", ad->inter->stats.nr_protofault, ftmp);
+		ftmp = 100.0*ad->inter->stats.nr_congdrop/ad->inter->stats.nr_received;
+		printf ("%15lld packets lost (buffer full)                  %5.1f%%\n", ad->inter->stats.nr_congdrop, ftmp);
+		ftmp = 100.0*ad->inter->stats.nr_outofwin/ad->inter->stats.nr_received;
+		printf ("%15lld packets out of window                       %5.1f%%\n", ad->inter->stats.nr_outofwin, ftmp);
+		ftmp = 100.0*ad->inter->stats.nr_unknownf/ad->inter->stats.nr_received;
+		printf ("%15lld packets with unknown flag                   %5.1f%%\n", ad->inter->stats.nr_unknownf, ftmp);
+		printf ("%15lld total payload bytes received\n", ad->inter->stats.bytes_recv_payload);
+		ftmp = 100.0*ad->inter->stats.bytes_recv_oow/(ad->inter->stats.bytes_recv_oow+ad->inter->stats.bytes_recv_payload);
+		printf ("%15lld total out-of-window bytes received          %5.1f%%\n", ad->inter->stats.bytes_recv_oow, ftmp);
+		printf ("%15lld total payload bytes sent\n", ad->inter->stats.bytes_sent_payload);
+		ftmp = 100.0*ad->inter->stats.bytes_sent_resend/ad->inter->stats.bytes_sent;
+		printf ("%15lld total bytes resent                          %5.1f%%\n", ad->inter->stats.bytes_sent_resend, ftmp);
+		printf ("%15lld total bytes sent\n", ad->inter->stats.bytes_sent);
+		printf ("%15lld total bytes acked\n", ad->inter->stats.bytes_sent-ad->inter->stats.bytes_sent_resend);
+		dtmp = shitmytime();
+		ftmp = 1.0e-6 * (ad->inter->stats.bytes_sent_payload - last_bytes_sent_payload) / (dtmp - last_update_time);
+		printf ("%15.1f MB/s payload TX rate (since last update)\n", ftmp);
+		ftmp = 1.0e-6 * ad->inter->stats.bytes_sent_payload / (dtmp - start_time);
+		printf ("%15.1f MB/s payload TX rate (since start up)\n", ftmp);
+		ftmp = 1.0e-6 * (ad->inter->stats.bytes_recv_payload - last_bytes_recv_payload) / (dtmp - last_update_time);
+		printf ("%15.1f MB/s payload RX rate (since last update)\n", ftmp);
+		ftmp = 1.0e-6 * ad->inter->stats.bytes_recv_payload / (dtmp - start_time);
+		printf ("%15.1f MB/s payload RX rate (since start up)\n", ftmp);
+		printf ("%15lld estimated RTT\n", ad->inter->stats.RTT);
+		printf ("************************\n");
+
+		last_bytes_sent_payload = ad->inter->stats.bytes_sent_payload;
+		last_bytes_recv_payload = ad->inter->stats.bytes_recv_payload;
+		last_update_time = dtmp;
+
+		printf ("\r");
+		printf ("CORE: ");
+		printf ("txqs: ");
+		for (i = 0; i < NUM_QUEUES; i++) {
+			tmp = ad->inter->tx_queues[i].nr_full.semval;
+			if (tmp < 0) tmp = 0;
+			printf ("%3d%%(%5d) ", tmp*100/ad->inter->tx_queues[i].nr_elem, tmp);
+		}
+		printf ("rxqs: ");
+		for (i = 0; i < NUM_QUEUES; i++) {
+			tmp = ad->inter->rx_queues[i].nr_full.semval;
+			if (tmp < 0) tmp = 0;
+			printf ("%3d%%(%5d) ",tmp*100/ad->inter->rx_queues[i].nr_elem, tmp);
+		}
+		tmp = ad->inter->alloctx.nr_full.semval;
+		if (tmp < 0) tmp = 0;
+		printf ("freetx: %.3d%%(%d) ",tmp*100/ad->inter->alloctx.nr_elem, tmp);
+		tmp = ad->inter->allocrx.nr_full.semval;
+		if (tmp < 0) tmp = 0;
+		printf ("freerx: %.3d%%(%d) ",tmp*100/ad->inter->allocrx.nr_elem, tmp);
+		printf ("lock_mask: %.8x ", ad->inter->lock_mask);
+		printf ("RTT: %.lld [us] ", ad->inter->stats.RTT);
+		printf ("CTS: %.lld [us] ", ad->currtime);
+
+		tmp = ad->txwin.high_seq - ad->txwin.low_seq;
+		if (((ad->txwin.low_seq + MAX_WINSIZ) < MAX_NRFRAMES) && (ad->txwin.high_seq > MAX_NRFRAMES))
+			tmp =  ad->txwin.high_seq + MAX_NRFRAMES - ad->txwin.low_seq;
+		printf ("TX: %05d-%05d (%4d, ", ad->txwin.low_seq, ad->txwin.high_seq, tmp);
+		tmp = 100*ad->txwin.cur_wsize/ad->txwin.max_wsize/sizeof(struct arq_frame);
+		printf ("cws %3d%%, ", tmp);
+		tmp = 100*ad->txwin.ss_thresh/ad->txwin.max_wsize/sizeof(struct arq_frame);
+		printf ("sst %3d%%) ", tmp);
+
+		tmp = ad->rxwin.high_seq - ad->rxwin.low_seq;
+		if (((ad->rxwin.low_seq + MAX_WINSIZ) < MAX_NRFRAMES) && (ad->rxwin.high_seq > MAX_NRFRAMES))
+			tmp =  ad->rxwin.high_seq + MAX_NRFRAMES - ad->rxwin.low_seq;
+		printf ("RX: %05d-%05d (%4d) ", ad->rxwin.low_seq, ad->rxwin.high_seq, tmp);
+
+		printf ("ACK: %05d ", ad->ACK);
+		printf ("rACK: %05d ", ad->rACK);
+		printf ("REQ: %d ", ad->REQ);
+		printf ("\n");
+	}
+
 #ifdef WITH_PACKET_MMAP
-void print_sock_stats () {
 	struct tpacket_hdr *hdr; /* pointer to a packet header */
 	__u8 *tmp;
 	struct tpacket_stats st;
@@ -273,8 +370,8 @@ void print_sock_stats () {
 		printf("recieved %u packets, dropped %u\n", st.tp_packets, st.tp_drops);
 
 	printf("%d packets in ring (%d were dropped.)\n", sum, debug->drops);
-}
 #endif
+}
 
 __s32 sock_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len)
 {

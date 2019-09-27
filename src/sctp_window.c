@@ -6,9 +6,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "sctrltp/sctp_window.h"
-#ifdef WITH_PACKET_MMAP
 #include "sctrltp/us_sctp_sock.h" /* debug helper functions */
-#endif
 
 
 static inline struct sctp_internal *get_frame (struct sctp_window *win, __u32 seq)
@@ -304,9 +302,7 @@ __s32 resend_frame (struct sctp_window *win, struct sctp_internal *resend, __u64
 				tmp->ntrans++;
 				if (tmp->ntrans >= MAX_TRANS) {
 					fprintf (stderr, "MASTER TIMEOUT: maximum number of transmissions reached (%d)!!\n", tmp->ntrans);
-#ifdef WITH_PACKET_MMAP
-					print_sock_stats();
-#endif
+					print_stats();
 					return -1;
 				}
 
