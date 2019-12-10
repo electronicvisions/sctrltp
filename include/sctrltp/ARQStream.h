@@ -33,13 +33,6 @@ public:
 
 	ARQStream(std::string const name, bool const reset = true);
 
-	/**
-	 * Construct ARQStream by automatically extracting the FPGA IP address from the environment.
-	 * @param reset Reset FPGA
-	 * @throws std::runtime_error On no or more than one FPGA IP available in environment
-	 */
-	ARQStream(bool const reset_fpga = true);
-
 	~ARQStream();
 
 	// for compatibility with NCSIM, no-op on real hw

@@ -87,7 +87,7 @@ def build(bld):
     bld.objects (
         target          = 'arqstream_obj',
         source          = 'src/ARQStream.cpp',
-        use             = ['sctrltp_inc', 'sctrl_inc', 'hostarq', 'sctrl', 'BOOST4SCTRLTPARQSTREAM', 'fpga_ip_list'],
+        use             = ['sctrltp_inc', 'sctrl_inc', 'hostarq', 'sctrl', 'BOOST4SCTRLTPARQSTREAM'],
         cxxflags        = '-fPIC', # HOLY SHIT
     )
 
