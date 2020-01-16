@@ -234,7 +234,8 @@ static __s32 do_startup (bool fpga_reset){
 static void do_hard_exit() {
 	/* ignore aborting/failing threads */
 	SCTP_CoreDown();
-	kill(getppid(), SIGINT);
+	/* signal the user-facing software */
+	kill(getppid(), SIGHUP);
 	exit(EXIT_FAILURE);
 }
 
