@@ -10,6 +10,9 @@
 
 namespace sctrltp {
 
+// variable gets updates when the socket is opened
+static double sock_init_time = 0.0;
+
 double mytime() {
 	struct timeval now;
 	gettimeofday(&now, NULL);
@@ -163,6 +166,9 @@ __s8 sock_init (struct sctp_sock *ssock, const __u32 *remote_ip)
 	assert(ssock->debug_fd >= 0);
 #endif
 
+	// store time of when the socket was successfully opened
+	sock_init_time = mytime();
+
 	return 0;
 }
 
@@ -261,16 +267,12 @@ void print_stats () {
 	int i;
 	float ftmp;
 	double dtmp;
-	static double start_time = 0.0;
 	static size_t last_bytes_sent_payload = 0;
 	static size_t last_bytes_recv_payload = 0;
 	static size_t last_update_time = 0;
 	if (ad == NULL) {
 		fprintf (stderr, "Core already down.\n");
 	} else {
-		if (start_time < 1.0)
-			start_time = shitmytime();
-
 		printf ("****** CORE STATS ******\n");
 		printf ("%15lld packets received\n", ad->inter->stats.nr_received);
 		ftmp = 100.0*ad->inter->stats.nr_received_payload/ad->inter->stats.nr_received;
@@ -291,16 +293,16 @@ void print_stats () {
 		printf ("%15lld total bytes resent                          %5.1f%%\n", ad->inter->stats.bytes_sent_resend, ftmp);
 		printf ("%15lld total bytes sent\n", ad->inter->stats.bytes_sent);
 		printf ("%15lld total bytes acked\n", ad->inter->stats.bytes_sent-ad->inter->stats.bytes_sent_resend);
-		dtmp = shitmytime();
+		dtmp = mytime();
 		ftmp = 1.0e-6 * (ad->inter->stats.bytes_sent_payload - last_bytes_sent_payload) / (dtmp - last_update_time);
-		printf ("%15.1f MB/s payload TX rate (since last update)\n", ftmp);
-		ftmp = 1.0e-6 * ad->inter->stats.bytes_sent_payload / (dtmp - start_time);
-		printf ("%15.1f MB/s payload TX rate (since start up)\n", ftmp);
+		printf ("%15.3f MB/s payload TX rate (since last update)\n", ftmp);
+		ftmp = 1.0e-6 * ad->inter->stats.bytes_sent_payload / (dtmp - sock_init_time);
+		printf ("%15.3f MB/s payload TX rate (since start up)\n", ftmp);
 		ftmp = 1.0e-6 * (ad->inter->stats.bytes_recv_payload - last_bytes_recv_payload) / (dtmp - last_update_time);
-		printf ("%15.1f MB/s payload RX rate (since last update)\n", ftmp);
-		ftmp = 1.0e-6 * ad->inter->stats.bytes_recv_payload / (dtmp - start_time);
-		printf ("%15.1f MB/s payload RX rate (since start up)\n", ftmp);
-		printf ("%15lld estimated RTT\n", ad->inter->stats.RTT);
+		printf ("%15.3f MB/s payload RX rate (since last update)\n", ftmp);
+		ftmp = 1.0e-6 * ad->inter->stats.bytes_recv_payload / (dtmp - sock_init_time);
+		printf ("%15.3f MB/s payload RX rate (since start up)\n", ftmp);
+		printf ("%15lld estimated RTT [us]\n", ad->inter->stats.RTT);
 		printf ("************************\n");
 
 		last_bytes_sent_payload = ad->inter->stats.bytes_sent_payload;
