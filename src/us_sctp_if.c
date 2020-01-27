@@ -129,7 +129,7 @@ struct sctp_descr *open_conn (const char *corename)
 	}
 
 	desc->trans = ptr;
-	strncpy ((char *)desc->name, (char *)corename, sizeof(desc->name));
+	strncpy ((char *)desc->name, (char *)corename, sizeof(desc->name) - 1);
 
 	return desc;
 }

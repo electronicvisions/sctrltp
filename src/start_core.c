@@ -122,7 +122,7 @@ int getInterface (const char *ifName, struct ifreq *ifHW) {
 	}
 
 	/* get hardware address by interface name (ifr_name) */
-	strncpy(ifreq.ifr_name, ifName, sizeof(ifreq.ifr_name));
+	strncpy(ifreq.ifr_name, ifName, sizeof(ifreq.ifr_name) - 1);
 	if (ioctl (sockfd, SIOCGIFHWADDR, &ifreq) < 0) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat"
@@ -173,7 +173,7 @@ void printInterfaces (void) {
 		if (ifr->ifr_addr.sa_family == AF_INET) {
 
 			/* get hardware address by interface name (ifr_name) */
-			strncpy(ifreq.ifr_name, ifr->ifr_name, sizeof(ifreq.ifr_name));
+			strncpy(ifreq.ifr_name, ifr->ifr_name, sizeof(ifreq.ifr_name) - 1);
 			if (ioctl (sockfd, SIOCGIFHWADDR, &ifreq) < 0) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat"
