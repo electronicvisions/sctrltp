@@ -131,7 +131,9 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 		} else {
 			/* continue with pageable shmem, but warn the user */
 			LOG_WARN("Could not lock shared mem to process space "
-			         "(maybe max memlock too small? NAME: %s)", NAME);
+			         "(maybe max memlock too small? `ulimit -l` should return at "
+			         "least %d blocks! NAME: %s)",
+			         (size + 512 - 1) / 512, NAME);
 		}
 	}
 #ifdef __i386__
