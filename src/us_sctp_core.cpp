@@ -267,6 +267,7 @@ static void *fpga_reset_timeout(void*) {
 
 template <typename P>
 static void do_reset (bool fpga_reset) {
+	int ret;
 	__s32 b;
 	struct sctp_alloc<P> tmp1,tmp2;
 	struct sctp_interface<P> *inter = get_admin<P>()->inter;
@@ -373,7 +374,16 @@ static void do_reset (bool fpga_reset) {
 		}
 		/*Signal thread should wait for reset respones*/
 		xchg (&(get_admin<P>()->STATUS.empty[0]), STAT_WAITRESET);
-		pthread_create(&timer, NULL, fpga_reset_timeout<P> , NULL);
+		ret = pthread_create(&timer, NULL, fpga_reset_timeout<P> , NULL);
+		if (ret != 0) {
+			LOG_ERROR("Could not spawn reset timer thread (for NAME: %s): %s", get_admin<P>()->NAME, strerror(errno));
+			pthread_exit(NULL);
+		}
+		ret = pthread_detach(timer);
+		if (ret != 0) {
+			LOG_ERROR("Could not detach reset timer thread (for NAME: %s): %s", get_admin<P>()->NAME, strerror(errno));
+			pthread_exit(NULL);
+		}
 	} else {
 		/*Signal threads should work normally*/
 		xchg (&(get_admin<P>()->STATUS.empty[0]), STAT_NORMAL);
@@ -1141,6 +1151,11 @@ __s8 SCTP_CoreUp (char const *name, char const *rip, __s8 wstartup)
 		deallocate(11);
 		return -4;
 	}
+	c = pthread_detach(get_admin<P>()->rxthr);
+	if (c != 0) {
+		deallocate(11);
+		return -4;
+	}
 
 #ifdef WITH_HPET
 	/* Before we start RESEND, we need to set up his timer */
@@ -1166,8 +1181,18 @@ __s8 SCTP_CoreUp (char const *name, char const *rip, __s8 wstartup)
 		deallocate(12);
 		return -4;
 	}
+	c = pthread_detach(get_admin<P>()->rsthr);
+	if (c != 0) {
+		deallocate(12);
+		return -4;
+	}
 
 	c = pthread_create (&get_admin<P>()->txthr, NULL, SCTP_TX<P>, get_admin<P>());
+	if (c != 0) {
+		deallocate(14);
+		return -4;
+	}
+	c = pthread_detach(get_admin<P>()->txthr);
 	if (c != 0) {
 		deallocate(14);
 		return -4;
