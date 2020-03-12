@@ -2,14 +2,13 @@
 
 #include <chrono>
 #include <boost/asio/ip/address_v4.hpp>
+#include "sctrltp/ARQFrame.h"
 
 #include "sctrltp/sctrltp_defines.h"
 
 namespace sctrltp {
 
 // fwd decls
-template<typename P>
-class packet;
 template<typename P>
 class ARQStreamImpl;
 
@@ -74,6 +73,17 @@ public:
 	// queue packet or false (no false on hw, it blocks)
 	bool send(packet<P>, Mode mode = FLUSH);
 
+	/**
+	 * Send sequence of payloads in max-sized packets.
+	 * @tparam InputIterator Iterator type to describe sequence.
+	 * @param pid PID to use
+	 * @param begin Iterator to beginning of sequence of payload
+	 * @param end Iterator to end of sequence of payload
+	 * @throws std::runtime_error On unsupported NONBLOCK mode
+	 */
+	template <typename InputIterator>
+	void send(packetid_t pid, InputIterator begin, InputIterator end, Mode mode = FLUSH);
+
 	// receive packet or false (no false on hw, it blocks)
 	bool receive(packet<P>&, Mode mode = NONBLOCK);
 
@@ -117,6 +127,13 @@ private:
 
 	size_t get_unique_queue_idx(packetid_t pid) const;
 
+	/**
+	 * Same as send except the words in the packet are not transformed to network byte order.
+	 * @param t Packet to send
+	 * @param mode Mode to use
+	 */
+	void send_direct(packet<P> const& t, Mode mode);
+
 #ifdef NCSIM
 // NCSIM-based testmodes want it public
 public:
@@ -130,5 +147,7 @@ public:
 	ARQStream& operator=(ARQStream const &);
 
 };
+
+#include "sctrltp/ARQStream.tcc"
 
 } // namespace sctrltp

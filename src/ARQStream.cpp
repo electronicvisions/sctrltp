@@ -61,6 +61,7 @@ template<typename P>
 struct ARQStreamImpl {
 	sctp_descr<P> * desc;
 	hostarq_handle* handle;
+	std::string name;
 	unique_queue_set_t unique_queue_set;
 
 	ARQStreamImpl(
@@ -71,7 +72,7 @@ struct ARQStreamImpl {
 	    udpport_t local_port_data,
 	    unique_queue_set_t unique_queues,
 	    bool reset) :
-	    unique_queue_set(unique_queues)
+	    name(name), unique_queue_set(unique_queues)
 	{
 		if (name.empty() || rip.empty()) {
 			throw std::runtime_error("ARQStream name and IP have to be set");
@@ -95,6 +96,32 @@ struct ARQStreamImpl {
 		hostarq_close(handle);
 		hostarq_free_handle(handle);
 		delete handle;
+	}
+
+	void fill_and_send_buf(sctrltp::packet<P> const& t, typename ARQStream<P>::Mode mode)
+	{
+		buf_desc<P> buffer;
+		__s32 ret;
+
+		// they cannot fail in blocking mode
+		acq_buf(desc, &buffer, 0); // TODO: add mode handling
+		init_buf(&buffer);
+
+		// will fail if previous packet wasn't flushed
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
+		ret = append_words(&buffer, t.pid, t.len, reinterpret_cast<__u64 const*>(t.pdu));
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
+		if (ret < 0)
+			throw std::runtime_error(name + ": payload error");
+
+		ret = send_buf(desc, &buffer, mode);
+		if (ret < 0)
+			throw std::runtime_error(name + ": send error");
 	}
 };
 
@@ -217,34 +244,20 @@ std::string ARQStream<P>::get_remote_ip() const {
 	return rip;
 }
 
-template<typename P>
-bool ARQStream<P>::send(packet<P> t, Mode mode) {
-	__s32 ret;
-	buf_desc<P> buffer;
+template <typename P>
+void ARQStream<P>::send_direct(packet<P> const& t, Mode const mode)
+{
+	pimpl->fill_and_send_buf(t, mode);
+}
 
+template <typename P>
+bool ARQStream<P>::send(packet<P> t, Mode const mode)
+{
 	// change to network byte order (like ARQStream does)
 	for (size_t i = 0; i < t.len; i++)
 		t.pdu[i] = htobe64(t.pdu[i]);
 
-	// they cannot fail in blocking mode
-	acq_buf<P>(pimpl->desc, &buffer, 0); // TODO: add mode handling
-	init_buf(&buffer);
-
-	// will fail if previous packet wasn't flushed
-#if (__GNUC__ >= 9)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
-#endif
-	ret = append_words<P>(&buffer, t.pid, t.len, reinterpret_cast<__u64*>(&t.pdu[0]));
-#if (__GNUC__ >= 9)
-#pragma GCC diagnostic pop
-#endif
-	if (ret < 0)
-		throw std::runtime_error(name + ": payload error");
-
-	ret = send_buf<P>(pimpl->desc, &buffer, mode);
-	if (ret < 0)
-		throw std::runtime_error(name + ": send error");
+	send_direct(t, mode);
 
 	return true;
 }

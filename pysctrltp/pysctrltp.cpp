@@ -33,7 +33,20 @@ void add_parameterization(py::module& m)
 	        "name"_a, "source_ip"_a, "source_port"_a, "target_ip"_a, "target_port"_a,
 	        "reset"_a = true)
 	    .def(py::init<ARQStreamSettings const>(), "settings"_a)
-	    .def("send", &ARQStream<P>::send, "packet"_a, "mode"_a = ARQStream<P>::Mode::FLUSH)
+	    .def(
+	        "send",
+	        py::overload_cast<packet<P>, typename ARQStream<P>::Mode>(
+	            (bool (ARQStream<P>::*)(packet<P>, typename ARQStream<P>::Mode)) &
+	            ARQStream<P>::send),
+	        "packet"_a, "mode"_a = ARQStream<P>::Mode::FLUSH)
+	    .def(
+	        "send",
+	        [](ARQStream<P>& self, packetid_t pid,
+	           std::vector<typename packet<P>::entry_t> const& payload,
+	           typename ARQStream<P>::Mode mode) {
+		        self.send(pid, payload.begin(), payload.end(), mode);
+	        },
+	        "pid"_a, "payload"_a, "mode"_a = ARQStream<P>::Mode::FLUSH)
 	    .def(
 	        "receive",
 	        py::overload_cast<typename sctrltp::packet<P>&, typename ARQStream<P>::Mode>(
