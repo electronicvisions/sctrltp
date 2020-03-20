@@ -1,3 +1,4 @@
+#include <pybind11/chrono.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -26,6 +27,14 @@ PYBIND11_PLUGIN(pysctrltp) {
 	m.def("open", &hostarq_open);
 	m.def("close", &hostarq_close);
 
+	py::class_<sctrltp::ARQStreamSettings> settings(m, "ARQStreamSettings");
+	settings.def(py::init<>())
+	    .def_readwrite("ip", &ARQStreamSettings::ip)
+	    .def_readwrite("reset", &ARQStreamSettings::reset)
+	    .def_readwrite("init_flush_lb_packet", &ARQStreamSettings::init_flush_lb_packet)
+	    .def_readwrite("init_flush_timeout", &ARQStreamSettings::init_flush_timeout)
+	    .def_readwrite("destruction_timeout", &ARQStreamSettings::destruction_timeout);
+
 	py::class_<sctrltp::ARQStream> arqstream(m, "ARQStream");
 
 	py::enum_<sctrltp::ARQStream::Mode>(arqstream, "Mode")
@@ -34,22 +43,22 @@ PYBIND11_PLUGIN(pysctrltp) {
 		.value("FLUSH", sctrltp::ARQStream::FLUSH)
 		.export_values();
 
-	arqstream
-		.def(py::init<std::string const, bool const>(), "name"_a, "reset"_a = true)
-		.def(py::init<std::string const,
-		              std::string const,
-			      ARQStream::udpport_t const,
-			      std::string const,
-			      ARQStream::udpport_t const,
-			      bool const>(), "name"_a, "source_ip"_a, "source_port"_a,
-			      "target_ip"_a, "target_port"_a, "reset"_a = true)
-		.def("send", &ARQStream::send, "packet"_a, "mode"_a = sctrltp::ARQStream::Mode::FLUSH)
-		.def("receive", &ARQStream::receive, "packet"_a, "mode"_a = sctrltp::ARQStream::Mode::NONBLOCK)
-		.def("flush", &ARQStream::flush)
-		.def("received_packet_available", &ARQStream::received_packet_available)
-		.def("all_packets_sent", &ARQStream::all_packets_sent)
-		.def("send_buffer_full", &ARQStream::send_buffer_full)
-	;
+	arqstream.def(py::init<std::string const, bool const>(), "name"_a, "reset"_a = true)
+	    .def(
+	        py::init<
+	            std::string const, std::string const, ARQStream::udpport_t const, std::string const,
+	            ARQStream::udpport_t const, bool const>(),
+	        "name"_a, "source_ip"_a, "source_port"_a, "target_ip"_a, "target_port"_a,
+	        "reset"_a = true)
+	    .def(py::init<sctrltp::ARQStreamSettings const>(), "settings"_a)
+	    .def("send", &ARQStream::send, "packet"_a, "mode"_a = sctrltp::ARQStream::Mode::FLUSH)
+	    .def(
+	        "receive", &ARQStream::receive, "packet"_a,
+	        "mode"_a = sctrltp::ARQStream::Mode::NONBLOCK)
+	    .def("flush", &ARQStream::flush)
+	    .def("received_packet_available", &ARQStream::received_packet_available)
+	    .def("all_packets_sent", &ARQStream::all_packets_sent)
+	    .def("send_buffer_full", &ARQStream::send_buffer_full);
 
 	py::class_<sctrltp::packet> packet(m, "packet");
 	packet

@@ -26,6 +26,9 @@ struct ARQStreamImpl {
 	hostarq_handle* handle;
 
 	ARQStreamImpl(std::string name, std::string rip, bool reset) {
+		if (name.empty() || rip.empty()) {
+			throw std::runtime_error("ARQStream name and IP have to be set");
+		}
 		// start HostARQ server (and reset link)
 		handle = new hostarq_handle;
 		hostarq_create_handle(handle, name.c_str(), rip.c_str(), reset /*reset HostARQ*/);
@@ -89,6 +92,16 @@ ARQStream::ARQStream(std::string const name, bool reset) :
 	pimpl(new ARQStreamImpl(name, name, reset))
 {
 	drop_receive_queue(400ms, true);
+}
+
+
+ARQStream::ARQStream(ARQStreamSettings const settings) :
+    name(settings.ip),
+    rip(settings.ip),
+    max_wait_for_completion_upon_destruction_in_ms(settings.destruction_timeout.count()),
+    pimpl(new ARQStreamImpl(settings.ip, settings.ip, settings.reset))
+{
+	drop_receive_queue(settings.init_flush_timeout, settings.init_flush_lb_packet);
 }
 
 

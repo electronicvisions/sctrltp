@@ -9,6 +9,19 @@ namespace sctrltp {
 class packet;
 class ARQStreamImpl;
 
+struct ARQStreamSettings
+{
+	// IPv4 address of remote link partner; format "x.x.x.x"
+	std::string ip;
+	// on startup send packet to reset SEQ/ACK and check parameter mismatch
+	bool reset = true;
+	// on construction send loopback packet to check receive queue flushing status
+	bool init_flush_lb_packet = true;
+	// timeout for receive queue flushing on construction
+	std::chrono::microseconds init_flush_timeout = std::chrono::milliseconds(400);
+	// timeout to keep waiting for packets when destructing
+	std::chrono::milliseconds destruction_timeout = std::chrono::milliseconds(500);
+};
 
 class ARQStream {
 public:
@@ -32,6 +45,8 @@ public:
 	);
 
 	ARQStream(std::string const name, bool const reset = true);
+
+	ARQStream(ARQStreamSettings const settings);
 
 	~ARQStream();
 
