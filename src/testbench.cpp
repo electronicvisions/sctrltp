@@ -25,7 +25,7 @@ static struct arq_frame *fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc
 		/*We dont have an unprocessed frame, so lets fetch new ones*/
 		fif_pop (fifo, (__u8 *)local_buf, baseptr);
 		for (i = 0; i < local_buf->num; i++) {
-			local_buf->fptr[i] = get_abs_ptr (baseptr, local_buf->fptr[i]);
+			local_buf->fptr[i] = static_cast<arq_frame*>(get_abs_ptr (baseptr, local_buf->fptr[i]));
 		}
 		local_buf->next = 1;
 		return local_buf->fptr[0];
@@ -47,7 +47,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 	} else {
 		if ((i = local_buf->next) < PARALLEL_FRAMES) {
 			/*There is room in local_buf to check frame in*/
-			local_buf->fptr[i] = get_rel_ptr (baseptr, ptr);
+			local_buf->fptr[i] = static_cast<arq_frame*>(get_rel_ptr (baseptr, ptr));
 			local_buf->next++;
 			if (flush) {
 				/*Even if we have not fully filled local_buf, we want to push it ...*/
@@ -63,7 +63,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 			fif_push (fifo, (__u8 *)local_buf, baseptr);
 			/*... but do not forget to register our frame*/
 			local_buf->next = 1;
-			local_buf->fptr[0] = get_rel_ptr (baseptr, ptr);
+			local_buf->fptr[0] = static_cast<arq_frame*>(get_rel_ptr (baseptr, ptr));
 			return;
 		}
 	}

@@ -1,3 +1,4 @@
+#pragma once
 #define MTU               1500
 #define MIN_PACKET_SIZE      4
 #define MIN_PACKET_SEND_SIZE (1*8+12)

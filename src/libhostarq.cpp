@@ -16,7 +16,9 @@
 
 /* We cannot #include <linux/fcntl.h> on Debian Jessie,
  * so we copied the define */
+#ifndef O_TMPFILE
 #define O_TMPFILE 020200000
+#endif
 
 /* Time interval in us for the parent processes when waiting for init
  * completion. The total time (RESET_TIMEOUT) is defined in a header file. */
@@ -51,14 +53,14 @@ void hostarq_create_handle(
 
 	/* construction begins */
 	handle->pid = 0;
-	handle->shm_name = malloc(strlen(shm_name) + 1);
+	handle->shm_name = static_cast<char*>(malloc(strlen(shm_name) + 1));
 	if (handle->shm_name == NULL) {
 		perror("malloc of handle->shm_name failed");
 		abort();
 	}
 	strcpy(handle->shm_name, shm_name);
 
-	handle->shm_path = malloc(strlen(shm_name_prefix) + NAME_MAX + 1);
+	handle->shm_path = static_cast<char*>(malloc(strlen(shm_name_prefix) + NAME_MAX + 1));
 	if (handle->shm_path == NULL) {
 		perror("malloc for handle->shm_path failed");
 		abort();
@@ -66,7 +68,7 @@ void hostarq_create_handle(
 	strcpy(handle->shm_path, shm_name_prefix);
 	strncat(handle->shm_path, handle->shm_name, NAME_MAX);
 
-	handle->remote_ip = malloc(strlen(remote_ip) + 1);
+	handle->remote_ip = static_cast<char*>(malloc(strlen(remote_ip) + 1));
 	if (handle->remote_ip == NULL) {
 		perror("malloc of handle->remote_ip failed");
 		abort();

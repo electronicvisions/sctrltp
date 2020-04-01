@@ -34,7 +34,7 @@ __s8 fif_init (struct sctp_fifo *fifo, __u32 nr, __u32 size)
 	__u8 *tmp;
 	if (fifo) {
 		/*Create buffer*/
-		tmp = malloc(nr*size);
+		tmp = static_cast<__u8*>(malloc(nr*size));
 		if (!tmp) {
 			return -5;
 		}
@@ -64,7 +64,7 @@ __s8 fif_init_wbuf (struct sctp_fifo *fifo, __u32 nr, __u32 size, __u8 *buf, voi
 		fifo->elem_size = size;
 
 		/*Calculates relative pointer to a given pointer*/
-		if (baseptr) buf = get_rel_ptr(baseptr, buf);
+		if (baseptr) buf = static_cast<__u8*>(get_rel_ptr(baseptr, buf));
 
 		fifo->buf = buf;
 		/*Make fifo accessible*/

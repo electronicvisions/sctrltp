@@ -1,12 +1,10 @@
+#pragma once
 /*Interface definition for upper layers*/
 
 
 #ifndef _GNU_SOURCE
 	#define _GNU_SOURCE
 #endif
-
-#ifndef _US_SCTP_IF
-#define _US_SCTP_IF
 
 #include <stdio.h>
 #include <unistd.h>
@@ -102,5 +100,3 @@ __s64 SCTP_Send (struct sctp_descr *desc, const __u16 typ, const __u32 num, cons
 /*Fetches one packet from core and gives the amount of responses(!) and flags in it back
  *returns 0 on success otherwise negative value*/
 __s32 SCTP_Recv (struct sctp_descr *desc, __u16 *typ, __u16 *num, __u64 *resp);
-
-#endif

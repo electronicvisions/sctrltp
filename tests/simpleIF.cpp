@@ -45,7 +45,7 @@ int main(int argc, char const * argv[]) {
 	}
 
 	/* create some test data */
-	gdata = malloc(sizeof(__u64) * TOTAL_WORDS);
+	gdata = static_cast<__u64*>(malloc(sizeof(__u64) * TOTAL_WORDS));
 	srand(0);
 	for (i = 0; i < TOTAL_WORDS; i++)
 		gdata[i] = rand();
@@ -106,7 +106,7 @@ void receiving (void * parm) {
 	size_t words_received = 0, no_frames = 0, errors = 0, i;
 	__s32 ret;
 	__u16 num, type;
-	__u64 * resp = malloc(sizeof(__u64) * MAX_PDUWORDS);
+	__u64 * resp = static_cast<__u64*>(malloc(sizeof(__u64) * MAX_PDUWORDS));
 
 	while (words_received < TOTAL_WORDS) {
 		ret = SCTP_Recv (desc, &type, &num, resp);

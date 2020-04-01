@@ -1,3 +1,4 @@
+#pragma once
 /*	\brief This file defines SCTP internal structure
  *
  *	This two functions create and destroy a SCTP-Core
@@ -5,9 +6,6 @@
  *	For implementation of RTT estimate use -DWITH_RTTADJ
  *	For implementation of congestion avoidance use -DWITH_CONGAV
  */
-
-#ifndef _US_SCTP_CORE
-#define _US_SCTP_CORE
 
 #include <pthread.h>
 #include <stdlib.h>
@@ -69,5 +67,3 @@ struct sctp_core *SCTP_debugcore (void);
 
 /* return seconds since epoch */
 double shitmytime();
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _SCTP_ATOMIC
-#define _SCTP_ATOMIC
+#pragma once
 
 #include "sctrltp/build-config.h"
 
@@ -167,5 +166,3 @@ void semaph_down (volatile struct semaphore *sem);
 void busy_semaph_up (volatile struct semaphore *sem);
 
 void busy_semaph_down (volatile struct semaphore *sem);
-
-#endif

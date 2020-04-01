@@ -1,9 +1,7 @@
+#pragma once
 /*
  * Cut down of pcap/bpf.h to avoid presence of libcap to compile SCTP Core
  */
-
-#ifndef _BERKELEY_PF
-#define _BERKELEY_PF
 
 /*
  * The instruction encodings.
@@ -84,5 +82,3 @@ struct bpf_insn {
  */
 #define BPF_STMT(code, k) { (__u16)(code), 0, 0, k }
 #define BPF_JUMP(code, k, jt, jf) { (__u16)(code), jt, jf, k }
-
-#endif

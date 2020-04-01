@@ -1,28 +1,28 @@
 bld.objects(
-    source =   'us_sctp_if.c',
+    source =   'us_sctp_if.cpp',
     target =   'us_sctp_if_obj',
     use    =   'sctrl_inc',
     includes = '.',
-    cflags = '-fPIC',
+    cxxflags = '-fPIC',
 )
 
 
 # the SCtrl Ethernet library
 bld(
-    features = 'c cstlib',
-    source =   'packets.c us_sctp_atomic.c sctp_fifo.c us_sctp_if.c',
+    features = 'cxx cxxstlib',
+    source =   'packets.cpp us_sctp_atomic.cpp sctp_fifo.cpp us_sctp_if.cpp',
     target =   'sctrl',
     use    =   'sctrl_inc',
     includes = '.',
     install_path = 'lib',
     defines = 'LOGLEVEL=9',
-    cflags = '-fPIC',
+    cxxflags = '-fPIC',
 )
 
 # SHMEM server (standalone version)
 bld(
-    features = 'c cprogram',
-    source='start_core.c us_sctp_core.c us_sctp_timer-hpet.c sctp_window.c us_sctp_sock.c packets.c',
+    features = 'cxx cxxprogram',
+    source='start_core.cpp us_sctp_core.cpp us_sctp_timer-hpet.cpp sctp_window.cpp us_sctp_sock.cpp packets.cpp',
     target='start_core',
     includes = '.',
     use=['PTHREAD','RT','sctrl'],
@@ -32,8 +32,8 @@ bld(
 
 # SHMEM server (library-version)
 bld(
-    features = 'c cstlib',
-    source='libhostarq.c',
+    features = 'cxx cxxstlib',
+    source='libhostarq.cpp',
     target='hostarq',
     includes = '.',
     export_includes = '.',
@@ -41,13 +41,13 @@ bld(
     depends_on = ['hostarq_daemon'],
     install_path='lib',
     defines = 'LOGLEVEL=1',
-    cflags = '-fPIC',
+    cxxflags = '-fPIC',
 )
 
 # The daemon is dead, long live the daemon!
 bld(
-    features = 'c cprogram',
-    source = 'hostarq_daemon.c us_sctp_core.c us_sctp_timer-hpet.c sctp_window.c us_sctp_sock.c packets.c',
+    features = 'cxx cxxprogram',
+    source = 'hostarq_daemon.cpp us_sctp_core.cpp us_sctp_timer-hpet.cpp sctp_window.cpp us_sctp_sock.cpp packets.cpp',
     target = 'hostarq_daemon',
     includes = '.',
     use = 'PTHREAD RT sctrl',
@@ -57,8 +57,8 @@ bld(
 
 # testmodes
 bld(
-    features = 'c cprogram',
-    source='testbench.c us_sctp_if.c',
+    features = 'cxx cxxprogram',
+    source='testbench.cpp us_sctp_if.cpp',
     target='testbench',
     includes = '.',
     use=['RT','sctrl'],
@@ -66,9 +66,9 @@ bld(
 )
 
 bld(
-    features='c cprogram',
+    features='cxx cxxprogram',
     target='sctp_test_core',
-    source='sctp_test_core.c packets.c',
+    source='sctp_test_core.cpp packets.cpp',
     includes = '.',
     use=['PTHREAD','RT','M','sctrl'],
     install_path='bin',
@@ -76,26 +76,26 @@ bld(
 
 # (unit?) tests
 bld(
-    features='c cprogram',
+    features='cxx cxxprogram',
     target='locktest',
-    source='locktest.c us_sctp_atomic.c',
+    source='locktest.cpp us_sctp_atomic.cpp',
     use='PTHREAD sctrltp_inc',
     includes = '.',
     install_path='bin',
 )
 
 bld(
-    features='c cprogram',
+    features='cxx cxxprogram',
     target='fifotest',
-    source='fifotest.c us_sctp_atomic.c sctp_fifo.c',
+    source='fifotest.cpp us_sctp_atomic.cpp sctp_fifo.cpp',
     use=['PTHREAD','RT', 'sctrltp_inc'],
     includes = '.',
     install_path='bin',
 )
 
 bld(
-    features = 'c cprogram',
-    source='daemon_user_ctrl.c us_sctp_if.c',
+    features = 'cxx cxxprogram',
+    source='daemon_user_ctrl.cpp us_sctp_if.cpp',
     target='daemon_user_ctrl',
     includes = '.',
     use=['RT','sctrl'],

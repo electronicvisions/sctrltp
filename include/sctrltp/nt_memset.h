@@ -1,3 +1,4 @@
+#pragma once
 /* 
 	This headerfile implements a very special function 
 	
@@ -8,9 +9,6 @@
 	
 	Do not define a fixed CLS value, instead compile with -DCLS=$(getconf LEVEL1_DCACHE_LINESIZE)
 */
-
-#ifndef _IA64_MSET_NOCACHE
-	#define _IA64_MSET_NOCACHE
 
 #define CLS 64 /* This is the cache line size of the L1 Data cache (UGLY, but a too high value is not so bad)*/
 
@@ -75,5 +73,3 @@ void* malloc_safe (size_t size)
 		memset (tmp, c, (nr-bytes_written));
 	}
 }
-
-#endif

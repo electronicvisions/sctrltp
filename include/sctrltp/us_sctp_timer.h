@@ -1,8 +1,6 @@
+#pragma once
 /* TIMER based time measurement routines 
  * (UNDER DEVELOPMENT!!!)*/
-
-#ifndef _US_SCTP_TIMER
-#define _US_SCTP_TIMER
 
 #include <fcntl.h>
 #include <linux/hpet.h>
@@ -33,5 +31,3 @@ __s32 timer_disenable (struct sctp_timer *desc, __u8 flag);
 
 /* Closes timer device file */
 void timer_close (struct sctp_timer *desc);
-
-#endif

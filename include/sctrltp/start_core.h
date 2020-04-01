@@ -1,3 +1,4 @@
+#pragma once
 #include <net/if.h>
 
 void print_core3 (void);

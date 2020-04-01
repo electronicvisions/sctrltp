@@ -1,11 +1,9 @@
+#pragma once
 /*
  * Use -DWITH_CONGAV to enable congestion avoidance
  *
  * ATTENTION: This version needs locking by callers of this functions!
  * */
-
-#ifndef _SCTP_WINDOW
-#define _SCTP_WINDOW
 
 #include <linux/types.h>
 #include <stddef.h>
@@ -47,7 +45,7 @@ void win_reset (struct sctp_window *win);
 
 /*Checks if new frame can be send and then pushes frame into window
  *Returns 1 if frame was inserted otherwise 0 (<1 (errorcase!))*/
-__s32 new_frame_tx (struct sctp_window *win, struct arq_frame *new, __u64 currtime);
+__s32 new_frame_tx (struct sctp_window *win, struct arq_frame *new_frame, __u64 currtime);
 
 /* Inserts frame into RXWIN if seq valid (and in window) returning slides and content of frames checked out*/
 __s32 new_frame_rx (struct sctp_window *win, struct arq_frame *in, struct sctp_internal *out);
@@ -59,5 +57,3 @@ __s32 mark_frame (struct sctp_window *win, __u32 rACK, struct sctp_internal *out
 
 /*Compares time field of packet(s) with currtime and gives them back if difference exceeds rto*/
 __s32 resend_frame (struct sctp_window *win, struct sctp_internal *resend, __u64 rto, __u64 currtime);
-
-#endif

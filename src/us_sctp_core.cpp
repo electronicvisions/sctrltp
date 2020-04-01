@@ -166,7 +166,7 @@ static void mw_push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf
 	} else {
 		if ((i = local_buf->next) < PARALLEL_FRAMES) {
 			/*There is room in local_buf to check frame in*/
-			local_buf->fptr[i] = get_rel_ptr (admin->inter, ptr);
+			local_buf->fptr[i] = static_cast<arq_frame*>(get_rel_ptr (admin->inter, ptr));
 			local_buf->next++;
 			if (flush) {
 				/*Even if we have not fully filled local_buf, we want to push it ...*/
@@ -182,7 +182,7 @@ static void mw_push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf
 			fif_push (fifo, (__u8 *)local_buf, admin->inter);
 			/*... but do not forget to register our frame*/
 			local_buf->next = 1;
-			local_buf->fptr[0] = get_rel_ptr (admin->inter, ptr);
+			local_buf->fptr[0] = static_cast<arq_frame*>(get_rel_ptr (admin->inter, ptr));
 			return;
 		}
 	}
@@ -202,7 +202,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, s
 	} else {
 		if ((i = local_buf->next) < PARALLEL_FRAMES) {
 			/*There is room in local_buf to check frame in*/
-			local_buf->fptr[i] = get_rel_ptr (admin->inter, ptr);
+			local_buf->fptr[i] = static_cast<arq_frame*>(get_rel_ptr (admin->inter, ptr));
 			local_buf->next++;
 			if (flush) {
 				/*Even if we have not fully filled local_buf, we want to push it ...*/
@@ -218,7 +218,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, s
 			fif_push (fifo, (__u8 *)local_buf, admin->inter);
 			/*... but do not forget to register our frame*/
 			local_buf->next = 1;
-			local_buf->fptr[0] = get_rel_ptr (admin->inter, ptr);
+			local_buf->fptr[0] = static_cast<arq_frame*>(get_rel_ptr (admin->inter, ptr));
 			return;
 		}
 	}
@@ -242,7 +242,7 @@ static void do_hard_exit() {
 }
 
 /*timeout for fpga +reset response*/
-static void *fpga_reset_timeout() {
+static void *fpga_reset_timeout(void*) {
 	LOG_INFO("Start new reset timer (NAME: %s)", admin->NAME);
 	usleep(RESET_TIMEOUT);
 	if (admin->STATUS.empty[0] == STAT_NORMAL) {
@@ -370,7 +370,7 @@ static void do_reset (bool fpga_reset) {
 
 void *SCTP_PREALLOC (void *core)
 {
-	struct sctp_core *ad = core;
+	struct sctp_core *ad = (sctp_core*) core;
 	__u32 i;
 	__u32 num;
 	struct sctp_alloc tmp;
@@ -428,7 +428,7 @@ void *SCTP_RX (void *core)
 	__u8 local = 0;
 
 	/*Shortcuts to used elements*/
-	struct sctp_core *ad = core;
+	struct sctp_core *ad = (sctp_core*) core;
 	struct sctp_interface *inter = ad->inter;
 
 	/*Local cache*/
@@ -487,7 +487,7 @@ void *SCTP_RX (void *core)
 				if (b != SC_EMPTY) {
 					/*Yippey, we got frames to handle!*/
 					for (i = 0; i < in.num; i++) {
-						in.fptr[i] = get_abs_ptr (inter, in.fptr[i]);
+						in.fptr[i] = static_cast<arq_frame*>(get_abs_ptr (inter, in.fptr[i]));
 					}
 					in.next = 1;
 					curr_packet = in.fptr[0];
@@ -598,7 +598,7 @@ void *SCTP_RX (void *core)
 								/*Pass packet to upper layer*/
 								if ((i = out[queue].next) < PARALLEL_FRAMES) {
 									/*There is room in local_buf to check frame in*/
-									out[queue].fptr[i] = get_rel_ptr (inter, outbuf_rx[a].resp);
+									out[queue].fptr[i] = static_cast<arq_frame*>(get_rel_ptr (inter, outbuf_rx[a].resp));
 									out[queue].next++;
 								} else {
 									/*Local buf totally full, so lets push it up first ...*/
@@ -607,7 +607,7 @@ void *SCTP_RX (void *core)
 									fif_push (outfifo, (__u8 *)&out[queue], inter);
 									/*... but do not forget to register our frame*/
 									out[queue].next = 1;
-									out[queue].fptr[0] = get_rel_ptr (inter, outbuf_rx[a].resp);
+									out[queue].fptr[0] = static_cast<arq_frame*>(get_rel_ptr (inter, outbuf_rx[a].resp));
 								}
 
 								a++;
@@ -662,7 +662,7 @@ void *SCTP_TX (void *core)
 {
 	__s32 b;
 	__s32 a = 0;
-	struct sctp_core *ad = core;
+	struct sctp_core *ad = (sctp_core*) core;
 	struct sctp_interface *inter = ad->inter;
 	struct sctp_fifo *infifo = ad->inter->tx_queues;
 	struct sctp_alloc in[NUM_QUEUES];
@@ -724,7 +724,7 @@ void *SCTP_TX (void *core)
 					if (b != SC_EMPTY) {
 						/*Yippey, we got frames to handle!*/
 						for (i = 0; i < in[queue].num; i++) {
-							in[queue].fptr[i] = get_abs_ptr (inter, in[queue].fptr[i]);
+							in[queue].fptr[i] = static_cast<arq_frame*>(get_abs_ptr (inter, in[queue].fptr[i]));
 						}
 						in[queue].next = 1;
 						curr_packet = in[queue].fptr[0];
@@ -880,7 +880,7 @@ void *SCTP_TX (void *core)
  * TODO: Maybe set up another rtc/hpet timer for this thread*/
 void *SCTP_RESEND (void *core)
 {
-	struct sctp_core *ad = core;
+	struct sctp_core *ad = (sctp_core*) core;
 	struct sctp_window *txwin = &(ad->txwin);
 	struct sctp_stats *stats = &(ad->inter->stats);
 	__vs32 *wlock = &(ad->txwin.lock.lock);
@@ -1007,7 +1007,7 @@ __s8 SCTP_CoreUp (char const *name, char const *rip, __s8 wstartup)
 		return 1;
 
 	if (!admin)
-		admin = malloc (sizeof(struct sctp_core));
+		admin = (sctp_core*) malloc (sizeof(struct sctp_core));
 	if (!admin) {
 		return -5;
 	} else {

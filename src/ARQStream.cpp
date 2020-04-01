@@ -8,10 +8,8 @@
 #include <sstream>
 #include <thread>
 
-extern "C"{
 #include "sctrltp/us_sctp_if.h"
 #include "sctrltp/libhostarq.h"
-}
 
 #include "sctrltp/ARQFrame.h"
 #include "sctrltp/ARQStream.h"

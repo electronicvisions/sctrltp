@@ -1,8 +1,6 @@
+#pragma once
 /*NOTE: CRITICAL sections should be pointers to atomic_var structures (see sctp_atomic.h)
 		One should change returned values to corresponding error values (f.e. EAGAIN etc.)*/
-
-#ifndef _SCTP_FIFO
-#define _SCTP_FIFO
 
 #include <linux/types.h>
 #include "sctp_atomic.h"
@@ -59,5 +57,3 @@ __s8 fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 __s8 try_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 
 __s8 try_fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
-
-#endif

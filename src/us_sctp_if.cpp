@@ -61,7 +61,7 @@ static struct arq_frame *fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc
 		/*We dont have an unprocessed frame, so lets fetch new ones*/
 		fif_pop (fifo, (__u8 *)local_buf, baseptr);
 		for (i = 0; i < local_buf->num; i++) {
-			local_buf->fptr[i] = get_abs_ptr (baseptr, local_buf->fptr[i]);
+			local_buf->fptr[i] = static_cast<arq_frame*>(get_abs_ptr (baseptr, local_buf->fptr[i]));
 		}
 		local_buf->next = 1;
 		return local_buf->fptr[0];
@@ -83,7 +83,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 	} else {
 		if ((i = local_buf->next) < PARALLEL_FRAMES) {
 			/*There is room in local_buf to check frame in*/
-			local_buf->fptr[i] = get_rel_ptr (baseptr, ptr);
+			local_buf->fptr[i] = static_cast<arq_frame*>(get_rel_ptr (baseptr, ptr));
 			local_buf->next++;
 			if (flush) {
 				/*Even if we have not fully filled local_buf, we want to push it ...*/
@@ -99,7 +99,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 			fif_push (fifo, (__u8 *)local_buf, baseptr);
 			/*... but do not forget to register our frame*/
 			local_buf->next = 1;
-			local_buf->fptr[0] = get_rel_ptr (baseptr, ptr);
+			local_buf->fptr[0] = static_cast<arq_frame*>(get_rel_ptr (baseptr, ptr));
 			return;
 		}
 	}
@@ -156,7 +156,7 @@ __s32 close_conn (struct sctp_descr *desc)
 		i = 0;
 		j = desc->send_buf.in.next;
 		while (j < desc->send_buf.in.num) {
-			desc->send_buf.in.fptr[i] = get_rel_ptr (desc->trans, desc->send_buf.in.fptr[j]);
+			desc->send_buf.in.fptr[i] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, desc->send_buf.in.fptr[j]));
 			j++;
 			i++;
 		}
@@ -182,7 +182,7 @@ __s32 close_conn (struct sctp_descr *desc)
 			i = 0;
 			j = desc->recv_buf.in[k].next;
 			while (j < desc->recv_buf.in[k].num) {
-				desc->recv_buf.in[k].fptr[i] = get_rel_ptr (desc->trans, desc->recv_buf.in[k].fptr[j]);
+				desc->recv_buf.in[k].fptr[i] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, desc->recv_buf.in[k].fptr[j]));
 				j++;
 				i++;
 			}
@@ -236,7 +236,7 @@ __s32 acq_buf (struct sctp_descr *desc, struct buf_desc *acq, const __u8 mode)
 		} else fif_pop (infifo, (__u8 *)&(desc->send_buf.in), desc->trans);
 
 		for (i = 0; i < desc->send_buf.in.num; i++) {
-			desc->send_buf.in.fptr[i] = get_abs_ptr (desc->trans, desc->send_buf.in.fptr[i]);
+			desc->send_buf.in.fptr[i] = static_cast<arq_frame*>(get_abs_ptr (desc->trans, desc->send_buf.in.fptr[i]));
 		}
 
 		desc->send_buf.in.next = 1;
@@ -288,7 +288,7 @@ __s32 rel_buf (struct sctp_descr *desc, struct buf_desc *rel, const __u8 mode)
 		} else {
 			if ((i = desc->recv_buf.out.next) < PARALLEL_FRAMES) {
 				/*There is room in cache to put pointer in*/
-				desc->recv_buf.out.fptr[i] = get_rel_ptr (desc->trans, rel->arq_sctrl);
+				desc->recv_buf.out.fptr[i] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, rel->arq_sctrl));
 				desc->recv_buf.out.next++;
 			} else {
 				/*We have one entry full, so lets release it first ...*/
@@ -303,7 +303,7 @@ __s32 rel_buf (struct sctp_descr *desc, struct buf_desc *rel, const __u8 mode)
 				} else fif_push (&(desc->trans->allocrx), (__u8 *)&(desc->recv_buf.out), desc->trans);
 				/*... and then register our pointer in a fresh entry*/
 				desc->recv_buf.out.next = 1;
-				desc->recv_buf.out.fptr[0] = get_rel_ptr (desc->trans, rel->arq_sctrl);
+				desc->recv_buf.out.fptr[0] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, rel->arq_sctrl));
 			}
 		}
 	}
@@ -353,7 +353,7 @@ __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 
 		/*We have to register a buffer to pass to lower layer*/
 		if ((i = desc->send_buf.out[queue].next) < PARALLEL_FRAMES) {
-			desc->send_buf.out[queue].fptr[i] = get_rel_ptr (desc->trans, buf->arq_sctrl);
+			desc->send_buf.out[queue].fptr[i] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
 			desc->send_buf.out[queue].next++;
 		} else {
 			desc->send_buf.out[queue].num = PARALLEL_FRAMES;
@@ -367,7 +367,7 @@ __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 			} else fif_push (&(desc->trans->tx_queues[queue]), (__u8 *)&(desc->send_buf.out[queue]), desc->trans);
 			do_wake = 1;
 			desc->send_buf.out[queue].next = 1;
-			desc->send_buf.out[queue].fptr[0] = get_rel_ptr (desc->trans, buf->arq_sctrl);
+			desc->send_buf.out[queue].fptr[0] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
 		}
 	}
 
@@ -471,7 +471,7 @@ __s32 recv_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 		} else fif_pop (&(desc->trans->rx_queues[queue]), (__u8 *)&(desc->recv_buf.in[queue]), desc->trans);
 
 		for (i = 0; i < desc->recv_buf.in[queue].num; i++) {
-			desc->recv_buf.in[queue].fptr[i] = get_abs_ptr (desc->trans, desc->recv_buf.in[queue].fptr[i]);
+			desc->recv_buf.in[queue].fptr[i] = static_cast<arq_frame*>(get_abs_ptr (desc->trans, desc->recv_buf.in[queue].fptr[i]));
 		}
 
 		desc->recv_buf.in[queue].next = 1;

@@ -53,7 +53,7 @@ __s8 win_init (struct sctp_window *win, __u32 max_fr, __u32 max_ws, __u8 side)
 	if (win)
 	{
 		/*Create buffer and store it*/
-		tmp = malloc (sizeof(struct sctp_internal)*max_fr);
+		tmp = static_cast<__u8*>(malloc (sizeof(struct sctp_internal)*max_fr));
 		if (!tmp) return SC_NOMEM;
 
 		win->side = side;
@@ -106,7 +106,7 @@ void win_reset (struct sctp_window *win)
 	}
 }
 
-__s32 new_frame_tx (struct sctp_window *win, struct arq_frame *new, __u64 currtime)
+__s32 new_frame_tx (struct sctp_window *win, struct arq_frame *new_frame, __u64 currtime)
 {
 	__u32 seq;
 	/*__u32 max_frames;*/
@@ -132,12 +132,12 @@ __s32 new_frame_tx (struct sctp_window *win, struct arq_frame *new, __u64 currti
 	if ((!tmp->req)) {
 		/*Success! We can append a new frame in buffer*/
 		/*Give packet the new sequence number!*/
-		sctpreq_set_seq(new, seq);
+		sctpreq_set_seq(new_frame, seq);
 
 		tmp->time = currtime;  /*This is initialized to current timestamp*/
 		tmp->ntrans = 1;  /*After this call we will send the frame one time minimum*/
 		tmp->acked = 0;
-		tmp->req = new; /*Register pointer of frame in buffer*/
+		tmp->req = new_frame; /*Register pointer of frame in buffer*/
 
 
 		/*Increase high_seq locally*/

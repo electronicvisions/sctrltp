@@ -1,6 +1,8 @@
 /*This peace of code will test locking methods provided by us_sctp_atomic.c*/
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 
 #include "sctrltp/build-config.h"
 #include <stdio.h>
@@ -41,7 +43,7 @@ double get_elapsed_time (struct timeval starttime, struct timeval endtime)
 	return diff;
 }
 
-void *consumer () {
+void *consumer (void*) {
 	__u64 amount = 0;
 	struct entry tmp;
 	cpu_set_t cpuset;
@@ -59,7 +61,7 @@ void *consumer () {
 	pthread_exit (NULL);
 }
 
-void *producer () {
+void *producer (void*) {
 	__u64 amount = 0;
 	struct entry tmp;
 	__u8 *curr_ptr = shmem.buffer;

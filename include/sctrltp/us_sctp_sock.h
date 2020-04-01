@@ -1,7 +1,4 @@
-/**/
-
-#ifndef _US_SCTP_SOCK
-#define _US_SCTP_SOCK
+#pragma once
 
 #include "sctrltp/build-config.h"
 #include <string.h>
@@ -87,6 +84,4 @@ void print_stats ();
 
 #ifdef DEBUG
 __s32 debug_write(struct sctp_sock *ssock, struct arq_frame *buf, __u32 len);
-#endif
-
 #endif

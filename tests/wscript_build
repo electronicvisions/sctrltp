@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 bld(
-    features     = 'c cprogram',
-    source       = 'test-libhostarq.c',
+    features     = 'cxx cxxprogram',
+    source       = 'test-libhostarq.cpp',
     target       = 'test-libhostarq',
     includes     = '.',
     use          = 'hostarq',
@@ -10,8 +10,8 @@ bld(
 )
 
 bld(
-    features = 'c cprogram',
-    source='simpleIF.c',
+    features = 'cxx cxxprogram',
+    source='simpleIF.cpp',
     target='simpleIF',
     includes = '.',
     use=['RT','sctrl', 'us_sctp_if_obj'],

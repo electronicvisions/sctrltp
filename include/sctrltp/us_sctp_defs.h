@@ -1,6 +1,5 @@
+#pragma once
 /*Definitions for return vals of SCTP funcs (will be unneccessary in Kernelspace)*/
-#ifndef _US_SCTP_DEFS
-#define _US_SCTP_DEFS
 
 #include <linux/types.h>
 #include <stddef.h>
@@ -134,5 +133,3 @@ struct sctp_interface {                 /*Bidirectional interface between layers
 };
 static_assert(offsetof(struct sctp_interface, alloctx) == 4096, ""); // TODO: page size should be configurable
 // TODO: check for more?
-
-#endif
