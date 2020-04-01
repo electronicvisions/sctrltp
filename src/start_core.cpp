@@ -10,11 +10,10 @@
 #include "sctrltp/us_sctp_core.h"
 #include "sctrltp/packets.h"
 
+using namespace sctrltp;
 
 static __s32 post_init = 0;
 static __s32 exiting = 0;
-
-void exit_handler (void);
 
 int main (int argc, char **argv)
 {
@@ -72,6 +71,7 @@ int main (int argc, char **argv)
 	return EXIT_SUCCESS;
 }
 
+namespace sctrltp {
 
 void print_core (void)
 {
@@ -198,3 +198,4 @@ void printInterfaces (void) {
 	close(sockfd);
 }
 
+} // namespace sctrltp

@@ -16,6 +16,8 @@
 #include "sctrltp/sctp_atomic.h"
 #include "sctrltp/us_sctp_defs.h"
 
+namespace sctrltp {
+
 void memfence (void)
 {
 	__asm__ __volatile__    ("mfence;"
@@ -459,3 +461,5 @@ void busy_semaph_up (volatile struct semaphore *sem)
 	} while (cmpxchg(&(sem->semval), old_val, old_val-1) != old_val);
 	/*We have decremented sem successfully*/
 }
+
+} // namespace sctrltp

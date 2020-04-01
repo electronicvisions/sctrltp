@@ -37,6 +37,8 @@
 #include <netpacket/packet.h>
 #endif
 
+namespace sctrltp {
+
 #ifdef WITH_PACKET_MMAP
 static struct sctp_sock *debug;
 #endif
@@ -85,3 +87,5 @@ void print_stats ();
 #ifdef DEBUG
 __s32 debug_write(struct sctp_sock *ssock, struct arq_frame *buf, __u32 len);
 #endif
+
+} // namespace sctrltp

@@ -14,6 +14,8 @@ volatile sig_atomic_t post_init = 0;
 static __s32 exiting = 0;
 static char const* our_shm_name = NULL;
 
+using namespace sctrltp;
+
 void call_exit() {
 	if (our_shm_name != NULL) {
 		/* thread unsafe... but who cares? let's delete it multiple times! */
@@ -68,7 +70,7 @@ int main(int argc, const char *argv[])
 	 * SIGINT, SIGHUP, SIGTERM, SIGQUIT, SIGCHLD
 	 * but if top-level ignores, we also ignore */
 	struct sigaction new_action, old_action;
-	new_action.sa_handler = termination_handler;
+	new_action.sa_handler = ::termination_handler;
 	sigfillset(&new_action.sa_mask); /* ignore all signals during signal handling */
 	new_action.sa_flags = 0;
 

@@ -27,6 +27,8 @@ __u8 mythrstate = 1;
 #define INT0 "20" // HPET
 #define INT1 "47" // NIC
 
+using namespace sctrltp;
+
 double get_elapsed_time (struct timeval starttime, struct timeval endtime)
 {
 	double diff;

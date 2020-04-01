@@ -31,6 +31,8 @@
 /*Next one could be or'd with previous values and switches blocking/non-blocking behaviour*/
 #define SYNC_TYPE_BLOCK 32
 
+namespace sctrltp {
+
 typedef volatile __s32 __vs32;
 
 /*dummy for an empty cache line*/
@@ -166,3 +168,5 @@ void semaph_down (volatile struct semaphore *sem);
 void busy_semaph_up (volatile struct semaphore *sem);
 
 void busy_semaph_down (volatile struct semaphore *sem);
+
+} // namespace sctrltp

@@ -26,6 +26,8 @@
 #include "sctp_fifo.h"
 #include "us_sctp_sock.h"
 
+namespace sctrltp {
+
 struct sctp_core {
 	char const* NAME;                       /* name of core */
 	__u32       pad0[L1D_CLS/4 - (sizeof(char const*)/4)];
@@ -67,3 +69,5 @@ struct sctp_core *SCTP_debugcore (void);
 
 /* return seconds since epoch */
 double shitmytime();
+
+} // namespace sctrltp

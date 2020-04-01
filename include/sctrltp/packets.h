@@ -53,6 +53,8 @@
 #endif
 #pragma GCC diagnostic pop
 
+namespace sctrltp {
+
 extern uint64_t const resetframe_var_values_check[6];
 
 #if (__GNUC__ >= 9)
@@ -161,3 +163,5 @@ __attribute__((always_inline)) static inline __u32 sctpsomething_get_size (struc
 #if (__GNUC__ >= 9)
 #pragma GCC diagnostic pop
 #endif
+
+} // namespace sctrltp

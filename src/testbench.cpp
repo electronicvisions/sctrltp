@@ -13,6 +13,8 @@
 #include "sctrltp/packets.h"
 #include "sctrltp/sctp_fifo.h"
 
+using namespace sctrltp;
+
 struct sctp_descr *desc = NULL;
 
 static struct arq_frame *fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, void *baseptr) {

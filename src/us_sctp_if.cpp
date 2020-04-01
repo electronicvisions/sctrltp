@@ -5,6 +5,7 @@
 #include <sys/file.h>
 #include "sctrltp/us_sctp_if.h"
 
+namespace sctrltp {
 
 static void *open_shared_mem (const char *NAME, __u32 size)
 {
@@ -634,3 +635,5 @@ __s32 SCTP_Recv (struct sctp_descr *desc, __u16 *typ, __u16 *num, __u64 *resp)
 
 	return 0;
 }
+
+} // namespace sctrltp

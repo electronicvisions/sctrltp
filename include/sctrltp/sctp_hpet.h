@@ -8,7 +8,11 @@
 #include <sys/ioctl.h>
 #include <signal.h>
 
+namespace sctrltp {
+
 struct sctp_hpet {
 	__s32   fd;
 	sig_t   old_sigh;
 }
+
+} // namespace sctrltp

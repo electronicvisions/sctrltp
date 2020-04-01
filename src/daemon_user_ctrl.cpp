@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include "sctrltp/us_sctp_if.h"
 
+using namespace sctrltp;
 
 #define MAX_RESET_WAIT 2
 // some helpers

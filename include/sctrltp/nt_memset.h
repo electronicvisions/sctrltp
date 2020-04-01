@@ -15,6 +15,8 @@
 #include <stdlib.h> /* This libary is needed for posix_memalign */
 #include <stdint.h>
 
+namespace sctrltp {
+
 /* This funtion allocates a mem area with 8-Byte alignment (needed by MOVNTI)*/
 void* malloc_safe (size_t size)
 {
@@ -73,3 +75,5 @@ void* malloc_safe (size_t size)
 		memset (tmp, c, (nr-bytes_written));
 	}
 }
+
+} // namespace sctrltp

@@ -1,6 +1,8 @@
 #include <sched.h>
 #include "sctrltp/sctp_atomic.h"
 
+namespace sctrltp {
+
 void memfence (void)
 {
 	__asm__ __volatile__    ("mfence;"
@@ -149,3 +151,5 @@ void busy_sem_down (struct atomic_var *sem)
 	sem_down (sem);
 	return;
 }
+
+} // namespace sctrltp

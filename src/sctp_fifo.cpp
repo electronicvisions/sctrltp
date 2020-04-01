@@ -6,6 +6,8 @@
 #include "sctrltp/sctp_atomic.h"
 #include "sctrltp/sctp_fifo.h"
 
+namespace sctrltp {
+
  void *get_abs_ptr (void *baseptr, void *relptr)
 {
 	void *tmp;
@@ -232,3 +234,4 @@ __s8 try_fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 	return -1;
 }
 
+} // namespace sctrltp

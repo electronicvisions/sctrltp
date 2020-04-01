@@ -20,6 +20,8 @@
 #define MAX_ELEM (4*4096)
 #define NUM_CPUS 2
 
+using namespace sctrltp;
+
 struct entry {
 	__u8 *ptr_to_buf;
 	__u8 pad[L1D_CLS - PTR_SIZE];

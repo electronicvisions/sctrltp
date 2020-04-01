@@ -9,6 +9,8 @@
 
 #include "sctrltp/sctp_atomic.h"
 
+using namespace sctrltp;
+
 struct shared_res {
 	struct queue_lock ql;
 	__u32 sh_count;

@@ -74,6 +74,8 @@
 #define SC_IOERR        -9
 #define SC_CORRUPT      -10
 
+namespace sctrltp {
+
 struct sctp_stats {
 	__u64	nr_received;    /*Number of packets received (total)*/
 	__u64	nr_received_payload;    /*Number of packets with payload received*/
@@ -133,3 +135,5 @@ struct sctp_interface {                 /*Bidirectional interface between layers
 };
 static_assert(offsetof(struct sctp_interface, alloctx) == 4096, ""); // TODO: page size should be configurable
 // TODO: check for more?
+
+} // namespace sctrltp

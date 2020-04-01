@@ -59,6 +59,8 @@
 #define		BPF_TAX		0x00
 #define		BPF_TXA		0x80
 
+namespace sctrltp {
+
 /* 
  * The program data structure passed to setsockopt
  */
@@ -76,6 +78,8 @@ struct bpf_insn {
 	__u8	jf;
 	__u32   k;
 };
+
+} // namespace sctrltp
 
 /*
  * Macros for insn array initializers.

@@ -3,6 +3,8 @@
 
 #include "sctrltp/us_sctp_timer.h"
 
+namespace sctrltp {
+
 /* Opens timer device file and tests if periodic interrupts can be enabled*/
 __s32 timer_init (struct sctp_timer *desc, char *dev, __u32 freq)
 {
@@ -73,3 +75,5 @@ void timer_close (struct sctp_timer *desc)
 	return;
 
 }
+
+} // namespace sctrltp

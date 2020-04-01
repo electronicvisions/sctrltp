@@ -13,6 +13,8 @@
 #include <errno.h>
 #include <assert.h>
 
+namespace sctrltp {
+
 struct sctp_timer {
 	__s32 fd;                 /* File descriptor of the opened timer driver file */
 	/* HPET / polling stuff */
@@ -31,3 +33,5 @@ __s32 timer_disenable (struct sctp_timer *desc, __u8 flag);
 
 /* Closes timer device file */
 void timer_close (struct sctp_timer *desc);
+
+} // namespace sctrltp

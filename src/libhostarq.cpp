@@ -27,6 +27,8 @@
 /* 20 bytes for integers-to-char-string conversion should be enough... */
 #define MAX_INT_STRING_SIZE 20
 
+using namespace sctrltp;
+
 void hostarq_create_handle(
 	struct hostarq_handle* handle, char const shm_name[], char const remote_ip[], bool const init)
 {

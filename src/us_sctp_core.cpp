@@ -14,6 +14,8 @@
 
 #define HOSTARQ_RESET_WAIT_SLEEP_INTERVAL 1000 /*in us*/
 
+namespace sctrltp {
+
 /*TODO: multiple instances (list!)*/
 static struct sctp_core *admin = NULL;
 
@@ -1213,3 +1215,5 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 }
 
 #undef HOSTARQ_RESET_WAIT_SLEEP_INTERVAL
+
+} // namespace sctrltp

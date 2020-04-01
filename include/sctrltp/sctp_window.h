@@ -15,6 +15,8 @@
 #define SCTP_TXWIN  0
 #define SCTP_RXWIN  1
 
+namespace sctrltp {
+
 struct sctp_window {
 	struct semaphore lock;		    /*A lock, for concurrent accesses (is only used by spin_lock/unlock, so theres no need to align this to pagesize)*/
 	__u32	low_seq;				/*Sequencenr of Packet first transmitted, but unacknowledged*/
@@ -57,3 +59,5 @@ __s32 mark_frame (struct sctp_window *win, __u32 rACK, struct sctp_internal *out
 
 /*Compares time field of packet(s) with currtime and gives them back if difference exceeds rto*/
 __s32 resend_frame (struct sctp_window *win, struct sctp_internal *resend, __u64 rto, __u64 currtime);
+
+} // namespace sctrltp

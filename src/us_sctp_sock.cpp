@@ -8,6 +8,8 @@
 #include "sctrltp/us_sctp_sock.h"
 #include "sctrltp/us_sctp_core.h"
 
+namespace sctrltp {
+
 double mytime() {
 	struct timeval now;
 	gettimeofday(&now, NULL);
@@ -456,3 +458,5 @@ __s32 debug_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len)
 	return 0;
 }
 #endif
+
+} // namespace sctrltp

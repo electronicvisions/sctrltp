@@ -8,6 +8,7 @@
 #include "sctrltp/sctp_window.h"
 #include "sctrltp/us_sctp_sock.h" /* debug helper functions */
 
+namespace sctrltp {
 
 static inline struct sctp_internal *get_frame (struct sctp_window *win, __u32 seq)
 {
@@ -319,3 +320,5 @@ __s32 resend_frame (struct sctp_window *win, struct sctp_internal *resend, __u64
 
 	return ret;
 }
+
+} // namespace sctrltp

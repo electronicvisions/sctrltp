@@ -4,6 +4,8 @@
 
 #include "sctrltp/packets.h"
 
+namespace sctrltp {
+
 uint64_t const resetframe_var_values_check[] = {
 	MAX_NRFRAMES,
 	MAX_WINSIZ,
@@ -33,3 +35,4 @@ void print_mac (const char *prefix, __u8 *mac) {
 	       (int) ((unsigned char *) mac)[5]);
 }
 
+} // namespace sctrltp

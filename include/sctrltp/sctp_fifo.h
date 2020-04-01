@@ -10,6 +10,8 @@
 #define FIF_SIG_DATAOUT	2
 /*There can be other sigs defined by user now!! :)*/
 
+namespace sctrltp {
+
 struct sctp_fifo {
 	/*0-63*/
 	struct semaphore	signals;		/*Protected signal mask*/
@@ -57,3 +59,5 @@ __s8 fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 __s8 try_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
 
 __s8 try_fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr);
+
+} // namespace sctrltp

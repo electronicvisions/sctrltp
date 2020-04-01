@@ -31,6 +31,8 @@
 /*this mode is for rel_buf to put a buffer back in local sending cache*/
 #define MODE_TX         0x08
 
+namespace sctrltp {
+
 struct sctp_rx_cache {
 	struct sctp_alloc in[NUM_QUEUES];
 	struct sctp_alloc out;
@@ -100,3 +102,5 @@ __s64 SCTP_Send (struct sctp_descr *desc, const __u16 typ, const __u32 num, cons
 /*Fetches one packet from core and gives the amount of responses(!) and flags in it back
  *returns 0 on success otherwise negative value*/
 __s32 SCTP_Recv (struct sctp_descr *desc, __u16 *typ, __u16 *num, __u64 *resp);
+
+} // namespace sctrltp

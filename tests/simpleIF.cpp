@@ -11,6 +11,8 @@
 /* number of 64-bit words to send/receive */
 #define TOTAL_WORDS 1000
 
+using namespace sctrltp;
+
 void * thread_sending (void * parm);
 void receiving (void * parm);
 
