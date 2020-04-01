@@ -28,6 +28,7 @@
 
 namespace sctrltp {
 
+template <typename P = Parameters<>>
 struct sctp_core {
 	char const* NAME;                       /* name of core */
 	__u32       pad0[L1D_CLS/4 - (sizeof(char const*)/4)];
@@ -40,32 +41,38 @@ struct sctp_core {
 	__u32       pad2[L1D_CLS/4-2];
 	__u64       currtime;                   /*current time (CURRENTLY UPDATED BY RESEND THREAD)*/
 
-	struct sctp_window txwin;		        /*sliding window of TX/RX*/
-	struct sctp_window rxwin;               /*sliding window of RX*/
-	struct sctp_sock sock;		            /*packet socket structure*/
-	struct sctp_timer txtimer;              /*RTC/HPET timer for TX*/
+	sctp_window<P> txwin;		        /*sliding window of TX/RX*/
+	sctp_window<P> rxwin;               /*sliding window of RX*/
+	sctp_sock sock;		            /*packet socket structure*/
+	sctp_timer txtimer;              /*RTC/HPET timer for TX*/
 
-	struct sctp_interface *inter;           /*Includes tx_queue, rx_queue, alloc queue and buffer pool (SHARED)*/
+	sctp_interface<P> *inter;           /*Includes tx_queue, rx_queue, alloc queue and buffer pool (SHARED)*/
 	pthread_t	txthr;			            /*The thread ids*/
 	pthread_t	rxthr;
 	pthread_t	rsthr;
 	pthread_t	allocthr;
+
 };
-static_assert(offsetof(struct sctp_core, ACK) == (2*L1D_CLS), "");
-static_assert(offsetof(struct sctp_core, rACK) == (3*L1D_CLS), "");
-static_assert(offsetof(struct sctp_core, currtime) == (4*L1D_CLS), "");
+// TODO: also check non-default-parameterized versions
+static_assert(offsetof(sctp_core<>, ACK) == (2*L1D_CLS), "");
+static_assert(offsetof(sctp_core<>, rACK) == (3*L1D_CLS), "");
+static_assert(offsetof(sctp_core<>, currtime) == (4*L1D_CLS), "");
 
 /*Main interface functions to SCTP Core*/
 
 /*This function prepares and start SCTP algorithm
  *returning 1 on success otherwise a negative value*/
+
+template <typename P>
 __s8 SCTP_CoreUp (char const *name, char const *rip, __s8 wstartup);
 
 /*Stops algorithm, frees mem and gives statuscode back*/
+template <typename P>
 __s8 SCTP_CoreDown (void);
 
 /*Gives direct access to inner core structure USE WITH CARE*/
-struct sctp_core *SCTP_debugcore (void);
+template <typename P>
+sctp_core<P> *SCTP_debugcore (void);
 
 /* return seconds since epoch */
 double shitmytime();

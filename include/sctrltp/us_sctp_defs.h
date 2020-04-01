@@ -4,6 +4,7 @@
 #include <linux/types.h>
 #include <stddef.h>
 
+#include "sctrltp_defines.h"
 #include "packets.h"
 #include "sctp_fifo.h"
 #include "sctp_atomic.h"
@@ -34,19 +35,27 @@
 #define CFG_STATUS_STARTUP  0x05
 
 /* DELAY = MAX_WINSIZ * PDU_SIZE / WIRESPEED */
-#define MIN_RTO    ((MAX_WINSIZ * PDU_SIZE) / WIRESPEED) / 2
-#define MAX_RTO    MIN_RTO
-//#define DELAY_ACK  ((MAX_WINSIZ * PDU_SIZE) / WIRESPEED / 3) /*maximum number of microseconds an ACK signal will be delayed*/
-#define DELAY_ACK  500
+
+//#define WIRESPEED          125 /* in 10^6 bytes/sec (because we calculate in us) */
+//#define MAX_WINSIZ         128 /* Can be specified in the range of 1 till (MAX_NRFRAMES-1)/2 (compile-time check exists) */
+//#define PDU_SIZE          (MTU - ETH_HEADER_SIZE - ARQ_HEADER_SIZE)
+
+// (128  * 1500b) / 125 = 1536
+// 1536/2 = 768 us
+
+//#define MIN_RTO    ((MAX_WINSIZ * PDU_SIZE) / WIRESPEED) / 2 /* us */
+//#define MAX_RTO    MIN_RTO
+////#define DELAY_ACK  ((MAX_WINSIZ * PDU_SIZE) / WIRESPEED / 3) /*maximum number of microseconds an ACK signal will be delayed*/
+//#define DELAY_ACK  500
 
 /*Core constraints*/
-#define TO_RES            100    /*Timeout resolution in microseconds*/
-#define MAX_TRANS       10000   /*maximum number of transmission till warning!!!*/
+// #define TO_RES            100    /*Timeout resolution in microseconds*/
+// #define MAX_TRANS       10000   /*maximum number of transmission till warning!!!*/
 #define RESET_TIMEOUT 2000*1000 /*in us*/
 
-#if DELAY_ACK < TO_RES
-#error DELAY_ACK is smaller than TO_RES
-#endif
+//#if DELAY_ACK < TO_RES
+//#error DELAY_ACK is smaller than TO_RES
+//#endif
 
 #define STAT_NORMAL         0
 #define STAT_RESET          1   /*Disables all threads to let do_reset make its work without disturbance*/
@@ -57,10 +66,10 @@
 #define LOCK_MASK_ALL   0x0001FFFF
 
 /*Internal buffer sizes*/
-#define ALLOCTX_BUFSIZE   (MAX_WINSIZ * NUM_QUEUES * 4)
-#define ALLOCRX_BUFSIZE   (ALLOCTX_BUFSIZE*2)
-#define TX_BUFSIZE        (ALLOCTX_BUFSIZE)
-#define RX_BUFSIZE        (ALLOCRX_BUFSIZE)
+//#define ALLOCTX_BUFSIZE   (MAX_WINSIZ * NUM_QUEUES * 4)
+//#define ALLOCRX_BUFSIZE   (ALLOCTX_BUFSIZE*2)
+//#define TX_BUFSIZE        (ALLOCTX_BUFSIZE)
+//#define RX_BUFSIZE        (ALLOCRX_BUFSIZE)
 
 /*Return values of internal funcs*/
 #define SC_INVAL        -1
@@ -92,24 +101,39 @@ struct sctp_stats {
 };
 static_assert(sizeof(struct sctp_stats) == (sizeof(__u64)*12), "");
 
+template<typename P = Parameters<>>
 struct sctp_internal {
-	struct arq_frame *req;   /*pointer to packet to transmit or to packet was transmitted*/
-	struct arq_frame *resp;  /*pointer to packet was received (in rx_queue there is always a response and a corr. request)*/
+	struct arq_frame<P> *req;   /*pointer to packet to transmit or to packet was transmitted*/
+	struct arq_frame<P> *resp;  /*pointer to packet was received (in rx_queue there is always a response and a corr. request)*/
 	__u64	time;		        /*Timestamp of initial transmission*/
 	__u32	ntrans;			    /*Number of transmissions (send/resend(s))*/
 	__u8    acked;              /*0 = not acknowledged 1 = otherwise*/
 	__u8    pad[L1D_CLS-2*PTR_SIZE-13];
 };
-static_assert(sizeof(struct sctp_internal) == L1D_CLS, "");
 
+namespace {
+template<typename P>
+struct check_sctp_internal {
+	static_assert(sizeof(sctp_internal<P>) == L1D_CLS, "");
+};
+}
+
+template<typename P = Parameters<>>
 struct sctp_alloc {
-	struct arq_frame  *fptr[PARALLEL_FRAMES]; /*Pointer to preallocated/recycled buffer(s)*/
+	struct arq_frame<P> *fptr[PARALLEL_FRAMES]; /*Pointer to preallocated/recycled buffer(s)*/
 	__u32 num;                                  /*Number of valid frame ptr in fptr array*/
 	__u32 next;
 	__u8 pad[L1D_CLS-8];                        /*We want Cachelinesize alignment*/
 };
-static_assert((sizeof(struct sctp_alloc) % L1D_CLS) == 0, "");
 
+namespace {
+template<typename P>
+struct check_sctp_alloc {
+	static_assert((sizeof(sctp_alloc<P>) % L1D_CLS) == 0, "");
+};
+}
+
+template<typename P = Parameters<>>
 struct sctp_interface {                 /*Bidirectional interface between layers (lays in shared mem region)*/
 	/*0-4095*/
 	struct semaphore        waketx;     /*This var is used to wake TX by USER or RX*/
@@ -123,17 +147,24 @@ struct sctp_interface {                 /*Bidirectional interface between layers
 	struct sctp_fifo        tx_queues[NUM_QUEUES];
 	struct sctp_fifo        rx_queues[NUM_QUEUES];
 
-	struct sctp_alloc       alloctx_buf[ALLOCTX_BUFSIZE];
-	struct sctp_alloc       allocrx_buf[ALLOCRX_BUFSIZE];
+	struct sctp_alloc<P>    alloctx_buf[P::ALLOCTX_BUFSIZE];
+	struct sctp_alloc<P>    allocrx_buf[P::ALLOCRX_BUFSIZE];
 
 	/*These buffers are now equally distributed among multiple fifos*/
-	struct sctp_alloc       txq_buf[TX_BUFSIZE];
-	struct sctp_alloc       rxq_buf[RX_BUFSIZE];
+	struct sctp_alloc<P>    txq_buf[P::TX_BUFSIZE];
+	struct sctp_alloc<P>    rxq_buf[P::RX_BUFSIZE];
 
 	struct sctp_stats       stats;
-	struct arq_frame        pool[ALLOCTX_BUFSIZE+ALLOCRX_BUFSIZE];
+	struct arq_frame<P>     pool[P::ALLOCTX_BUFSIZE + P::ALLOCRX_BUFSIZE];
+
 };
-static_assert(offsetof(struct sctp_interface, alloctx) == 4096, ""); // TODO: page size should be configurable
 // TODO: check for more?
+
+namespace {
+template<typename P>
+struct check_sctp_interface {
+	static_assert(offsetof(sctp_interface<P>, alloctx) == 4096, ""); // TODO: page size should be configurable
+};
+}
 
 } // namespace sctrltp

@@ -1,9 +1,5 @@
 /*This peace of code will test locking methods provided by us_sctp_atomic.c*/
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
-
 #include "sctrltp/build-config.h"
 #include <stdio.h>
 #include <unistd.h>

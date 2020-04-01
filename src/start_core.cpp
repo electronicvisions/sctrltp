@@ -50,7 +50,7 @@ int main (int argc, char **argv)
 	atexit(exit_handler);
 
 	printf ("Core %s to %s (init=%s)\n", rip, rip, init ? "y" : "n");
-	retval = SCTP_CoreUp (rip, rip, init);
+	retval = SCTP_CoreUp<Parameters<>> (rip, rip, init);
 	if (retval < 1) {
 		fprintf (stderr, "Error occurred. Please check if you have UID 0\n");
 		return EXIT_FAILURE;
@@ -75,7 +75,7 @@ namespace sctrltp {
 
 void print_core (void)
 {
-	print_stats();
+	print_stats<Parameters<>>();
 }
 
 
@@ -87,7 +87,7 @@ void exit_handler (void) {
 #ifdef WITH_PACKET_MMAP
 		print_sock_stats();
 #endif
-		SCTP_CoreDown();
+		SCTP_CoreDown<Parameters<>>();
 	}
 }
 

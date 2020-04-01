@@ -13,11 +13,13 @@
 
 using namespace sctrltp;
 
+template <typename P>
 void * thread_sending (void * parm);
+template <typename P>
 void receiving (void * parm);
 
 /* ARQ handle */
-static struct sctp_descr *desc = NULL;
+static struct sctp_descr<> *desc = NULL;
 
 /* global data */
 __u64 * gdata;
@@ -40,7 +42,7 @@ int main(int argc, char const * argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	desc = SCTP_Open(argv[1]);
+	desc = SCTP_Open<Parameters<>>(argv[1]);
 	if (!desc) {
 		fprintf(stderr, "Error: Could not connect to core\n");
 		return EXIT_FAILURE;
@@ -53,8 +55,8 @@ int main(int argc, char const * argv[]) {
 		gdata[i] = rand();
 
 	/* spawn sending thread and do receive synchronously */
-	pthread_create (&threadvar, NULL, thread_sending, desc);
-	receiving(desc);
+	pthread_create (&threadvar, NULL, thread_sending<Parameters<>>, desc);
+	receiving<Parameters<>>(desc);
 
 	ret = pthread_join(threadvar, NULL);
 	if (ret != 0) {
@@ -74,17 +76,17 @@ int main(int argc, char const * argv[]) {
 	return 0;
 }
 
-
+template <typename P>
 void * thread_sending (void * parm) {
-	struct sctp_descr *desc = (struct sctp_descr *)parm;
+	struct sctp_descr<P> *desc = (struct sctp_descr<P> *)parm;
 	size_t words_sent = 0, no_frames = 0;
 	__s64 ret;
 	__u64 * payload;
 
 	while (words_sent < TOTAL_WORDS) {
 		payload = &gdata[words_sent];
-		__u32 tosend = ((TOTAL_WORDS - 176) > words_sent) ? MAX_PDUWORDS : (TOTAL_WORDS - words_sent);
-		ret = SCTP_Send (desc, TEST_TYPE, tosend, payload);
+		__u32 tosend = ((TOTAL_WORDS - 176) > words_sent) ? P::MAX_PDUWORDS : (TOTAL_WORDS - words_sent);
+		ret = SCTP_Send<P> (desc, TEST_TYPE, tosend, payload);
 		if (ret <= 0) {
 			fprintf(stderr, "SCTP_Send failed: %llu\n", ret);
 			abort();
@@ -102,16 +104,16 @@ void * thread_sending (void * parm) {
 	pthread_exit(NULL);
 }
 
-
+template <typename P>
 void receiving (void * parm) {
-	struct sctp_descr *desc = (struct sctp_descr *)parm;
+	struct sctp_descr<P> *desc = (struct sctp_descr<P> *)parm;
 	size_t words_received = 0, no_frames = 0, errors = 0, i;
 	__s32 ret;
 	__u16 num, type;
-	__u64 * resp = static_cast<__u64*>(malloc(sizeof(__u64) * MAX_PDUWORDS));
+	__u64 * resp = static_cast<__u64*>(malloc(sizeof(__u64) * P::MAX_PDUWORDS));
 
 	while (words_received < TOTAL_WORDS) {
-		ret = SCTP_Recv (desc, &type, &num, resp);
+		ret = SCTP_Recv<P> (desc, &type, &num, resp);
 		if (ret != 0) {
 			fprintf(stderr, "SCTP_Recv failed: %u\n", ret);
 			abort();

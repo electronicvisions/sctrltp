@@ -7,6 +7,8 @@
 
 namespace sctrltp {
 
+namespace {
+
 static void *open_shared_mem (const char *NAME, __u32 size)
 {
 	void *ptr = NULL;
@@ -52,7 +54,8 @@ static void close_shared_mem (void *shared_mem, __u32 size)
 	return;
 }
 
-static struct arq_frame *fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, void *baseptr) {
+template<typename P>
+static arq_frame<P> *fetch_frames (sctp_fifo *fifo, sctp_alloc<P> *local_buf, void *baseptr) {
 	__u32 i;
 	if ((i = local_buf->next) < local_buf->num) {
 		/*We have a frame in local cache*/
@@ -62,14 +65,15 @@ static struct arq_frame *fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc
 		/*We dont have an unprocessed frame, so lets fetch new ones*/
 		fif_pop (fifo, (__u8 *)local_buf, baseptr);
 		for (i = 0; i < local_buf->num; i++) {
-			local_buf->fptr[i] = static_cast<arq_frame*>(get_abs_ptr (baseptr, local_buf->fptr[i]));
+			local_buf->fptr[i] = static_cast<arq_frame<P>*>(get_abs_ptr (baseptr, local_buf->fptr[i]));
 		}
 		local_buf->next = 1;
 		return local_buf->fptr[0];
 	}
 }
 
-static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, void *baseptr, struct arq_frame *ptr, __u8 flush) {
+template<typename P>
+static void push_frames (sctp_fifo *fifo, sctp_alloc<P> *local_buf, void *baseptr, arq_frame<P> *ptr, __u8 flush) {
 	__u32 i;
 	if (!ptr) {
 		if (flush && ((i = local_buf->next) > 0)) {
@@ -84,7 +88,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 	} else {
 		if ((i = local_buf->next) < PARALLEL_FRAMES) {
 			/*There is room in local_buf to check frame in*/
-			local_buf->fptr[i] = static_cast<arq_frame*>(get_rel_ptr (baseptr, ptr));
+			local_buf->fptr[i] = static_cast<arq_frame<P>*>(get_rel_ptr (baseptr, ptr));
 			local_buf->next++;
 			if (flush) {
 				/*Even if we have not fully filled local_buf, we want to push it ...*/
@@ -100,30 +104,33 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 			fif_push (fifo, (__u8 *)local_buf, baseptr);
 			/*... but do not forget to register our frame*/
 			local_buf->next = 1;
-			local_buf->fptr[0] = static_cast<arq_frame*>(get_rel_ptr (baseptr, ptr));
+			local_buf->fptr[0] = static_cast<arq_frame<P>*>(get_rel_ptr (baseptr, ptr));
 			return;
 		}
 	}
 }
 
+} // namespace anonymous
+
 /*lower level interface functions*/
 
-struct sctp_descr *open_conn (const char *corename)
+template<typename P>
+sctp_descr<P> *open_conn (const char *corename)
 {
-	struct sctp_descr *desc = NULL;
-	struct sctp_interface *ptr = NULL;
+	struct sctp_descr<P> *desc = NULL;
+	struct sctp_interface<P> *ptr = NULL;
 
 	/*Creating descriptor and mapping shared memory to own adress space*/
-	desc = (struct sctp_descr *) malloc (sizeof(struct sctp_descr));
+	desc = (sctp_descr<P> *) malloc (sizeof(sctp_descr<P>));
 	if (!desc) return NULL;
 
-	memset (desc, 0, sizeof (struct sctp_descr));
+	memset (desc, 0, sizeof (sctp_descr<P>));
 
 	/*Initialize mutex*/
 	mutex_init (&(desc->mutex));
 
 	/*Connect to core shared memory interface*/
-	ptr = (struct sctp_interface *)open_shared_mem ((const char *)corename, sizeof(struct sctp_interface));
+	ptr = (sctp_interface<P> *)open_shared_mem ((const char *)corename, sizeof(sctp_interface<P>));
 	if (!ptr) {
 		free(desc);
 		return NULL;
@@ -135,7 +142,8 @@ struct sctp_descr *open_conn (const char *corename)
 	return desc;
 }
 
-__s32 close_conn (struct sctp_descr *desc)
+template<typename P>
+__s32 close_conn (sctp_descr<P> *desc)
 {
 	__u32 i,j,k;
 
@@ -157,7 +165,7 @@ __s32 close_conn (struct sctp_descr *desc)
 		i = 0;
 		j = desc->send_buf.in.next;
 		while (j < desc->send_buf.in.num) {
-			desc->send_buf.in.fptr[i] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, desc->send_buf.in.fptr[j]));
+			desc->send_buf.in.fptr[i] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, desc->send_buf.in.fptr[j]));
 			j++;
 			i++;
 		}
@@ -183,7 +191,7 @@ __s32 close_conn (struct sctp_descr *desc)
 			i = 0;
 			j = desc->recv_buf.in[k].next;
 			while (j < desc->recv_buf.in[k].num) {
-				desc->recv_buf.in[k].fptr[i] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, desc->recv_buf.in[k].fptr[j]));
+				desc->recv_buf.in[k].fptr[i] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, desc->recv_buf.in[k].fptr[j]));
 				j++;
 				i++;
 			}
@@ -196,19 +204,20 @@ __s32 close_conn (struct sctp_descr *desc)
 	}
 
 	/*Unmap shared mem*/
-	close_shared_mem (desc->trans, sizeof(struct sctp_interface));
+	close_shared_mem (desc->trans, sizeof(sctp_interface<P>));
 	/*free descr*/
 	free(desc);
 	desc = NULL;
 	return 0;
 }
 
-__s32 acq_buf (struct sctp_descr *desc, struct buf_desc *acq, const __u8 mode)
+template<typename P>
+__s32 acq_buf (sctp_descr<P> *desc, buf_desc<P> *acq, const __u8 mode)
 {
 	__u32 i;
 	__s32 ret;
-	struct sctp_fifo *infifo = NULL;
-	struct arq_frame *ptr_to_frame = NULL;
+	sctp_fifo *infifo = NULL;
+	arq_frame<P> *ptr_to_frame = NULL;
 	assert (desc != NULL);
 	assert (acq  != NULL);
 
@@ -237,7 +246,7 @@ __s32 acq_buf (struct sctp_descr *desc, struct buf_desc *acq, const __u8 mode)
 		} else fif_pop (infifo, (__u8 *)&(desc->send_buf.in), desc->trans);
 
 		for (i = 0; i < desc->send_buf.in.num; i++) {
-			desc->send_buf.in.fptr[i] = static_cast<arq_frame*>(get_abs_ptr (desc->trans, desc->send_buf.in.fptr[i]));
+			desc->send_buf.in.fptr[i] = static_cast<arq_frame<P>*>(get_abs_ptr (desc->trans, desc->send_buf.in.fptr[i]));
 		}
 
 		desc->send_buf.in.next = 1;
@@ -263,7 +272,8 @@ __s32 acq_buf (struct sctp_descr *desc, struct buf_desc *acq, const __u8 mode)
 	return 1;
 }
 
-__s32 rel_buf (struct sctp_descr *desc, struct buf_desc *rel, const __u8 mode)
+template<typename P>
+__s32 rel_buf (sctp_descr<P> *desc, buf_desc<P> *rel, const __u8 mode)
 {
 	__u32 i;
 	__s32 ret;
@@ -289,7 +299,7 @@ __s32 rel_buf (struct sctp_descr *desc, struct buf_desc *rel, const __u8 mode)
 		} else {
 			if ((i = desc->recv_buf.out.next) < PARALLEL_FRAMES) {
 				/*There is room in cache to put pointer in*/
-				desc->recv_buf.out.fptr[i] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, rel->arq_sctrl));
+				desc->recv_buf.out.fptr[i] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, rel->arq_sctrl));
 				desc->recv_buf.out.next++;
 			} else {
 				/*We have one entry full, so lets release it first ...*/
@@ -304,7 +314,7 @@ __s32 rel_buf (struct sctp_descr *desc, struct buf_desc *rel, const __u8 mode)
 				} else fif_push (&(desc->trans->allocrx), (__u8 *)&(desc->recv_buf.out), desc->trans);
 				/*... and then register our pointer in a fresh entry*/
 				desc->recv_buf.out.next = 1;
-				desc->recv_buf.out.fptr[0] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, rel->arq_sctrl));
+				desc->recv_buf.out.fptr[0] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, rel->arq_sctrl));
 			}
 		}
 	}
@@ -326,12 +336,13 @@ __s32 rel_buf (struct sctp_descr *desc, struct buf_desc *rel, const __u8 mode)
 
 	if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
 
-	if (rel) memset (rel, 0, sizeof (struct buf_desc));
+	if (rel) memset (rel, 0, sizeof (buf_desc<P>));
 
 	return 1;
 }
 
-__s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
+template<typename P>
+__s32 send_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 {
 	__u32 i;
 	__s32 ret;
@@ -354,7 +365,7 @@ __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 
 		/*We have to register a buffer to pass to lower layer*/
 		if ((i = desc->send_buf.out[queue].next) < PARALLEL_FRAMES) {
-			desc->send_buf.out[queue].fptr[i] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
+			desc->send_buf.out[queue].fptr[i] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
 			desc->send_buf.out[queue].next++;
 		} else {
 			desc->send_buf.out[queue].num = PARALLEL_FRAMES;
@@ -368,7 +379,7 @@ __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 			} else fif_push (&(desc->trans->tx_queues[queue]), (__u8 *)&(desc->send_buf.out[queue]), desc->trans);
 			do_wake = 1;
 			desc->send_buf.out[queue].next = 1;
-			desc->send_buf.out[queue].fptr[0] = static_cast<arq_frame*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
+			desc->send_buf.out[queue].fptr[0] = static_cast<arq_frame<P>*>(get_rel_ptr (desc->trans, buf->arq_sctrl));
 		}
 	}
 
@@ -389,7 +400,7 @@ __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 
 	if (mode & MODE_SAFE) mutex_unlock (&(desc->mutex));
 
-	if (buf) memset (buf, 0, sizeof (struct buf_desc));
+	if (buf) memset (buf, 0, sizeof(buf_desc<P>));
 
 	/*We need to wake a possible sleeping TX thread, if data was passed to him*/
 	if (do_wake) cond_signal (&(desc->trans->waketx), 1, 1);
@@ -397,8 +408,8 @@ __s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 	return 1;
 }
 
-
-__s32 tx_queues_empty (struct sctp_descr *desc)
+template<typename P>
+__s32 tx_queues_empty (sctp_descr<P> *desc)
 {
 	__u32 queue;
 	assert (desc != NULL);
@@ -408,8 +419,8 @@ __s32 tx_queues_empty (struct sctp_descr *desc)
 	return 1; // true
 }
 
-
-__s32 tx_queues_full (struct sctp_descr *desc)
+template<typename P>
+__s32 tx_queues_full (sctp_descr<P> *desc)
 {
 	__u32 queue;
 	assert (desc != NULL);
@@ -419,8 +430,8 @@ __s32 tx_queues_full (struct sctp_descr *desc)
 	return 1; // true
 }
 
-
-__s32 rx_queues_empty (struct sctp_descr *desc)
+template<typename P>
+__s32 rx_queues_empty (sctp_descr<P> *desc)
 {
 	__u32 queue;
 	assert (desc != NULL);
@@ -431,7 +442,8 @@ __s32 rx_queues_empty (struct sctp_descr *desc)
 }
 
 
-__s32 rx_queues_full (struct sctp_descr *desc)
+template<typename P>
+__s32 rx_queues_full (sctp_descr<P> *desc)
 {
 	__u32 queue;
 	assert (desc != NULL);
@@ -441,13 +453,13 @@ __s32 rx_queues_full (struct sctp_descr *desc)
 	return 1; // true
 }
 
-
-__s32 recv_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
+template<typename P>
+__s32 recv_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 {
 	__u32 i;
 	__s32 ret;
 	__u32 queue = 0;
-	struct arq_frame *ptr_to_frame = NULL;
+	arq_frame<P> *ptr_to_frame = NULL;
 
 	assert (desc != NULL);
 	assert (buf != NULL);
@@ -472,7 +484,7 @@ __s32 recv_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 		} else fif_pop (&(desc->trans->rx_queues[queue]), (__u8 *)&(desc->recv_buf.in[queue]), desc->trans);
 
 		for (i = 0; i < desc->recv_buf.in[queue].num; i++) {
-			desc->recv_buf.in[queue].fptr[i] = static_cast<arq_frame*>(get_abs_ptr (desc->trans, desc->recv_buf.in[queue].fptr[i]));
+			desc->recv_buf.in[queue].fptr[i] = static_cast<arq_frame<P>*>(get_abs_ptr (desc->trans, desc->recv_buf.in[queue].fptr[i]));
 		}
 
 		desc->recv_buf.in[queue].next = 1;
@@ -496,7 +508,8 @@ __s32 recv_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode)
 	return 1;
 }
 
-__s32 init_buf (struct buf_desc *buf)
+template<typename P>
+__s32 init_buf (buf_desc<P> *buf)
 {
 	assert (buf != NULL);
 	buf->arq_sctrl->LEN = 0;
@@ -504,7 +517,8 @@ __s32 init_buf (struct buf_desc *buf)
 	return 1;
 }
 
-__s32 append_words (struct buf_desc *buf, const __u16 ptype, const __u32 num, const __u64 *values)
+template<typename P>
+__s32 append_words (buf_desc<P> *buf, const __u16 ptype, const __u32 num, const __u64 *values)
 {
 	__u32 curr_typ;
 	__u32 curr_num;
@@ -525,7 +539,7 @@ __s32 append_words (struct buf_desc *buf, const __u16 ptype, const __u32 num, co
 	curr_typ = ntohs(buf->arq_sctrl->PTYPE);
 
 	/* check if packet already too long, this must not happen ;) */
-	assert (curr_num <= MAX_PDUWORDS);
+	assert (curr_num <= P::MAX_PDUWORDS);
 	
 	/* can only append if packet type matches */
 	if (curr_typ != ptype) {
@@ -534,8 +548,8 @@ __s32 append_words (struct buf_desc *buf, const __u16 ptype, const __u32 num, co
 	}
 
 	max_num = curr_num + num;
-	if (max_num > MAX_PDUWORDS)
-		max_num = MAX_PDUWORDS;
+	if (max_num > P::MAX_PDUWORDS)
+		max_num = P::MAX_PDUWORDS;
 	count = max_num - curr_num;
 
 	/* append as many words to packet as possible */
@@ -550,22 +564,25 @@ __s32 append_words (struct buf_desc *buf, const __u16 ptype, const __u32 num, co
 
 /*Older but easier to use interface functions*/
 
-struct sctp_descr *SCTP_Open (const char *corename)
+template<typename P>
+sctp_descr<P> *SCTP_Open (const char *corename)
 {
-	return open_conn (corename);
+	return open_conn<P>(corename);
 }
 
-__s32 SCTP_Close (struct sctp_descr *desc)
+template<typename P>
+__s32 SCTP_Close (sctp_descr<P> *desc)
 {
 	return close_conn (desc);
 }
 
 /*This function pushes packet(s) to tx_queue of Core (COULD BLOCK INFINITELY IF NOONE READS RESPONSES)*/
-__s64 SCTP_Send (struct sctp_descr *desc, const __u16 typ, const __u32 num, const __u64 *payload)
+template<typename P>
+__s64 SCTP_Send (sctp_descr<P> *desc, const __u16 typ, const __u32 num, const __u64 *payload)
 {
 	__u64 const *cmd;
-	struct arq_frame *packet = NULL;
-	struct arq_frame *sc_packet;
+	arq_frame<P> *packet = NULL;
+	arq_frame<P> *sc_packet;
 	__u64 *sc_cmd;
 	__u32 i;
 	__u8 j;
@@ -589,8 +606,8 @@ __s64 SCTP_Send (struct sctp_descr *desc, const __u16 typ, const __u32 num, cons
 #if (__GNUC__ >= 9)
 #pragma GCC diagnostic pop
 #endif
-		if ((num - i) >= MAX_PDUWORDS)
-			j = MAX_PDUWORDS;
+		if ((num - i) >= P::MAX_PDUWORDS)
+			j = P::MAX_PDUWORDS;
 		else
 			j = num - i;
 		/*Set header of frame (NOTE: global bit is set automatically according to payload and nathannr)*/
@@ -598,10 +615,10 @@ __s64 SCTP_Send (struct sctp_descr *desc, const __u16 typ, const __u32 num, cons
 		memcpy (sc_cmd, &cmd[i], sizeof (__u64) * j);
 		i += j;
 
-		push_frames (&(desc->trans->tx_queues[queue]), &(desc->send_buf.out[0]), desc->trans, packet, 0);
+		push_frames<P> (&(desc->trans->tx_queues[queue]), &(desc->send_buf.out[0]), desc->trans, packet, 0);
 	}
 	/*Flush any remaining frame(s)*/
-	push_frames (&(desc->trans->tx_queues[queue]), &(desc->send_buf.out[0]), desc->trans, NULL, 1);
+	push_frames<P> (&(desc->trans->tx_queues[queue]), &(desc->send_buf.out[0]), desc->trans, NULL, 1);
 	/*Wake TX*/
 	cond_signal (&(desc->trans->waketx), 1, 1);
 
@@ -611,10 +628,11 @@ __s64 SCTP_Send (struct sctp_descr *desc, const __u16 typ, const __u32 num, cons
 /* Pulls one packet from rx_queue associated with nathan and gives amount back
  * (data will be copied in a buffer).
  */
-__s32 SCTP_Recv (struct sctp_descr *desc, __u16 *typ, __u16 *num, __u64 *resp)
+template<typename P>
+__s32 SCTP_Recv (sctp_descr<P> *desc, __u16 *typ, __u16 *num, __u64 *resp)
 {
- 	struct arq_frame *respons;
-	struct arq_frame *tmp2;
+ 	arq_frame<P> *respons;
+	arq_frame<P> *tmp2;
 	int queue = 0;
 
 	if (!desc | !resp | !typ | !num)
@@ -631,9 +649,26 @@ __s32 SCTP_Recv (struct sctp_descr *desc, __u16 *typ, __u16 *num, __u64 *resp)
 	memcpy (resp, tmp2->COMMANDS, sizeof (__u64) * (*num));
 
 	/*Now dump frame (recycle it)*/
-	push_frames (&(desc->trans->allocrx), &(desc->recv_buf.out), desc->trans, respons, 0);
+	push_frames<P> (&(desc->trans->allocrx), &(desc->recv_buf.out), desc->trans, respons, 0);
 
 	return 0;
 }
+
+template sctp_descr<> *open_conn (const char *corename);
+template __s32 close_conn (sctp_descr<> *desc);
+template __s32 acq_buf (sctp_descr<> *desc, buf_desc<> *acq, const __u8 mode);
+template __s32 rel_buf (sctp_descr<> *desc, buf_desc<> *rel, const __u8 mode);
+template __s32 send_buf (sctp_descr<> *desc, buf_desc<> *buf, const __u8 mode);
+template __s32 recv_buf (sctp_descr<> *desc, buf_desc<> *buf, const __u8 mode);
+template __s32 init_buf (buf_desc<> *buf);
+template __s32 append_words (buf_desc<> *buf, const __u16 ptype, const __u32 num, const __u64 *values);
+template __s32 tx_queues_empty (sctp_descr<> *desc);
+template __s32 tx_queues_full (sctp_descr<> *desc);
+template __s32 rx_queues_empty (sctp_descr<> *desc);
+template __s32 rx_queues_full (sctp_descr<> *desc);
+template sctp_descr<> *SCTP_Open (const char *corename);
+template __s32 SCTP_Close (sctp_descr<> *desc);
+template __s64 SCTP_Send (sctp_descr<> *desc, const __u16 typ, const __u32 num, const __u64 *payload);
+template __s32 SCTP_Recv (sctp_descr<> *desc, __u16 *typ, __u16 *num, __u64 *resp);
 
 } // namespace sctrltp

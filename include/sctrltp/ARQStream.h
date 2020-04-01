@@ -3,10 +3,14 @@
 #include <chrono>
 #include <boost/asio/ip/address_v4.hpp>
 
+#include "sctrltp/sctrltp_defines.h"
+
 namespace sctrltp {
 
 // fwd decls
+template<typename P>
 class packet;
+template<typename P>
 class ARQStreamImpl;
 
 struct ARQStreamSettings
@@ -23,6 +27,7 @@ struct ARQStreamSettings
 	std::chrono::milliseconds destruction_timeout = std::chrono::milliseconds(500);
 };
 
+template<typename P = Parameters<>>
 class ARQStream {
 public:
 	typedef boost::asio::ip::address_v4 ip_t;
@@ -59,10 +64,10 @@ public:
 	std::string get_remote_ip() const;
 
 	// queue packet or false (no false on hw, it blocks)
-	bool send(packet, Mode mode = FLUSH);       
+	bool send(packet<P>, Mode mode = FLUSH);
 
 	// receive packet or false (no false on hw, it blocks)
-	bool receive(packet&, Mode mode = NONBLOCK);
+	bool receive(packet<P>&, Mode mode = NONBLOCK);
 
 	// TODO: add queue cmd
 
@@ -95,7 +100,7 @@ private:
 // NCSIM-based testmodes want it public
 public:
 #endif
-	ARQStreamImpl * pimpl; // no extra deps here, plain ptr!
+	ARQStreamImpl<P> * pimpl; // no extra deps here, plain ptr!
 
 	// not copyable
 	ARQStream(ARQStream const &);

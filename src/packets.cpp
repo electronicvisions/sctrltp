@@ -2,15 +2,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "sctrltp/sctrltp_defines.h"
 #include "sctrltp/packets.h"
 
 namespace sctrltp {
-
-uint64_t const resetframe_var_values_check[] = {
-	MAX_NRFRAMES,
-	MAX_WINSIZ,
-	MAX_PDUWORDS,
-};
 
 void parse_mac (char *in, __u8 *out) {
 	/*Parsing in in format XX:XX:XX:XX:XX:XX to format XXXXXX*/

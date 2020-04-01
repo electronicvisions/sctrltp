@@ -15,10 +15,11 @@
  * It sends packets configurable, varying size and payload to the FPGA as loop back packets. The
  * returned words are checked for correct payload. During run various stats are recorded.
  */
+template <typename P = sctrltp::Parameters<>>
 class LoopbackTest
 {
 public:
-	typedef sctrltp::packet::entry_t WordType;
+	typedef typename sctrltp::packet<P>::entry_t WordType;
 
 	/**
 	 * Enum encoding the mode in which way packets are formed
@@ -111,10 +112,10 @@ private:
 
 	void stats_reset();
 
-	sctrltp::ARQStream m_arq_stream;
+	sctrltp::ARQStream<P> m_arq_stream;
 
-	sctrltp::packet test_packet;
-	sctrltp::packet received_packet;
+	sctrltp::packet<P> test_packet;
+	sctrltp::packet<P> received_packet;
 
 	Stats m_stats;
 	Settings m_settings;
@@ -171,38 +172,40 @@ private:
 };
 
 // needed for boost program options
-inline std::istream& operator>>(std::istream& in, LoopbackTest::PacketMode& tt)
+template <typename P = sctrltp::Parameters<>>
+inline std::istream& operator>>(std::istream& in, typename LoopbackTest<P>::PacketMode& tt)
 {
 	std::string token;
 	in >> token;
 	if (token == "r")
-		tt = LoopbackTest::PacketMode::Random;
+		tt = LoopbackTest<P>::PacketMode::Random;
 	else if (token == "s")
-		tt = LoopbackTest::PacketMode::SequenceIncremental;
+		tt = LoopbackTest<P>::PacketMode::SequenceIncremental;
 	else if (token == "d")
-		tt = LoopbackTest::PacketMode::SequenceDecremental;
+		tt = LoopbackTest<P>::PacketMode::SequenceDecremental;
 	else if (token == "c")
-		tt = LoopbackTest::PacketMode::Corner;
+		tt = LoopbackTest<P>::PacketMode::Corner;
 	else if (token == "m")
-		tt = LoopbackTest::PacketMode::Max;
+		tt = LoopbackTest<P>::PacketMode::Max;
 	else if (token == "n")
-		tt = LoopbackTest::PacketMode::Min;
+		tt = LoopbackTest<P>::PacketMode::Min;
 	else
 		in.setstate(std::ios_base::failbit);
 	return in;
 }
 
 // needed for boost program options
-inline std::istream& operator>>(std::istream& in, LoopbackTest::PayloadMode& tt)
+template <typename P = sctrltp::Parameters<>>
+inline std::istream& operator>>(std::istream& in, typename LoopbackTest<P>::PayloadMode& tt)
 {
 	std::string token;
 	in >> token;
 	if (token == "r")
-		tt = LoopbackTest::PayloadMode::Random;
+		tt = LoopbackTest<P>::PayloadMode::Random;
 	else if (token == "s")
-		tt = LoopbackTest::PayloadMode::SequenceIncremental;
+		tt = LoopbackTest<P>::PayloadMode::SequenceIncremental;
 	else if (token == "d")
-		tt = LoopbackTest::PayloadMode::SequenceDecremental;
+		tt = LoopbackTest<P>::PayloadMode::SequenceDecremental;
 	else
 		in.setstate(std::ios_base::failbit);
 	return in;

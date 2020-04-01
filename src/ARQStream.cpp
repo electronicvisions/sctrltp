@@ -19,8 +19,9 @@ using namespace std::chrono;
 
 namespace sctrltp {
 
+template<typename P>
 struct ARQStreamImpl {
-	struct sctp_descr * desc;
+	sctp_descr<P> * desc;
 	hostarq_handle* handle;
 
 	ARQStreamImpl(std::string name, std::string rip, bool reset) {
@@ -31,7 +32,7 @@ struct ARQStreamImpl {
 		handle = new hostarq_handle;
 		hostarq_create_handle(handle, name.c_str(), rip.c_str(), reset /*reset HostARQ*/);
 		hostarq_open(handle);
-		desc = open_conn(name.c_str()); // name of software arq session
+		desc = open_conn<P>(name.c_str()); // name of software arq session
 		if (!desc) {
 			std::ostringstream ss;
 			ss << "Error: Software ARQ Session " << name << " not found" << std::endl;
@@ -67,7 +68,8 @@ void sleep(std::string const& name, nanoseconds const sleep)
 	}
 }
 
-ARQStream::ARQStream(
+template <typename P>
+ARQStream<P>::ARQStream(
 		std::string const name,
 		std::string const,
 		udpport_t,
@@ -77,38 +79,38 @@ ARQStream::ARQStream(
 	name(name),
 	rip(rip),
 	max_wait_for_completion_upon_destruction_in_ms(500),
-	pimpl(new ARQStreamImpl(name, rip, reset))
+	pimpl(new ARQStreamImpl<P>(name, rip, reset))
 {
 	drop_receive_queue(400ms, true);
 }
 
-
-ARQStream::ARQStream(std::string const name, bool reset) :
+template<typename P>
+ARQStream<P>::ARQStream(std::string const name, bool reset) :
 	name(name),
 	rip(name),
 	max_wait_for_completion_upon_destruction_in_ms(500),
-	pimpl(new ARQStreamImpl(name, name, reset))
+	pimpl(new ARQStreamImpl<P>(name, name, reset))
 {
 	drop_receive_queue(400ms, true);
 }
 
-
-ARQStream::ARQStream(ARQStreamSettings const settings) :
+template<typename P>
+ARQStream<P>::ARQStream(ARQStreamSettings const settings) :
     name(settings.ip),
     rip(settings.ip),
     max_wait_for_completion_upon_destruction_in_ms(settings.destruction_timeout.count()),
-    pimpl(new ARQStreamImpl(settings.ip, settings.ip, settings.reset))
+    pimpl(new ARQStreamImpl<P>(settings.ip, settings.ip, settings.reset))
 {
 	drop_receive_queue(settings.init_flush_timeout, settings.init_flush_lb_packet);
 }
 
-
-ARQStream::~ARQStream() {
+template<typename P>
+ARQStream<P>::~ARQStream() {
 	static_assert(sizeof(__u64) == sizeof(uint64_t), "Non-matching typedefs");
 
 	// ECM (2018-02-14): send one last packet to flush (there's no dedicated tear down)
 	{
-		packet curr_pck;
+		packet<P> curr_pck;
 		curr_pck.pid = PTYPE_FLUSH;
 		curr_pck.len = 1;
 		curr_pck.pdu[0] = 0;
@@ -146,26 +148,34 @@ ARQStream::~ARQStream() {
 }
 
 
-void ARQStream::start() {}
-void ARQStream::stop() {}
-void ARQStream::trigger_send() {}
-void ARQStream::trigger_receive() {}
+template<typename P>
+void ARQStream<P>::start() {}
 
-std::string ARQStream::get_remote_ip() const {
+template<typename P>
+void ARQStream<P>::stop() {}
+
+template<typename P>
+void ARQStream<P>::trigger_send() {}
+
+template<typename P>
+void ARQStream<P>::trigger_receive() {}
+
+template<typename P>
+std::string ARQStream<P>::get_remote_ip() const {
 	return rip;
 }
 
-
-bool ARQStream::send(packet t, Mode mode) {
+template<typename P>
+bool ARQStream<P>::send(packet<P> t, Mode mode) {
 	__s32 ret;
-	struct buf_desc buffer;
+	buf_desc<P> buffer;
 
 	// change to network byte order (like ARQStream does)
 	for (size_t i = 0; i < t.len; i++)
 		t.pdu[i] = htobe64(t.pdu[i]);
 
 	// they cannot fail in blocking mode
-	acq_buf(pimpl->desc, &buffer, 0); // TODO: add mode handling
+	acq_buf<P>(pimpl->desc, &buffer, 0); // TODO: add mode handling
 	init_buf(&buffer);
 
 	// will fail if previous packet wasn't flushed
@@ -173,24 +183,24 @@ bool ARQStream::send(packet t, Mode mode) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Waddress-of-packed-member"
 #endif
-	ret = append_words(&buffer, t.pid, t.len, reinterpret_cast<__u64*>(&t.pdu[0]));
+	ret = append_words<P>(&buffer, t.pid, t.len, reinterpret_cast<__u64*>(&t.pdu[0]));
 #if (__GNUC__ >= 9)
 #pragma GCC diagnostic pop
 #endif
 	if (ret < 0)
 		throw std::runtime_error(name + ": payload error");
 
-	ret = send_buf(pimpl->desc, &buffer, mode);
+	ret = send_buf<P>(pimpl->desc, &buffer, mode);
 	if (ret < 0)
 		throw std::runtime_error(name + ": send error");
 
 	return true;
 }
 
-
-bool ARQStream::receive(packet& t, Mode mode) {
+template<typename P>
+bool ARQStream<P>::receive(packet<P>& t, Mode mode) {
 	__s32 ret;
-	struct buf_desc buffer;
+	buf_desc<P> buffer;
 
 	ret = recv_buf(pimpl->desc, &buffer, mode);
 	if (ret == SC_EMPTY)
@@ -212,20 +222,21 @@ bool ARQStream::receive(packet& t, Mode mode) {
 	return true;
 }
 
-
-void ARQStream::flush() {
+template<typename P>
+void ARQStream<P>::flush() {
 	// clear TX cache
-	__s32 ret = send_buf(pimpl->desc, NULL, MODE_FLUSH);
+	__s32 ret = send_buf<P>(pimpl->desc, NULL, MODE_FLUSH);
 	if (ret < 0)
 		throw std::runtime_error(name + ": flushing error");
 }
 
-
-bool ARQStream::received_packet_available() {
+template<typename P>
+bool ARQStream<P>::received_packet_available() {
 	return ! static_cast<bool>(rx_queues_empty(pimpl->desc));
 }
 
-size_t ARQStream::drop_receive_queue(microseconds timeout, bool with_control_packet)
+template<typename P>
+size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_packet)
 {
 	size_t dropped_words = 0;
 	microseconds accumulated_sleep(0);
@@ -234,7 +245,7 @@ size_t ARQStream::drop_receive_queue(microseconds timeout, bool with_control_pac
 	// sleep timings in us (back-off to longer times; don't use >= 1s!)
 	std::vector<microseconds> const sleep_intervals = {5us,    10us,   50us,    100us,   500us,
 	                                                   1000us, 5000us, 10000us, 50000us, 100000us};
-	packet my_packet;
+	packet<P> my_packet;
 	// we need a random seed that differs between each experiment run
 	size_t const seed = duration_cast<milliseconds>(
 							system_clock::now().time_since_epoch())
@@ -311,16 +322,17 @@ size_t ARQStream::drop_receive_queue(microseconds timeout, bool with_control_pac
 	return dropped_words;
 }
 
-
-bool ARQStream::all_packets_sent() {
+template<typename P>
+bool ARQStream<P>::all_packets_sent() {
 	return static_cast<bool>(tx_queues_empty(pimpl->desc));
 }
 
-
-bool ARQStream::send_buffer_full() {
+template<typename P>
+bool ARQStream<P>::send_buffer_full() {
 	return static_cast<bool>(tx_queues_full(pimpl->desc));
 }
 
+template class ARQStream<>;
 
 #endif // !NCSIM
 

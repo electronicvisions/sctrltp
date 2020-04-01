@@ -1,6 +1,6 @@
 #pragma once
 /*Interface definition for upper layers*/
-
+#pragma once
 
 #ifndef _GNU_SOURCE
 	#define _GNU_SOURCE
@@ -33,74 +33,96 @@
 
 namespace sctrltp {
 
+template<typename P = Parameters<>>
 struct sctp_rx_cache {
-	struct sctp_alloc in[NUM_QUEUES];
-	struct sctp_alloc out;
+	struct sctp_alloc<P> in[NUM_QUEUES];
+	struct sctp_alloc<P> out;
 };
 
+template<typename P = Parameters<>>
 struct sctp_tx_cache {
-	struct sctp_alloc in;
-	struct sctp_alloc out[NUM_QUEUES];
+	struct sctp_alloc<P> in;
+	struct sctp_alloc<P> out[NUM_QUEUES];
 };
 
+template<typename P = Parameters<>>
 struct sctp_descr {
 	struct drepper_mutex    mutex;      /*a mutex similar to pthread mutexes*/
 
-	struct sctp_tx_cache    send_buf;
-	struct sctp_rx_cache    recv_buf;
+	sctp_tx_cache<P>        send_buf;
+	sctp_rx_cache<P>        recv_buf;
 
-	struct sctp_interface   *trans;	    /*Pointer to interface in shared memory to pass and receive data to/from*/
+	sctp_interface<P>       *trans;	    /*Pointer to interface in shared memory to pass and receive data to/from*/
 	__u8                    name[248];  /*Name of shared mem segment*/
 	__u32                   my_lock_mask; /*Mask which determines nathans currently locked by me*/
 	__s32					ref_cnt;    /*reference counter*/
 
-	__u8                    pad[8192 - (248 + PTR_SIZE + sizeof(struct drepper_mutex) + 2*sizeof(struct sctp_tx_cache) + 8)];
-};
-static_assert(sizeof(struct sctp_descr) == (2*4096), ""); // 2 pages (TODO: page size should be configurable)
+	__u8                    pad[8192 - (248 + PTR_SIZE + sizeof(drepper_mutex) + 2*sizeof(sctp_tx_cache<P>) + 8)];
 
+};
+// TODO: also check non-default-parameterized versions
+static_assert(sizeof(sctp_descr<>) == (2*4096), ""); // 2 pages (TODO: page size should be configurable)
+
+template<typename P = Parameters<>>
 struct buf_desc {
 	/* TODO: do we need raw UDP frame? */
-	struct arq_frame *arq_sctrl;
+	arq_frame<P> *arq_sctrl;
 	__u64 *payload;
 };
 
 /*abstract functions to use framework more efficiently*/
-struct sctp_descr *open_conn (const char *corename);
+template<typename P>
+sctp_descr<P> *open_conn (const char *corename);
 
-__s32 close_conn (struct sctp_descr *desc);
+template<typename P>
+__s32 close_conn (sctp_descr<P> *desc);
 
-__s32 acq_buf (struct sctp_descr *desc, struct buf_desc *acq, const __u8 mode);
+template<typename P>
+__s32 acq_buf (sctp_descr<P> *desc, buf_desc<P> *acq, const __u8 mode);
 
-__s32 rel_buf (struct sctp_descr *desc, struct buf_desc *rel, const __u8 mode);
+template<typename P>
+__s32 rel_buf (sctp_descr<P> *desc, buf_desc<P> *rel, const __u8 mode);
 
-__s32 send_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode);
+template<typename P>
+__s32 send_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode);
 
-__s32 recv_buf (struct sctp_descr *desc, struct buf_desc *buf, const __u8 mode);
+template<typename P>
+__s32 recv_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode);
 
-__s32 init_buf (struct buf_desc *buf);
+template<typename P>
+__s32 init_buf (buf_desc<P> *buf);
 
-__s32 append_words (struct buf_desc *buf, const __u16 ptype, const __u32 num, const __u64 *values);
+template<typename P>
+__s32 append_words (buf_desc<P> *buf, const __u16 ptype, const __u32 num, const __u64 *values);
 
-__s32 tx_queues_empty (struct sctp_descr *desc);
+template<typename P>
+__s32 tx_queues_empty (sctp_descr<P> *desc);
 
-__s32 tx_queues_full (struct sctp_descr *desc);
+template<typename P>
+__s32 tx_queues_full (sctp_descr<P> *desc);
 
-__s32 rx_queues_empty (struct sctp_descr *desc);
+template<typename P>
+__s32 rx_queues_empty (sctp_descr<P> *desc);
 
-__s32 rx_queues_full (struct sctp_descr *desc);
+template<typename P>
+__s32 rx_queues_full (sctp_descr<P> *desc);
 
 /*This function connects to SCTP Core and returning a descriptor (on error returning NULL)*/
-struct sctp_descr *SCTP_Open (const char *corename);
+template<typename P>
+sctp_descr<P> *SCTP_Open (const char *corename);
 
 /*Disconnects from SCTP Core and gives statuscode back*/
-__s32 SCTP_Close (struct sctp_descr *desc);
+template<typename P>
+__s32 SCTP_Close (sctp_descr<P> *desc);
 
 /*Assembles an SCTP Packet respective to aflags and sflags and filling it with payload
  *returns num on success otherwise negative value*/
-__s64 SCTP_Send (struct sctp_descr *desc, const __u16 typ, const __u32 num, const __u64 *payload);
+template<typename P>
+__s64 SCTP_Send (sctp_descr<P> *desc, const __u16 typ, const __u32 num, const __u64 *payload);
 
 /*Fetches one packet from core and gives the amount of responses(!) and flags in it back
  *returns 0 on success otherwise negative value*/
-__s32 SCTP_Recv (struct sctp_descr *desc, __u16 *typ, __u16 *num, __u64 *resp);
+template<typename P>
+__s32 SCTP_Recv (sctp_descr<P> *desc, __u16 *typ, __u16 *num, __u64 *resp);
 
 } // namespace sctrltp

@@ -70,22 +70,26 @@ struct sctp_sock {
 };
 
 /*Initializes raw packet socket and bind it to the given device*/
-__s8 sock_init (struct sctp_sock *ssock, const __u32 *rip);
+__s8 sock_init (sctp_sock *ssock, const __u32 *rip);
 
 /* returns number of bytes stored into buf (should be HEADER+NB*SCTRLCMD bytes)
  * filter = 1: filter enabled, will return -1 if frame has not passed filter checks*/
-__s32 sock_read (struct sctp_sock *ssock, struct arq_frame *buf, __u8 filter);
+template<typename arq_frame>
+__s32 sock_read (sctp_sock *ssock, arq_frame *buf, __u8 filter);
 
 /*returns number of bytes actually written (should be equal to len, if its not -4 is returned)*/
-__s32 sock_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len);
+template<typename arq_frame>
+__s32 sock_write (sctp_sock *ssock, arq_frame *buf, __u32 len);
 
 /*returns number of bytes actually written (should be equal to len, if its not -4 is returned)*/
-__s32 sock_writev (struct sctp_sock *ssock, const struct iovec *iov, int iovcnt);
+__s32 sock_writev (sctp_sock *ssock, iovec const *iov, int iovcnt);
 
+template <typename P>
 void print_stats ();
 
 #ifdef DEBUG
-__s32 debug_write(struct sctp_sock *ssock, struct arq_frame *buf, __u32 len);
+template<typename arq_frame>
+__s32 debug_write(sctp_sock *ssock, arq_frame *buf, __u32 len);
 #endif
 
 } // namespace sctrltp

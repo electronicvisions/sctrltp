@@ -8,20 +8,22 @@
 
 using namespace std::chrono_literals;
 
-LoopbackTest::Settings::Settings() :
+template <typename P>
+LoopbackTest<P>::Settings::Settings() :
     runtime(1min),
     timeout(5s),
-    packet_mode(LoopbackTest::PacketMode::Random),
-    payload_mode(LoopbackTest::PayloadMode::Random),
+    packet_mode(LoopbackTest<P>::PacketMode::Random),
+    payload_mode(LoopbackTest<P>::PayloadMode::Random),
     payload_seed(42),
     length_seed(52),
-    packet_length(MAX_PDUWORDS),
+    packet_length(P::MAX_PDUWORDS),
     corner(1000),
     print_progress(false),
     max_retries(1000)
 {}
 
-LoopbackTest::LoopbackTest(std::string const ip, Settings const& settings) :
+template <typename P>
+LoopbackTest<P>::LoopbackTest(std::string const ip, Settings const& settings) :
     m_arq_stream(sctrltp::ARQStream(ip, "192.168.0.1", 1234, ip, 1234)),
     m_expected_next_word(0),
     m_next_word_to_send(0),
@@ -30,7 +32,7 @@ LoopbackTest::LoopbackTest(std::string const ip, Settings const& settings) :
     m_length_engine(std::ranlux24_base(settings.length_seed))
 {
 	test_packet.pid = PTYPE_LOOPBACK;
-	test_packet.len = MAX_PDUWORDS;
+	test_packet.len = P::MAX_PDUWORDS;
 
 	set_settings(settings);
 	stats_reset();
@@ -39,25 +41,26 @@ LoopbackTest::LoopbackTest(std::string const ip, Settings const& settings) :
 	receiving_dist = std::uniform_int_distribution<WordType>(0, std::numeric_limits<WordType>::max());
 }
 
-void LoopbackTest::set_settings(Settings const& settings)
+template <typename P>
+void LoopbackTest<P>::set_settings(Settings const& settings)
 {
 	m_settings = settings;
 	switch (m_settings.payload_mode) {
 		case PayloadMode::Random:
-			get_next_word = std::bind(&LoopbackTest::make_random_payload, this);
-			check_packet_payload = std::bind(&LoopbackTest::check_random_payload, this);
+			get_next_word = std::bind(&LoopbackTest<P>::make_random_payload, this);
+			check_packet_payload = std::bind(&LoopbackTest<P>::check_random_payload, this);
 			break;
 		case PayloadMode::SequenceIncremental:
-			get_next_word = std::bind(&LoopbackTest::make_incremental_sequence_payload, this);
+			get_next_word = std::bind(&LoopbackTest<P>::make_incremental_sequence_payload, this);
 			check_packet_payload =
-			    std::bind(&LoopbackTest::check_incremental_sequence_payload, this);
+			    std::bind(&LoopbackTest<P>::check_incremental_sequence_payload, this);
 			m_expected_next_word = 0;
 			m_next_word_to_send = 0;
 			break;
 		case PayloadMode::SequenceDecremental:
-			get_next_word = std::bind(&LoopbackTest::make_decremental_sequence_payload, this);
+			get_next_word = std::bind(&LoopbackTest<P>::make_decremental_sequence_payload, this);
 			check_packet_payload =
-			    std::bind(&LoopbackTest::check_decremental_sequence_payload, this);
+			    std::bind(&LoopbackTest<P>::check_decremental_sequence_payload, this);
 			m_expected_next_word = std::numeric_limits<WordType>::max();
 			m_next_word_to_send = std::numeric_limits<WordType>::max();
 			break;
@@ -67,29 +70,29 @@ void LoopbackTest::set_settings(Settings const& settings)
 			std::terminate();
 	};
 
-	if(settings.packet_length > MAX_PDUWORDS) {
+	if(settings.packet_length > P::MAX_PDUWORDS) {
 		throw std::overflow_error("Provided packet length to long");
 	}
 	length_dist = std::uniform_int_distribution<uint32_t>(1, settings.packet_length);
 
 	switch (m_settings.packet_mode) {
 		case PacketMode::Random:
-			make_function = std::bind(&LoopbackTest::make_random_packet, this);
+			make_function = std::bind(&LoopbackTest<P>::make_random_packet, this);
 			break;
 		case PacketMode::SequenceIncremental:
-			make_function = std::bind(&LoopbackTest::make_incremental_sequence_packet, this);
+			make_function = std::bind(&LoopbackTest<P>::make_incremental_sequence_packet, this);
 			break;
 		case PacketMode::SequenceDecremental:
-			make_function = std::bind(&LoopbackTest::make_decremental_sequence_packet, this);
+			make_function = std::bind(&LoopbackTest<P>::make_decremental_sequence_packet, this);
 			break;
 		case PacketMode::Corner:
-			make_function = std::bind(&LoopbackTest::make_corner_packet, this);
+			make_function = std::bind(&LoopbackTest<P>::make_corner_packet, this);
 			break;
 		case PacketMode::Max:
-			make_function = std::bind(&LoopbackTest::make_max_packet, this);
+			make_function = std::bind(&LoopbackTest<P>::make_max_packet, this);
 			break;
 		case PacketMode::Min:
-			make_function = std::bind(&LoopbackTest::make_min_packet, this);
+			make_function = std::bind(&LoopbackTest<P>::make_min_packet, this);
 			break;
 		default:
 			std::cerr << "Entered packet mode " << static_cast<size_t>(settings.packet_mode)
@@ -98,12 +101,14 @@ void LoopbackTest::set_settings(Settings const& settings)
 	};
 }
 
-LoopbackTest::Settings LoopbackTest::get_settings() const
+template <typename P>
+typename LoopbackTest<P>::Settings LoopbackTest<P>::get_settings() const
 {
 	return m_settings;
 }
 
-void LoopbackTest::timer()
+template <typename P>
+void LoopbackTest<P>::timer()
 {
 	std::this_thread::sleep_for(m_settings.runtime);
 	m_timer_running = false;
@@ -112,7 +117,8 @@ void LoopbackTest::timer()
 	approximate_bandwidth();
 }
 
-void LoopbackTest::progress()
+template <typename P>
+void LoopbackTest<P>::progress()
 {
 	// convert runtime to seconds, then update the bar every second
 	size_t const int_runtime =
@@ -125,24 +131,28 @@ void LoopbackTest::progress()
 	}
 }
 
-LoopbackTest::WordType LoopbackTest::make_incremental_sequence_payload()
+template <typename P>
+typename LoopbackTest<P>::WordType LoopbackTest<P>::make_incremental_sequence_payload()
 {
 	// yes we want to return the not yet increased value
 	return m_next_word_to_send++;
 }
 
-LoopbackTest::WordType LoopbackTest::make_decremental_sequence_payload()
+template <typename P>
+typename LoopbackTest<P>::WordType LoopbackTest<P>::make_decremental_sequence_payload()
 {
 	// yes we want to return the not yet decreased value
 	return m_next_word_to_send--;
 }
 
-LoopbackTest::WordType LoopbackTest::make_random_payload()
+template <typename P>
+typename LoopbackTest<P>::WordType LoopbackTest<P>::make_random_payload()
 {
 	return sending_dist(m_sending_engine);
 }
 
-void LoopbackTest::make_incremental_sequence_packet()
+template <typename P>
+void LoopbackTest<P>::make_incremental_sequence_packet()
 {
 	test_packet.len = (m_stats.sent_packet_counter % (m_settings.packet_length - 1 )) + 1;
 	for (size_t i = 0; i < test_packet.len; i++) {
@@ -151,7 +161,8 @@ void LoopbackTest::make_incremental_sequence_packet()
 	}
 }
 
-void LoopbackTest::make_decremental_sequence_packet()
+template <typename P>
+void LoopbackTest<P>::make_decremental_sequence_packet()
 {
 	test_packet.len =
 	    m_settings.packet_length - (m_stats.sent_packet_counter % (m_settings.packet_length - 1)) + 1;
@@ -161,7 +172,8 @@ void LoopbackTest::make_decremental_sequence_packet()
 	}
 }
 
-void LoopbackTest::make_random_packet()
+template <typename P>
+void LoopbackTest<P>::make_random_packet()
 {
 	test_packet.len = length_dist(m_length_engine);
 	for (size_t i = 0; i < test_packet.len; i++) {
@@ -170,10 +182,11 @@ void LoopbackTest::make_random_packet()
 	}
 }
 
-void LoopbackTest::make_corner_packet()
+template <typename P>
+void LoopbackTest<P>::make_corner_packet()
 {
 	if (m_stats.sent_payload_counter % m_settings.corner) {
-		test_packet.len = MAX_PDUWORDS;
+		test_packet.len = P::MAX_PDUWORDS;
 	} else {
 		test_packet.len = 1;
 	}
@@ -183,7 +196,8 @@ void LoopbackTest::make_corner_packet()
 	}
 }
 
-void LoopbackTest::make_max_packet()
+template <typename P>
+void LoopbackTest<P>::make_max_packet()
 {
 	test_packet.len = m_settings.packet_length;
 	for (size_t i = 0; i < test_packet.len; i++) {
@@ -192,7 +206,8 @@ void LoopbackTest::make_max_packet()
 	}
 }
 
-void LoopbackTest::make_min_packet()
+template <typename P>
+void LoopbackTest<P>::make_min_packet()
 {
 	test_packet.len = 1;
 	for (size_t i = 0; i < test_packet.len; i++) {
@@ -201,7 +216,8 @@ void LoopbackTest::make_min_packet()
 	}
 }
 
-void LoopbackTest::check_random_payload()
+template <typename P>
+void LoopbackTest<P>::check_random_payload()
 {
 	size_t tries = 0;
 	for (size_t i = 0; i < received_packet.len; i++) {
@@ -226,7 +242,8 @@ void LoopbackTest::check_random_payload()
 	}
 }
 
-void LoopbackTest::check_incremental_sequence_payload()
+template <typename P>
+void LoopbackTest<P>::check_incremental_sequence_payload()
 {
 	for (size_t i = 0; i < received_packet.len; i++) {
 		if (received_packet.pdu[i] != m_expected_next_word) {
@@ -239,7 +256,8 @@ void LoopbackTest::check_incremental_sequence_payload()
 	}
 }
 
-void LoopbackTest::check_decremental_sequence_payload()
+template <typename P>
+void LoopbackTest<P>::check_decremental_sequence_payload()
 {
 	for (size_t i = 0; i < received_packet.len; i++) {
 		if (received_packet.pdu[i] != m_expected_next_word) {
@@ -252,28 +270,31 @@ void LoopbackTest::check_decremental_sequence_payload()
 	}
 }
 
-void LoopbackTest::send_loopback()
+template <typename P>
+void LoopbackTest<P>::send_loopback()
 {
 	while (m_timer_running) {
 		make_function();
-		m_arq_stream.send(test_packet, sctrltp::ARQStream::NOTHING);
+		m_arq_stream.send(test_packet, sctrltp::ARQStream<P>::NOTHING);
 		m_stats.sent_packet_counter++;
 	}
 	m_arq_stream.flush();
 }
 
-void LoopbackTest::receive_loopback()
+template <typename P>
+void LoopbackTest<P>::receive_loopback()
 {
 	while (m_receive_running) {
 		if (m_arq_stream.received_packet_available()) {
-			m_arq_stream.receive(received_packet, sctrltp::ARQStream::NOTHING);
+			m_arq_stream.receive(received_packet, sctrltp::ARQStream<P>::NOTHING);
 			check_packet_payload();
 			m_stats.received_packet_counter++;
 		}
 	}
 }
 
-void LoopbackTest::approximate_bandwidth()
+template <typename P>
+void LoopbackTest<P>::approximate_bandwidth()
 {
 	// TODO packets sent during "runtime" are used for this calculation
 	// for a more exact measurement the actual time of the last _received_ data would be required
@@ -283,7 +304,8 @@ void LoopbackTest::approximate_bandwidth()
 	m_stats.approx_bandwidth = (total_data / total_time) / 1e6; // bandwidth in Mbit/s
 }
 
-void LoopbackTest::stats_reset()
+template <typename P>
+void LoopbackTest<P>::stats_reset()
 {
 	m_stats.sent_payload_counter = 0;
 	m_stats.received_payload_counter = 0;
@@ -296,7 +318,8 @@ void LoopbackTest::stats_reset()
 	m_receive_running = true;
 }
 
-LoopbackTest::Stats LoopbackTest::run()
+template <typename P>
+typename LoopbackTest<P>::Stats LoopbackTest<P>::run()
 {
 	stats_reset();
 	std::thread timer = get_timer_thread();
@@ -317,22 +340,28 @@ LoopbackTest::Stats LoopbackTest::run()
 	return m_stats;
 }
 
-std::thread LoopbackTest::get_sending_thread()
+template <typename P>
+std::thread LoopbackTest<P>::get_sending_thread()
 {
 	return std::thread([&] { send_loopback(); });
 }
 
-std::thread LoopbackTest::get_receiving_thread()
+template <typename P>
+std::thread LoopbackTest<P>::get_receiving_thread()
 {
 	return std::thread([&] { receive_loopback(); });
 }
 
-std::thread LoopbackTest::get_timer_thread()
+template <typename P>
+std::thread LoopbackTest<P>::get_timer_thread()
 {
 	return std::thread([&] { timer(); });
 }
 
-std::thread LoopbackTest::get_progress_thread()
+template <typename P>
+std::thread LoopbackTest<P>::get_progress_thread()
 {
 	return std::thread([&] { progress(); });
 }
+
+template class LoopbackTest<>;

@@ -1,4 +1,5 @@
 bld.objects(
+    features = 'cxx',
     source =   'us_sctp_if.cpp',
     target =   'us_sctp_if_obj',
     use    =   'sctrl_inc',

@@ -16,7 +16,7 @@
 
 /* We cannot #include <linux/fcntl.h> on Debian Jessie,
  * so we copied the define */
-#ifndef O_TMPFILE
+#ifndef O_TMPFILE // FIXME Issue 3523: extra changeset?
 #define O_TMPFILE 020200000
 #endif
 

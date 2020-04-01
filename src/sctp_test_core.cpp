@@ -83,7 +83,7 @@ void get_intr_cnt(size_t * net, size_t * timer) {
 	pclose(fp);
 }
 
-
+template <typename P>
 void *sending (void *ret)
 {
 	__u64 i, max = TEST_SIZE;
@@ -99,8 +99,8 @@ void *sending (void *ret)
 	size_t last_interrupts, last_interrupts2;
 	get_intr_cnt(&last_interrupts, &last_interrupts2);
 
-	struct sctp_descr *desc = (struct sctp_descr *)ret;
-	struct buf_desc buffer;
+	struct sctp_descr<P> *desc = (struct sctp_descr<P> *)ret;
+	struct buf_desc<P> buffer;
 
 	/*struct sctrl_cmd cmd[PARALLEL_FRAMES*MAX_CMDS];*/
 	/*__u32 i;*/
@@ -116,14 +116,14 @@ void *sending (void *ret)
 	gettimeofday(&begin, NULL);
 
 	size_t j = 0;
-	__u64 packet[MAX_PDUWORDS] = {0};
+	__u64 packet[P::MAX_PDUWORDS] = {0};
 	__u64 last_i = 0;
 
 	acq_buf (desc, &buffer, 0);
 	init_buf (&buffer);
 	packet[0] = htobe64(0x80000000100000a0); // 4 = stats, 8 = dummy data, c both...
 	append_words (&buffer, 0x0123, 1, packet);
-	send_buf (desc, &buffer, MODE_FLUSH);
+	send_buf<P> (desc, &buffer, MODE_FLUSH);
 	//send_buf (desc, NULL, MODE_FLUSH);
 
 	double starttime = mytime();
@@ -144,7 +144,7 @@ void *sending (void *ret)
 		//wordsize++;
 		//wordsize = 1 + (rand_r(&seedilidi2) % (MAX_PDUWORDS-1));
 		//wordsize = 32 * (1 + (rand_r(&seedilidi2) % 5)); //(MAX_PDUWORDS-1));
-		assert(wordsize > 0 && wordsize <= MAX_PDUWORDS);
+		assert(wordsize > 0 && wordsize <= P::MAX_PDUWORDS);
 		//static size_t wordsize = 0; //(rand_r(&seedilidi2) % (MAX_PDUWORDS-64)) + 64;
 		//if (wordsize < 64)
 		//	wordsize++;
@@ -171,7 +171,7 @@ void *sending (void *ret)
 		//} while(true);
 
 		/*push buffer to tx_queue*/
-		send_buf (desc, &buffer, 0);
+		send_buf<P> (desc, &buffer, 0);
 		packet_cnt++;
 		//printf("sent %d\n", i);
 
@@ -226,7 +226,7 @@ void *sending (void *ret)
 			break;
 	}
 	// flush :)
-	send_buf (desc, NULL, MODE_FLUSH);
+	send_buf<P> (desc, NULL, MODE_FLUSH);
 
 	gettimeofday(&finish, NULL);
 
@@ -247,11 +247,11 @@ void *sending (void *ret)
 
 int main (int argc, char **argv)
 {
-	struct buf_desc buffer;
+	struct buf_desc<> buffer;
 	__u64 i, sum = 0, last_sum = 0;
 	/*__u8 sflags,num;*/
 	/*__u16 nat;*/
-	struct sctp_descr *desc = NULL;
+	struct sctp_descr<> *desc = NULL;
 
 	pthread_t threadvar;
 	
@@ -264,14 +264,14 @@ int main (int argc, char **argv)
 	}
 
 	printf ("****Testing Core (make sure, that testbench is running on tap0, Core on tap1)\n");
-	desc = open_conn (argv[1]);
+	desc = open_conn<Parameters<>> (argv[1]);
 	if (!desc) {
 		printf ("Error: make sure Core and testbench are up\n");
 		return 1;
 	}
 
 	printf ("****Sending infinite Packets to BALU\n");
-	pthread_create (&threadvar, NULL, sending, desc);
+	pthread_create (&threadvar, NULL, sending<Parameters<>>, desc);
 
 	printf ("****Thread started\n");
 	__u64 data = 0;

@@ -168,7 +168,8 @@ __s8 sock_init (struct sctp_sock *ssock, const __u32 *remote_ip)
 
 
 /*returns number of bytes stored into buf (should be HEADER+NB*SCTRLCMD bytes)*/
-__s32 sock_read (struct sctp_sock *ssock, struct arq_frame *buf, __u8 filter)
+template <typename arq_frame>
+__s32 sock_read (struct sctp_sock *ssock, arq_frame *buf, __u8 filter)
 {
 
 	__s32 nread = 0;
@@ -240,7 +241,7 @@ check_rx_ring:
 	}
 
 #else /* end of WITH_PACKET_MMAP */
-	nread = read (ssock->sd, tmp, sizeof(struct arq_frame));
+	nread = read (ssock->sd, tmp, sizeof(arq_frame));
 	if (nread < 0) {
 		LOG_ERROR("Failed to read from socket: %s\n", strerror(errno));
 		return SC_ABORT;
@@ -253,8 +254,9 @@ check_rx_ring:
 	return nread;
 }
 
+template <typename P>
 void print_stats () {
-	struct sctp_core *ad = SCTP_debugcore();
+	struct sctp_core<P> *ad = SCTP_debugcore<P>();
 	__s32 tmp;
 	int i;
 	float ftmp;
@@ -330,17 +332,17 @@ void print_stats () {
 		printf ("CTS: %.lld [us] ", ad->currtime);
 
 		tmp = ad->txwin.high_seq - ad->txwin.low_seq;
-		if (((ad->txwin.low_seq + MAX_WINSIZ) < MAX_NRFRAMES) && (ad->txwin.high_seq > MAX_NRFRAMES))
-			tmp =  ad->txwin.high_seq + MAX_NRFRAMES - ad->txwin.low_seq;
+		if (((ad->txwin.low_seq + P::MAX_WINSIZ) < P::MAX_NRFRAMES) && (ad->txwin.high_seq > P::MAX_NRFRAMES))
+			tmp =  ad->txwin.high_seq + P::MAX_NRFRAMES - ad->txwin.low_seq;
 		printf ("TX: %05d-%05d (%4d, ", ad->txwin.low_seq, ad->txwin.high_seq, tmp);
-		tmp = 100*ad->txwin.cur_wsize/ad->txwin.max_wsize/sizeof(struct arq_frame);
+		tmp = 100*ad->txwin.cur_wsize/ad->txwin.max_wsize/sizeof(arq_frame<P>);
 		printf ("cws %3d%%, ", tmp);
-		tmp = 100*ad->txwin.ss_thresh/ad->txwin.max_wsize/sizeof(struct arq_frame);
+		tmp = 100*ad->txwin.ss_thresh/ad->txwin.max_wsize/sizeof(arq_frame<P>);
 		printf ("sst %3d%%) ", tmp);
 
 		tmp = ad->rxwin.high_seq - ad->rxwin.low_seq;
-		if (((ad->rxwin.low_seq + MAX_WINSIZ) < MAX_NRFRAMES) && (ad->rxwin.high_seq > MAX_NRFRAMES))
-			tmp =  ad->rxwin.high_seq + MAX_NRFRAMES - ad->rxwin.low_seq;
+		if (((ad->rxwin.low_seq + P::MAX_WINSIZ) < P::MAX_NRFRAMES) && (ad->rxwin.high_seq > P::MAX_NRFRAMES))
+			tmp =  ad->rxwin.high_seq + P::MAX_NRFRAMES - ad->rxwin.low_seq;
 		printf ("RX: %05d-%05d (%4d) ", ad->rxwin.low_seq, ad->rxwin.high_seq, tmp);
 
 		printf ("ACK: %05d ", ad->ACK);
@@ -375,7 +377,8 @@ void print_stats () {
 #endif
 }
 
-__s32 sock_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len)
+template <typename arq_frame>
+__s32 sock_write (struct sctp_sock *ssock,  arq_frame *buf, __u32 len)
 {
 	__s32 nwritten;
 	int i = 0;
@@ -430,7 +433,8 @@ __s32 sock_writev (struct sctp_sock *ssock, const struct iovec *iov, int iovcnt)
 
 
 #ifdef DEBUG
-__s32 debug_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len)
+template <typename arq_frame>
+__s32 debug_write (struct sctp_sock *ssock, arq_frame *buf, __u32 len)
 {
 	struct arq_frame* sf = (struct arq_frame*) buf->PAYLOAD;
 	char* s;
@@ -457,6 +461,11 @@ __s32 debug_write (struct sctp_sock *ssock, struct arq_frame *buf, __u32 len)
 	write(ssock->debug_fd, "\n", 1);
 	return 0;
 }
+template __s32 debug_write (struct sctp_sock *ssock, struct arq_frame<> *buf, __u32 len);
 #endif
+
+template void print_stats<Parameters<>>();
+template __s32 sock_read (sctp_sock *ssock, arq_frame<> *buf, __u8 filter);
+template __s32 sock_write (sctp_sock *ssock, arq_frame<> *buf, __u32 len);
 
 } // namespace sctrltp

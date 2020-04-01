@@ -15,9 +15,15 @@
 
 using namespace sctrltp;
 
-struct sctp_descr *desc = NULL;
+template <typename P>
+static sctp_descr<P>*& get_desc()
+{
+	static sctp_descr<P> *desc = NULL;
+	return desc;
+}
 
-static struct arq_frame *fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, void *baseptr) {
+template <typename P>
+static struct arq_frame<P> *fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc<P> *local_buf, void *baseptr) {
 	__u32 i;
 	if ((i = local_buf->next) < local_buf->num) {
 		/*We have a frame in local cache*/
@@ -27,14 +33,15 @@ static struct arq_frame *fetch_frames (struct sctp_fifo *fifo, struct sctp_alloc
 		/*We dont have an unprocessed frame, so lets fetch new ones*/
 		fif_pop (fifo, (__u8 *)local_buf, baseptr);
 		for (i = 0; i < local_buf->num; i++) {
-			local_buf->fptr[i] = static_cast<arq_frame*>(get_abs_ptr (baseptr, local_buf->fptr[i]));
+			local_buf->fptr[i] = static_cast<arq_frame<P>*>(get_abs_ptr (baseptr, local_buf->fptr[i]));
 		}
 		local_buf->next = 1;
 		return local_buf->fptr[0];
 	}
 }
 
-static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, void *baseptr, struct arq_frame *ptr, __u8 flush) {
+template <typename P>
+static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc<P> *local_buf, void *baseptr, struct arq_frame<P> *ptr, __u8 flush) {
 	__u32 i;
 	if (!ptr) {
 		if (flush && ((i = local_buf->next) > 0)) {
@@ -49,7 +56,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 	} else {
 		if ((i = local_buf->next) < PARALLEL_FRAMES) {
 			/*There is room in local_buf to check frame in*/
-			local_buf->fptr[i] = static_cast<arq_frame*>(get_rel_ptr (baseptr, ptr));
+			local_buf->fptr[i] = static_cast<arq_frame<P>*>(get_rel_ptr (baseptr, ptr));
 			local_buf->next++;
 			if (flush) {
 				/*Even if we have not fully filled local_buf, we want to push it ...*/
@@ -65,7 +72,7 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 			fif_push (fifo, (__u8 *)local_buf, baseptr);
 			/*... but do not forget to register our frame*/
 			local_buf->next = 1;
-			local_buf->fptr[0] = static_cast<arq_frame*>(get_rel_ptr (baseptr, ptr));
+			local_buf->fptr[0] = static_cast<arq_frame<P>*>(get_rel_ptr (baseptr, ptr));
 			return;
 		}
 	}
@@ -73,17 +80,17 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc *local_buf, v
 
 int main (int argc, char **argv)
 {
-	struct sctp_alloc inbuf_rx;
-	struct sctp_alloc outbuf_rx;
-	struct sctp_alloc inbuf_tx;
-	struct sctp_alloc outbuf_tx;
+	sctp_alloc inbuf_rx;
+	sctp_alloc outbuf_rx;
+	sctp_alloc inbuf_tx;
+	sctp_alloc outbuf_tx;
 
-	struct arq_frame *ptr;
-	struct arq_frame *ptr_out;
-	struct arq_frame *sc_header;
+	arq_frame<> *ptr;
+	arq_frame<> *ptr_out;
+	arq_frame<> *sc_header;
 	__u64 *sc_cmds;
 	__u64 *sc_resps;
-	struct arq_frame *sc_header_out;
+	arq_frame<> *sc_header_out;
 
 	/*Variables to simulate nathan with module*/
 	__u32 i;
@@ -92,10 +99,10 @@ int main (int argc, char **argv)
 
 	int queue = 0;
 
-	memset (&inbuf_rx, 0, sizeof(struct sctp_alloc));
-	memset (&inbuf_tx, 0, sizeof(struct sctp_alloc));
-	memset (&outbuf_rx, 0, sizeof(struct sctp_alloc));
-	memset (&outbuf_tx, 0, sizeof(struct sctp_alloc));
+	memset (&inbuf_rx, 0, sizeof(sctp_alloc<>));
+	memset (&inbuf_tx, 0, sizeof(sctp_alloc<>));
+	memset (&outbuf_rx, 0, sizeof(sctp_alloc<>));
+	memset (&outbuf_tx, 0, sizeof(sctp_alloc<>));
 
 #ifdef WITH_ROUTING
 	if (argc < 3) {
@@ -122,8 +129,8 @@ int main (int argc, char **argv)
 
 	printf ("Connecting to Core...\n");
 
-	desc = SCTP_Open (argv[1]);
-	if (!desc) {
+	get_desc<Parameters<>>() = SCTP_Open<Parameters<>> (argv[1]);
+	if (!get_desc<Parameters<>>()) {
 		fprintf (stderr, "Error: Could not connect to core\n");
 		return 1;
 	}
@@ -132,10 +139,10 @@ int main (int argc, char **argv)
 
 	while (1) {
 		/*Fetch empty buffer from alloctx*/
-		ptr_out = fetch_frames (&(desc->trans->alloctx), &inbuf_tx, desc->trans);
+		ptr_out = fetch_frames (&(get_desc<Parameters<>>()->trans->alloctx), &inbuf_tx, get_desc<Parameters<>>()->trans);
 
 		/*Fetch frame from rx_queue*/
-		ptr = fetch_frames (&(desc->trans->rx_queues[queue]), &inbuf_rx, desc->trans);
+		ptr = fetch_frames (&(get_desc<Parameters<>>()->trans->rx_queues[queue]), &inbuf_rx, get_desc<Parameters<>>()->trans);
 
 		/*Handle frame*/
 		sc_header = ptr;
@@ -160,13 +167,13 @@ int main (int argc, char **argv)
 		}
 
 		/*Recycle frame from rx_queue*/
-		push_frames (&(desc->trans->allocrx), &outbuf_rx, desc->trans, ptr, 1);
+		push_frames (&(get_desc<Parameters<>>()->trans->allocrx), &outbuf_rx, get_desc<Parameters<>>()->trans, ptr, 1);
 
 		/*Push response frame to tx_queue*/
-		push_frames (&(desc->trans->tx_queues[queue]), &outbuf_tx, desc->trans, ptr_out, 1);
+		push_frames (&(get_desc<Parameters<>>()->trans->tx_queues[queue]), &outbuf_tx, get_desc<Parameters<>>()->trans, ptr_out, 1);
 
 		/*Wake TX*/
-		cond_signal (&(desc->trans->waketx), 1, 1);
+		cond_signal (&(get_desc<Parameters<>>()->trans->waketx), 1, 1);
 	}
 
 	return 0;

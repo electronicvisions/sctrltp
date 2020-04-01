@@ -24,6 +24,7 @@ void call_exit() {
 }
 
 /* used for abnormal termination triggered by some signal */
+template <typename P = Parameters<>>
 void termination_handler (int signum) {
 	if (!post_init) {
 		fprintf(stderr, "Got signal %d but HostARQ init was not completed, "
@@ -34,7 +35,7 @@ void termination_handler (int signum) {
 	}
 	/* we could see multiple signals during exit => ignore them */
 	if (cmpxchg(&(exiting), 0, 1) == 0)
-		SCTP_CoreDown();
+		SCTP_CoreDown<P>();
 	exit(EXIT_SUCCESS);
 }
 
@@ -70,7 +71,7 @@ int main(int argc, const char *argv[])
 	 * SIGINT, SIGHUP, SIGTERM, SIGQUIT, SIGCHLD
 	 * but if top-level ignores, we also ignore */
 	struct sigaction new_action, old_action;
-	new_action.sa_handler = ::termination_handler;
+	new_action.sa_handler = termination_handler<>;
 	sigfillset(&new_action.sa_mask); /* ignore all signals during signal handling */
 	new_action.sa_flags = 0;
 
@@ -91,7 +92,7 @@ int main(int argc, const char *argv[])
 	atexit(call_exit);
 
 	/* child me up */
-	if (SCTP_CoreUp(our_shm_name, remote_ip, init) < 1) {
+	if (SCTP_CoreUp<Parameters<>>(our_shm_name, remote_ip, init) < 1) {
 		fprintf(stderr, "Error occurred when starting up HostARQ software\n");
 		return EXIT_FAILURE;
 	}

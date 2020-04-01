@@ -53,22 +53,23 @@
 #endif
 #pragma GCC diagnostic pop
 
-namespace sctrltp {
-
-extern uint64_t const resetframe_var_values_check[6];
-
 #if (__GNUC__ >= 9)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Waddress-of-packed-member"
 #endif
+
+namespace sctrltp {
+
+template<typename P = Parameters<>>
 struct arq_frame {
 	__u32   ACK;                /*Acknowledge to packet with sequenceno = ACK (other direction)*/
 	__u32   SEQ;                /*Sequencenumber*/
 	__u16   PTYPE;              /*Type of packet (called "packet id" in docs)*/
 	__u16   LEN;                /*Length (64-bit words)*/
-	__u64   COMMANDS[MAX_PDUWORDS];
+	__u64   COMMANDS[P::MAX_PDUWORDS];
 }__attribute__ ((packed));
-static_assert(offsetof(struct arq_frame, COMMANDS) == (sizeof(__u32)*2 + sizeof(__u16)*2), "");
+// TODO: also check non-default-parameterized versions
+static_assert(offsetof(arq_frame<>, COMMANDS) == (sizeof(__u32)*2 + sizeof(__u16)*2), "");
 // TODO: check for uint64_t ptr alignment requirements too!
 
 struct arq_ackframe {
@@ -90,36 +91,42 @@ void print_mac (const char *prefix, __u8 *mac);
 
 /*SCTPREQ_* These funtions are used by the sending side of the layer*/
 
-struct arq_frame *sctpreq_get_ptr (struct arq_frame *packet);
+template<typename AF>
+AF* sctpreq_get_ptr (AF* packet);
 
 
 // TODO: static inline, but C99 style extern inline seems nicer...
 
-static inline void sctpreq_set_header (struct arq_frame *packet, __u16 LEN, __u16 PTYPE) {
+template<typename AF>
+static inline void sctpreq_set_header (AF* packet, __u16 LEN, __u16 PTYPE) {
 	packet->LEN = htons(LEN);
 	packet->PTYPE = htons(PTYPE);
-} __attribute__((always_inline))
+}
 
 /*seq valid bit will be set too!!*/
-__attribute__((always_inline)) static inline void sctpreq_set_seq (struct arq_frame *packet, __u32 SEQ) {
+template<typename AF>
+__attribute__((always_inline)) static inline void sctpreq_set_seq (AF* packet, __u32 SEQ) {
 	packet->SEQ = htonl(SEQ); /* size: 7 bits! */
 }
 
-__attribute__((always_inline)) static inline void sctpreq_set_ack (struct arq_frame *packet, __u32 ACK) {
+template<typename AF>
+__attribute__((always_inline)) static inline void sctpreq_set_ack (AF* packet, __u32 ACK) {
 	packet->ACK = htonl(ACK);
 }
 
-__attribute__((always_inline)) static inline void sctpack_set_ack (struct arq_ackframe *packet, __u32 ACK) {
+__attribute__((always_inline)) static inline void sctpack_set_ack (arq_ackframe *packet, __u32 ACK) {
 	packet->ACK = htonl(ACK);
 }
 
 /*get length in words*/
-__attribute__((always_inline)) static inline __u16 sctpreq_get_len (struct arq_frame *packet) {
+template<typename AF>
+__attribute__((always_inline)) static inline __u16 sctpreq_get_len (AF* packet) {
 	return ntohs(packet->LEN);
 }
 
 /*get size in bytes*/
-__attribute__((always_inline)) static inline __u32 sctpreq_get_size (struct arq_frame *packet) {
+template<typename AF>
+__attribute__((always_inline)) static inline __u32 sctpreq_get_size (AF* packet) {
 	__u32 size = ARQ_HEADER_SIZE;
 	size += TYPLEN_SIZE + ntohs(packet->LEN) * WORD_SIZE;
 	if (size < MIN_PACKET_SIZE)
@@ -127,21 +134,25 @@ __attribute__((always_inline)) static inline __u32 sctpreq_get_size (struct arq_
 	return size;
 }
 
-__attribute__((always_inline)) static inline __u32 sctpreq_get_seq (struct arq_frame *packet) {
+template<typename AF>
+__attribute__((always_inline)) static inline __u32 sctpreq_get_seq (AF* packet) {
 	__u32 seq;
 	seq = ntohl(packet->SEQ);
 	return seq;
 }
 
-__attribute__((always_inline)) static inline __u32 sctpreq_get_ack (struct arq_frame *packet) {
+template<typename AF>
+__attribute__((always_inline)) static inline __u32 sctpreq_get_ack (AF* packet) {
 	return ntohl(packet->ACK);
 }
 
-__attribute__((always_inline)) static inline __u16 sctpreq_get_typ (struct arq_frame *packet) {
+template<typename AF>
+__attribute__((always_inline)) static inline __u16 sctpreq_get_typ (AF* packet) {
 	return ntohs(packet->PTYPE);
 }
 
-__attribute__((always_inline)) static inline __u64* sctpreq_get_pload (struct arq_frame *packet) {
+template<typename AF>
+__attribute__((always_inline)) static inline __u64* sctpreq_get_pload (AF* packet) {
 	return packet->COMMANDS;
 }
 
@@ -150,7 +161,8 @@ static inline void sctpreset_init (struct arq_resetframe *packet) {
 }
 
 
-__attribute__((always_inline)) static inline __u32 sctpsomething_get_size (struct arq_frame *packet, size_t nread) {
+template<typename AF>
+__attribute__((always_inline)) static inline __u32 sctpsomething_get_size (AF* packet, size_t nread) {
 	__u32 size = ARQ_HEADER_SIZE;
 	if (nread <= MIN_PACKET_SIZE)
 		return MIN_PACKET_SIZE;

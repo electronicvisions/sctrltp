@@ -31,7 +31,7 @@ namespace sctrltp {
 }
 
 /*TODO: Exchange malloc with kmalloc when in kernelspace*/
-__s8 fif_init (struct sctp_fifo *fifo, __u32 nr, __u32 size)
+__s8 fif_init (sctp_fifo *fifo, __u32 nr, __u32 size)
 {
 	__u8 *tmp;
 	if (fifo) {

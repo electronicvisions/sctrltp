@@ -14,23 +14,24 @@ static double mytime() {
 	return 1.0 * now.tv_sec + now.tv_usec / 1e6;
 }
 
-static __s32 trigger_reset(struct sctp_descr* desc) {
-	struct buf_desc buffer;
+template <typename P>
+static __s32 trigger_reset(struct sctp_descr<P>* desc) {
+	struct buf_desc<P> buffer;
 	double curr_time;
 	double start = 0;
 	__u64 magic_word[1] = {htobe64(HW_HOSTARQ_MAGICWORD)};
 
 	fprintf(stderr, "trying to send FPGA reset command...\n");
-	acq_buf (desc, &buffer, 0);
-	init_buf (&buffer);
-	append_words (&buffer, PTYPE_DO_ARQRESET, 1, magic_word);
-	send_buf (desc, &buffer, 0);
-	send_buf (desc, NULL, MODE_FLUSH);
+	acq_buf<P> (desc, &buffer, 0);
+	init_buf<P> (&buffer);
+	append_words<P> (&buffer, PTYPE_DO_ARQRESET, 1, magic_word);
+	send_buf<P> (desc, &buffer, 0);
+	send_buf<P> (desc, NULL, MODE_FLUSH);
 	printf("FPGA reset command sent");
 
 	start = mytime();
 	do {
-		recv_buf (desc, &buffer, 0);
+		recv_buf<P> (desc, &buffer, 0);
 		if (sctpreq_get_typ(buffer.arq_sctrl) == PTYPE_CFG_TYPE) {
 			return 1;
 		}
@@ -39,19 +40,20 @@ static __s32 trigger_reset(struct sctp_descr* desc) {
 	return 0;
 }
 
-static void set_timings(struct sctp_descr* desc, __u64* cfg) {
-	struct buf_desc buffer;
+template <typename P>
+static void set_timings(struct sctp_descr<P>* desc, __u64* cfg) {
+	struct buf_desc<P> buffer;
 
-	acq_buf (desc, &buffer, 0);
-	init_buf (&buffer);
-	append_words (&buffer, PTYPE_CFG_TYPE, CFG_SIZE, cfg);
-	send_buf (desc, &buffer, 0);
-	send_buf (desc, NULL, MODE_FLUSH);
+	acq_buf<P> (desc, &buffer, 0);
+	init_buf<P> (&buffer);
+	append_words<P> (&buffer, PTYPE_CFG_TYPE, CFG_SIZE, cfg);
+	send_buf<P> (desc, &buffer, 0);
+	send_buf<P> (desc, NULL, MODE_FLUSH);
 	printf("Timing frame sent to FPGA\n");
 }
 
 int main(int argc, char* argv[]) {
-	struct sctp_descr* desc;
+	struct sctp_descr<>* desc;
 	__u64 cfg[CFG_SIZE];
 
 	if (argc != (CFG_SIZE + 2)) {
@@ -62,7 +64,7 @@ int main(int argc, char* argv[]) {
 	for(; i < CFG_SIZE; i++) {
 		cfg[i] = atoi(argv[i+2]);
 	}
-	desc = open_conn(argv[1]);
+	desc = open_conn<Parameters<>>(argv[1]);
 
 	if (trigger_reset(desc) != 1) {
 		printf("No reset response frome FPGA");

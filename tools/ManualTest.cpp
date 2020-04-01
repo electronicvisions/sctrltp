@@ -17,8 +17,8 @@ using namespace sctrltp;
 int main(int argc, char** argv)
 {
 	std::string ip;
-	LoopbackTest::PayloadMode payload_mode = LoopbackTest::PayloadMode::Random;
-	LoopbackTest::PacketMode packet_mode = LoopbackTest::PacketMode::Random;
+	LoopbackTest<>::PayloadMode payload_mode = LoopbackTest<>::PayloadMode::Random;
+	LoopbackTest<>::PacketMode packet_mode = LoopbackTest<>::PacketMode::Random;
 	uint64_t payload_seed = static_cast<uint64_t>(std::time(nullptr));
 	uint32_t length_seed = static_cast<uint32_t>(std::time(nullptr)) * payload_seed;
 	size_t len;
@@ -37,16 +37,16 @@ int main(int argc, char** argv)
 	    bpo::value<bpo_parser_helper::duration>(&timeout)->default_value(
 	        bpo_parser_helper::duration{5s}),
 	    "Time to wait for last response after sending in 'h'ours, 'm'inutes or 's'econds")(
-	    "payload_mode", bpo::value<LoopbackTest::PayloadMode>(&payload_mode),
+	    "payload_mode", bpo::value<LoopbackTest<>::PayloadMode>(&payload_mode),
 	    "Type of test, includes: \n 's'equencial_increase, seqiuncial_'d'ecrese, 'r'andom")(
-	    "packet_mode", bpo::value<LoopbackTest::PacketMode>(&packet_mode),
+	    "packet_mode", bpo::value<LoopbackTest<>::PacketMode>(&packet_mode),
 	    "Type of test, includes: \n 's'equencial_increase, seqiuncial_'d'ecrese, 'r'andom, 'm'ax, "
 	    "mi'n' and 'c'orner-case, default ")(
 	    "payload_seed", bpo::value<uint64_t>(&payload_seed),
 	    "Seed the generator for random packet payload generation, default is system clock")(
 	    "length_seed", bpo::value<uint32_t>(&length_seed),
 	    "Seed the generator for random packet length generation, default is system clock")(
-	    "len", bpo::value<size_t>(&len)->default_value(MAX_PDUWORDS),
+	    "len", bpo::value<size_t>(&len)->default_value(Parameters<>::MAX_PDUWORDS),
 	    "Set packet length for sequential loopback")(
 	    "corner", bpo::value<size_t>(&corner)->default_value(1000),
 	    "Set the number of length 1 packets between max length packets for "
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 	std::cout << "Random payload seed " << payload_seed << std::endl;
 	std::cout << "Random length seed " << length_seed << std::endl;
 
-	LoopbackTest::Settings settings;
+	LoopbackTest<>::Settings settings;
 	settings.runtime = chr::duration_cast<chr::seconds>(runtime.value);
 	settings.timeout = chr::duration_cast<chr::seconds>(timeout.value);
 	settings.payload_mode = payload_mode;
@@ -77,11 +77,11 @@ int main(int argc, char** argv)
 	settings.corner = corner;
 	settings.print_progress = true;
 
-	LoopbackTest loop(ip, settings);
+	LoopbackTest<> loop(ip, settings);
 
 	std::cout << "ARQStream established, start sending" << std::endl;
 
-	LoopbackTest::Stats stats = loop.run();
+	LoopbackTest<>::Stats stats = loop.run();
 
 	std::cout << "Done!" << std::endl;
 	std::cout << "sent " << stats.sent_payload_counter << " payloads in "

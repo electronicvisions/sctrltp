@@ -16,13 +16,13 @@ bpo_parser_helper::duration runtime;
 // TODO make typed test for all packet and payload modes combinations
 TEST(LoopbackTest, Random)
 {
-	LoopbackTest::Settings settings;
+	LoopbackTest<>::Settings settings;
 	settings.runtime = std::chrono::duration_cast<std::chrono::seconds>(runtime.value);
-	settings.payload_mode = LoopbackTest::PayloadMode::Random;
-	settings.packet_mode = LoopbackTest::PacketMode::Random;
-	LoopbackTest random_test(ip, settings);
+	settings.payload_mode = LoopbackTest<>::PayloadMode::Random;
+	settings.packet_mode = LoopbackTest<>::PacketMode::Random;
+	LoopbackTest<> random_test(ip, settings);
 
-	LoopbackTest::Stats random_stats = random_test.run();
+	LoopbackTest<>::Stats random_stats = random_test.run();
 
 	EXPECT_EQ(0, random_stats.error_counter);
 	EXPECT_EQ(random_stats.sent_payload_counter, random_stats.received_payload_counter);
