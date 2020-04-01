@@ -2,8 +2,10 @@
 
 wafDefaultPipeline(projects: ["sctrltp"],
                    container: [app: "visionary-wafer"],
-                   notificationChannel: "#softies")
+                   notificationChannel: "#softies",
+                   enableClangFormat: false)
 
 wafDefaultPipeline(projects: ["sctrltp"],
                    container: [app: "visionary-dls"],
-                   notificationChannel: "#dls-software")
+                   notificationChannel: "#dls-software",
+                   enableClangFormat: false)
