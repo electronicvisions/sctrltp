@@ -30,6 +30,8 @@ def configure(conf):
     conf.load('compiler_c')
     conf.load('compiler_cxx')
     conf.load('boost')
+    conf.load('gtest')
+
     conf.find_program('ctags', var='CTAGS', mandatory=False)
     if (conf.env.CTAGS):
         conf.env.CTAGS_DIRS = (conf.path.bld_dir(), '.')
@@ -69,12 +71,6 @@ def configure(conf):
 
     conf.check_boost(lib='system', uselib_store='BOOST4SCTRLTPARQSTREAM')
     conf.check_boost(lib='system program_options', uselib_store='BOOST4SCTRLTPTESTS')
-
-    conf.check_cxx(uselib_store='GTEST',
-                  mandatory=True,
-                  header_name='gtest/gtest.h',
-                  lib='gtest'
-    )
 
     conf.recurse('pysctrltp')
 
@@ -116,9 +112,11 @@ def build(bld):
     )
 
     bld.program (
+        features     = 'cxx cxxprogram gtest',
         target       = 'hostarq_loopback_automated_test',
         source       = ['tools/AutomatedTest.cpp'],
-        use          = ['GTEST', 'hostarq_loopback_test_obj'],
+        use          = [ 'hostarq_loopback_test_obj'],
+        skip_run     = True,
         install_path = '${PREFIX}/bin',
     )
 

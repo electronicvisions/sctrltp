@@ -13,9 +13,15 @@ using namespace sctrltp;
 std::string ip;
 bpo_parser_helper::duration runtime;
 
+extern int waf_gtest_argc;
+extern char** waf_gtest_argv;
+int parse_options();
+
 // TODO make typed test for all packet and payload modes combinations
 TEST(LoopbackTest, Random)
 {
+	if (parse_options() != 0) return;
+
 	LoopbackTest<>::Settings settings;
 	settings.runtime = std::chrono::duration_cast<std::chrono::seconds>(runtime.value);
 	settings.payload_mode = LoopbackTest<>::PayloadMode::Random;
@@ -35,13 +41,10 @@ TEST(LoopbackTest, Random)
 	    << "Bandwidth below " << threshold << " Mbit/s";
 }
 
-int main(int argc, char** argv)
+int parse_options()
 {
-	::testing::InitGoogleTest(&argc, argv);
-
-
 	bpo::options_description desc("Options");
-	desc.add_options()("help", "produce help message")(
+	desc.add_options()("test-help", "produce help message")(
 	    "ip", bpo::value<std::string>(&ip), "Set FPGA IP address")(
 	    "runtime",
 	    bpo::value<bpo_parser_helper::duration>(&runtime)->default_value(
@@ -49,12 +52,12 @@ int main(int argc, char** argv)
 	    "Runtime of the test in 'h'ours, 'm'inutes or 's'econds");
 
 	bpo::variables_map vm;
-	bpo::store(bpo::parse_command_line(argc, argv, desc), vm);
+	bpo::store(bpo::parse_command_line(waf_gtest_argc, waf_gtest_argv, desc), vm);
 	bpo::notify(vm);
 
-	if (vm.count("help")) {
+	if (vm.count("test-help")) {
 		std::cout << desc << "\n";
 		return 1;
 	}
-	return RUN_ALL_TESTS();
+	return 0;
 }
