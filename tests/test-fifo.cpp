@@ -8,6 +8,8 @@
 #include <string.h>
 #include <sys/time.h>
 
+#include <gtest/gtest.h>
+
 #include "sctrltp/us_sctp_defs.h"
 #include "sctrltp/sctp_fifo.h"
 #include "sctrltp/nt_memset.h"
@@ -82,18 +84,12 @@ void *producer (void*) {
 }
 
 
-int main (int argc, char **argv)
+TEST(Fifo, speed)
 {
 	pthread_t prod, cons;
 	double time;
-	__u32 elemsize = 1;
-	__u32 nr = BUF_SIZE/elemsize;
-
-	if (argc < 2) {
-	} else {
-		elemsize = (__u32)atoi(argv[1]);
-		nr = BUF_SIZE / elemsize;
-	}
+	__u32 elemsize = 1; // TODO: configurable
+	__u32 nr = BUF_SIZE/elemsize; // TODO: configurable
 
 	if (nr > MAX_ELEM) nr = MAX_ELEM;
 
@@ -112,5 +108,5 @@ int main (int argc, char **argv)
 	time = get_elapsed_time(last,curr);
 	printf ("#Size     \t#time      \t#Throughput\n");
 	printf ("%.8u\t%.8e\t%.8e\n", elemsize, time, BUF_SIZE / time);
-	return 0;
+	EXPECT_GE(BUF_SIZE/time, 2.4e6);
 }

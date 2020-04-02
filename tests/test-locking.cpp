@@ -69,7 +69,7 @@ TEST(Locking, all)
 	pthread_t thr[10];
 	__u32 thrvar[10];
 	__u32 i = 0;
-	__u32 num = 3;
+	__u32 num = 3; // TODO: configurable
 	struct timeval last;
 	struct timeval curr;
 

@@ -129,6 +129,15 @@ def build(bld):
         install_path = '${PREFIX}/bin',
     )
 
+    bld.program (
+        features     = 'cxx cxxprogram gtest',
+        target       = 'hostarq_test_fifo',
+        source       = ['tests/test-fifo.cpp', 'src/us_sctp_atomic.cpp', 'src/sctp_fifo.cpp'],
+        use          = ['PTHREAD', 'RT', 'sctrltp_inc'],
+        skip_run     = True,
+        install_path = '${PREFIX}/bin',
+    )
+
     bld.recurse('pysctrltp')
 
     bld.add_post_fun(summary)
