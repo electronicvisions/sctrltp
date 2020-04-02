@@ -27,7 +27,7 @@ struct ARQStreamSettings
 	std::chrono::milliseconds destruction_timeout = std::chrono::milliseconds(500);
 };
 
-template<typename P = Parameters<>>
+template<typename P>
 class ARQStream {
 public:
 	typedef boost::asio::ip::address_v4 ip_t;

@@ -60,7 +60,7 @@
 
 namespace sctrltp {
 
-template<typename P = Parameters<>>
+template<typename P>
 struct arq_frame {
 	__u32   ACK;                /*Acknowledge to packet with sequenceno = ACK (other direction)*/
 	__u32   SEQ;                /*Sequencenumber*/

@@ -19,7 +19,7 @@ template <typename P>
 void receiving (void * parm);
 
 /* ARQ handle */
-static struct sctp_descr<> *desc = NULL;
+static struct sctp_descr<ParametersFcpBss1> *desc = NULL;
 
 /* global data */
 __u64 * gdata;
@@ -42,7 +42,7 @@ int main(int argc, char const * argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	desc = SCTP_Open<Parameters<>>(argv[1]);
+	desc = SCTP_Open<ParametersFcpBss1>(argv[1]);
 	if (!desc) {
 		fprintf(stderr, "Error: Could not connect to core\n");
 		return EXIT_FAILURE;
@@ -55,8 +55,8 @@ int main(int argc, char const * argv[]) {
 		gdata[i] = rand();
 
 	/* spawn sending thread and do receive synchronously */
-	pthread_create (&threadvar, NULL, thread_sending<Parameters<>>, desc);
-	receiving<Parameters<>>(desc);
+	pthread_create (&threadvar, NULL, thread_sending<ParametersFcpBss1>, desc);
+	receiving<ParametersFcpBss1>(desc);
 
 	ret = pthread_join(threadvar, NULL);
 	if (ret != 0) {

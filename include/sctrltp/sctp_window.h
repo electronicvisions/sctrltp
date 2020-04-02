@@ -17,7 +17,7 @@
 
 namespace sctrltp {
 
-template <typename P = Parameters<>>
+template <typename P>
 struct sctp_window {
 	struct semaphore lock;		    /*A lock, for concurrent accesses (is only used by spin_lock/unlock, so theres no need to align this to pagesize)*/
 	__u32	low_seq;				/*Sequencenr of Packet first transmitted, but unacknowledged*/

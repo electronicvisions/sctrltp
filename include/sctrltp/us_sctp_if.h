@@ -33,19 +33,19 @@
 
 namespace sctrltp {
 
-template<typename P = Parameters<>>
+template<typename P>
 struct sctp_rx_cache {
 	struct sctp_alloc<P> in[NUM_QUEUES];
 	struct sctp_alloc<P> out;
 };
 
-template<typename P = Parameters<>>
+template<typename P>
 struct sctp_tx_cache {
 	struct sctp_alloc<P> in;
 	struct sctp_alloc<P> out[NUM_QUEUES];
 };
 
-template<typename P = Parameters<>>
+template<typename P>
 struct sctp_descr {
 	struct drepper_mutex    mutex;      /*a mutex similar to pthread mutexes*/
 
@@ -66,7 +66,7 @@ struct sctp_descr {
 	    ""); // 2 pages (TODO: page size should be configurable)
 #include "sctrltp/parameters.def"
 
-template<typename P = Parameters<>>
+template<typename P>
 struct buf_desc {
 	/* TODO: do we need raw UDP frame? */
 	arq_frame<P> *arq_sctrl;

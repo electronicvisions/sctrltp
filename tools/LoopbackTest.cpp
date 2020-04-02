@@ -24,7 +24,7 @@ LoopbackTest<P>::Settings::Settings() :
 
 template <typename P>
 LoopbackTest<P>::LoopbackTest(std::string const ip, Settings const& settings) :
-    m_arq_stream(sctrltp::ARQStream(ip, "192.168.0.1", 1234, ip, 1234)),
+    m_arq_stream(sctrltp::ARQStream<P>(ip, "192.168.0.1", 1234, ip, 1234)),
     m_expected_next_word(0),
     m_next_word_to_send(0),
     m_sending_engine(std::ranlux48_base(settings.payload_seed)),

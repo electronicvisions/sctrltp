@@ -80,17 +80,17 @@ static void push_frames (struct sctp_fifo *fifo, struct sctp_alloc<P> *local_buf
 
 int main (int argc, char **argv)
 {
-	sctp_alloc inbuf_rx;
-	sctp_alloc outbuf_rx;
-	sctp_alloc inbuf_tx;
-	sctp_alloc outbuf_tx;
+	sctp_alloc<ParametersFcpBss1> inbuf_rx;
+	sctp_alloc<ParametersFcpBss1> outbuf_rx;
+	sctp_alloc<ParametersFcpBss1> inbuf_tx;
+	sctp_alloc<ParametersFcpBss1> outbuf_tx;
 
-	arq_frame<> *ptr;
-	arq_frame<> *ptr_out;
-	arq_frame<> *sc_header;
+	arq_frame<ParametersFcpBss1> *ptr;
+	arq_frame<ParametersFcpBss1> *ptr_out;
+	arq_frame<ParametersFcpBss1> *sc_header;
 	__u64 *sc_cmds;
 	__u64 *sc_resps;
-	arq_frame<> *sc_header_out;
+	arq_frame<ParametersFcpBss1> *sc_header_out;
 
 	/*Variables to simulate nathan with module*/
 	__u32 i;
@@ -99,10 +99,10 @@ int main (int argc, char **argv)
 
 	int queue = 0;
 
-	memset (&inbuf_rx, 0, sizeof(sctp_alloc<>));
-	memset (&inbuf_tx, 0, sizeof(sctp_alloc<>));
-	memset (&outbuf_rx, 0, sizeof(sctp_alloc<>));
-	memset (&outbuf_tx, 0, sizeof(sctp_alloc<>));
+	memset (&inbuf_rx, 0, sizeof(sctp_alloc<ParametersFcpBss1>));
+	memset (&inbuf_tx, 0, sizeof(sctp_alloc<ParametersFcpBss1>));
+	memset (&outbuf_rx, 0, sizeof(sctp_alloc<ParametersFcpBss1>));
+	memset (&outbuf_tx, 0, sizeof(sctp_alloc<ParametersFcpBss1>));
 
 #ifdef WITH_ROUTING
 	if (argc < 3) {

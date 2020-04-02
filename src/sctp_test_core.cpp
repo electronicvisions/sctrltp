@@ -247,11 +247,11 @@ void *sending (void *ret)
 
 int main (int argc, char **argv)
 {
-	struct buf_desc<> buffer;
+	struct buf_desc<ParametersFcpBss1> buffer;
 	__u64 i, sum = 0, last_sum = 0;
 	/*__u8 sflags,num;*/
 	/*__u16 nat;*/
-	struct sctp_descr<> *desc = NULL;
+	struct sctp_descr<ParametersFcpBss1> *desc = NULL;
 
 	pthread_t threadvar;
 	
@@ -264,14 +264,14 @@ int main (int argc, char **argv)
 	}
 
 	printf ("****Testing Core (make sure, that testbench is running on tap0, Core on tap1)\n");
-	desc = open_conn<Parameters<>> (argv[1]);
+	desc = open_conn<ParametersFcpBss1> (argv[1]);
 	if (!desc) {
 		printf ("Error: make sure Core and testbench are up\n");
 		return 1;
 	}
 
 	printf ("****Sending infinite Packets to BALU\n");
-	pthread_create (&threadvar, NULL, sending<Parameters<>>, desc);
+	pthread_create (&threadvar, NULL, sending<ParametersFcpBss1>, desc);
 
 	printf ("****Thread started\n");
 	__u64 data = 0;

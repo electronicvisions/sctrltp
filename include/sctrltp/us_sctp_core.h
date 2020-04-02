@@ -28,7 +28,7 @@
 
 namespace sctrltp {
 
-template <typename P = Parameters<>>
+template <typename P>
 struct sctp_core {
 	char const* NAME;                       /* name of core */
 	__u32       pad0[L1D_CLS/4 - (sizeof(char const*)/4)];

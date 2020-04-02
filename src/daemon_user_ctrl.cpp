@@ -53,7 +53,7 @@ static void set_timings(struct sctp_descr<P>* desc, __u64* cfg) {
 }
 
 int main(int argc, char* argv[]) {
-	struct sctp_descr<>* desc;
+	struct sctp_descr<ParametersFcpBss1>* desc;
 	__u64 cfg[CFG_SIZE];
 
 	if (argc != (CFG_SIZE + 2)) {
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 	for(; i < CFG_SIZE; i++) {
 		cfg[i] = atoi(argv[i+2]);
 	}
-	desc = open_conn<Parameters<>>(argv[1]);
+	desc = open_conn<ParametersFcpBss1>(argv[1]);
 
 	if (trigger_reset(desc) != 1) {
 		printf("No reset response frome FPGA");

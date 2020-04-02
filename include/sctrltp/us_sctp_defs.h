@@ -101,7 +101,7 @@ struct sctp_stats {
 };
 static_assert(sizeof(struct sctp_stats) == (sizeof(__u64)*12), "");
 
-template<typename P = Parameters<>>
+template<typename P>
 struct sctp_internal {
 	struct arq_frame<P> *req;   /*pointer to packet to transmit or to packet was transmitted*/
 	struct arq_frame<P> *resp;  /*pointer to packet was received (in rx_queue there is always a response and a corr. request)*/
@@ -114,7 +114,7 @@ struct sctp_internal {
 #define PARAMETERISATION(Name) static_assert(sizeof(sctp_internal<Name>) == L1D_CLS, "");
 #include "sctrltp/parameters.def"
 
-template<typename P = Parameters<>>
+template<typename P>
 struct sctp_alloc {
 	struct arq_frame<P> *fptr[PARALLEL_FRAMES]; /*Pointer to preallocated/recycled buffer(s)*/
 	__u32 num;                                  /*Number of valid frame ptr in fptr array*/
@@ -125,7 +125,7 @@ struct sctp_alloc {
 #define PARAMETERISATION(Name) static_assert((sizeof(sctp_alloc<Name>) % L1D_CLS) == 0, "");
 #include "sctrltp/parameters.def"
 
-template<typename P = Parameters<>>
+template<typename P>
 struct sctp_interface {                 /*Bidirectional interface between layers (lays in shared mem region)*/
 	/*0-4095*/
 	struct semaphore        waketx;     /*This var is used to wake TX by USER or RX*/

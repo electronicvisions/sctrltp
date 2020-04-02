@@ -6,7 +6,7 @@
 namespace sctrltp {
 
 /* standard packet type: with payload */
-template<typename P = Parameters<>>
+template<typename P>
 struct packet {
     typedef uint32_t seq_t;
     typedef uint64_t entry_t;
