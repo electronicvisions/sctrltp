@@ -35,10 +35,11 @@ struct sctp_window {
 	__u32   pad2[L1D_CLS/4-6-PTR_SIZE/4-1]; /* ptr alignment requires 64 bits */
 
 };
-// TODO: also check non-default-parameterized versions
-static_assert(offsetof(sctp_window<>, high_seq) == (2*L1D_CLS), "");
-static_assert(offsetof(sctp_window<>, flag) == (3*L1D_CLS), "");
-static_assert(sizeof(sctp_window<>) == (4*L1D_CLS), "");
+#define PARAMETERISATION(Name)                                                                     \
+	static_assert(offsetof(sctp_window<Name>, high_seq) == (2 * L1D_CLS), "");                     \
+	static_assert(offsetof(sctp_window<Name>, flag) == (3 * L1D_CLS), "");                         \
+	static_assert(sizeof(sctp_window<Name>) == (4 * L1D_CLS), "");
+#include "sctrltp/parameters.def"
 
 /*Initializes sliding window 
  *Returns 0 on success otherwise a negative value*/

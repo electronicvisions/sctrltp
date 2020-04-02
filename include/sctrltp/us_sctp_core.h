@@ -53,10 +53,11 @@ struct sctp_core {
 	pthread_t	allocthr;
 
 };
-// TODO: also check non-default-parameterized versions
-static_assert(offsetof(sctp_core<>, ACK) == (2*L1D_CLS), "");
-static_assert(offsetof(sctp_core<>, rACK) == (3*L1D_CLS), "");
-static_assert(offsetof(sctp_core<>, currtime) == (4*L1D_CLS), "");
+#define PARAMETERISATION(Name)                                                                     \
+	static_assert(offsetof(sctp_core<Name>, ACK) == (2 * L1D_CLS), "");                            \
+	static_assert(offsetof(sctp_core<Name>, rACK) == (3 * L1D_CLS), "");                           \
+	static_assert(offsetof(sctp_core<Name>, currtime) == (4 * L1D_CLS), "");
+#include "sctrltp/parameters.def"
 
 /*Main interface functions to SCTP Core*/
 

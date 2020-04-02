@@ -68,8 +68,10 @@ struct arq_frame {
 	__u16   LEN;                /*Length (64-bit words)*/
 	__u64   COMMANDS[P::MAX_PDUWORDS];
 }__attribute__ ((packed));
-// TODO: also check non-default-parameterized versions
-static_assert(offsetof(arq_frame<>, COMMANDS) == (sizeof(__u32)*2 + sizeof(__u16)*2), "");
+#define PARAMETERISATION(Name)                                                                     \
+	static_assert(                                                                                 \
+	    offsetof(arq_frame<Name>, COMMANDS) == (sizeof(__u32) * 2 + sizeof(__u16) * 2), "");
+#include "sctrltp/parameters.def"
 // TODO: check for uint64_t ptr alignment requirements too!
 
 struct arq_ackframe {

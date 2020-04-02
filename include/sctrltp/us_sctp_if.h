@@ -60,8 +60,11 @@ struct sctp_descr {
 	__u8                    pad[8192 - (248 + PTR_SIZE + sizeof(drepper_mutex) + 2*sizeof(sctp_tx_cache<P>) + 8)];
 
 };
-// TODO: also check non-default-parameterized versions
-static_assert(sizeof(sctp_descr<>) == (2*4096), ""); // 2 pages (TODO: page size should be configurable)
+#define PARAMETERISATION(Name)                                                                     \
+	static_assert(                                                                                 \
+	    sizeof(sctp_descr<Name>) == (2 * 4096),                                                    \
+	    ""); // 2 pages (TODO: page size should be configurable)
+#include "sctrltp/parameters.def"
 
 template<typename P = Parameters<>>
 struct buf_desc {
