@@ -10,7 +10,7 @@ bld.objects(
 # the SCtrl Ethernet library
 bld(
     features = 'c cstlib',
-    source =   'packets.c us_sctp_atomic.c sctp_fifo.c us_sctp_if.c sctrl_file.c',
+    source =   'packets.c us_sctp_atomic.c sctp_fifo.c us_sctp_if.c',
     target =   'sctrl',
     use    =   'sctrl_inc',
     includes = '.',
