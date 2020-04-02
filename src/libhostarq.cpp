@@ -93,11 +93,9 @@ hostarq_free_handle(struct hostarq_handle* handle)
 }
 
 
-void
-hostarq_open(struct hostarq_handle* handle)
+void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemon_string)
 {
 	int ret, ret2, i, fd, flag;
-	char hostarq_daemon_string[] = "hostarq_daemon";
 	char fd_string[MAX_INT_STRING_SIZE], init_string[MAX_INT_STRING_SIZE];
 	char const lockdir[] = "/var/run/lock/hicann";
 	char lockdir_startupfile[] = "/var/run/lock/hicann/hostarq_startup_XXXXXX";
@@ -183,8 +181,12 @@ hostarq_open(struct hostarq_handle* handle)
 	/* the child shares the same set of file descriptors (except for those with O_CLOEXEC) */
 	if (handle->pid == 0 /* child */) {
 		/* execvp's params are `char * const *`, so we have to provide non-const parameters */
-		char* const params[6] = {hostarq_daemon_string, handle->shm_name, fd_string,
-		                         handle->remote_ip,     init_string,      NULL};
+		char* const params[6] = {const_cast<char*>(hostarq_daemon_string),
+		                         handle->shm_name,
+		                         fd_string,
+		                         handle->remote_ip,
+		                         init_string,
+		                         NULL};
 		execvp(params[0], params);
 		perror("libhostarq tried to spawn HostARQ daemon");
 		abort();

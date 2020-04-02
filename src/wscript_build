@@ -31,6 +31,10 @@ bld(
     defines = 'LOGLEVEL=9'
 )
 
+hostarq_daemons = {'_fcp_bss1': 'ParametersFcpBss1',
+                   '_fcp_bss2_cube': 'ParametersFcpBss2Cube',
+                   '_ananas_bss1': 'ParametersAnanasBss1'}
+
 # SHMEM server (library-version)
 bld(
     features = 'cxx cxxstlib',
@@ -39,22 +43,23 @@ bld(
     includes = '.',
     export_includes = '.',
     use = ['PTHREAD', 'RT', 'sctrltp_inc'],
-    depends_on = ['hostarq_daemon'],
+    depends_on = ['hostarq_daemon' + ending for ending in hostarq_daemons.keys()],
     install_path='lib',
     defines = 'LOGLEVEL=1',
     cxxflags = '-fPIC',
 )
 
-# The daemon is dead, long live the daemon!
-bld(
-    features = 'cxx cxxprogram',
-    source = 'hostarq_daemon.cpp us_sctp_core.cpp us_sctp_timer-hpet.cpp sctp_window.cpp us_sctp_sock.cpp packets.cpp',
-    target = 'hostarq_daemon',
-    includes = '.',
-    use = 'PTHREAD RT sctrl',
-    install_path = 'bin',
-    defines = 'LOGLEVEL=1'
-)
+for ending, parameters in hostarq_daemons.items():
+    # The daemon is dead, long live the daemon!
+    bld(
+        features = 'cxx cxxprogram',
+        source = 'hostarq_daemon.cpp us_sctp_core.cpp us_sctp_timer-hpet.cpp sctp_window.cpp us_sctp_sock.cpp packets.cpp',
+        target = 'hostarq_daemon' + ending,
+        includes = '.',
+        use = 'PTHREAD RT sctrl',
+        install_path = 'bin',
+        defines = ['LOGLEVEL=1', 'PARAMETERS=' + parameters]
+    )
 
 # testmodes
 bld(

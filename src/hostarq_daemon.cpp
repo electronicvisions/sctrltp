@@ -10,6 +10,10 @@
 #include "sctrltp/start_core.h"
 #include "sctrltp/us_sctp_core.h"
 
+#ifndef PARAMETERS
+#define PARAMETERS Parameters<>
+#endif
+
 volatile sig_atomic_t post_init = 0;
 static __s32 exiting = 0;
 static char const* our_shm_name = NULL;
@@ -24,8 +28,9 @@ void call_exit() {
 }
 
 /* used for abnormal termination triggered by some signal */
-template <typename P = Parameters<>>
-void termination_handler (int signum) {
+template <typename P>
+void termination_handler(int signum)
+{
 	if (!post_init) {
 		fprintf(stderr, "Got signal %d but HostARQ init was not completed, "
 				"don't know what to do => aborting\n", signum);
@@ -71,7 +76,7 @@ int main(int argc, const char *argv[])
 	 * SIGINT, SIGHUP, SIGTERM, SIGQUIT, SIGCHLD
 	 * but if top-level ignores, we also ignore */
 	struct sigaction new_action, old_action;
-	new_action.sa_handler = termination_handler<>;
+	new_action.sa_handler = termination_handler<PARAMETERS>;
 	sigfillset(&new_action.sa_mask); /* ignore all signals during signal handling */
 	new_action.sa_flags = 0;
 
@@ -92,7 +97,7 @@ int main(int argc, const char *argv[])
 	atexit(call_exit);
 
 	/* child me up */
-	if (SCTP_CoreUp<Parameters<>>(our_shm_name, remote_ip, init) < 1) {
+	if (SCTP_CoreUp<PARAMETERS>(our_shm_name, remote_ip, init) < 1) {
 		fprintf(stderr, "Error occurred when starting up HostARQ software\n");
 		return EXIT_FAILURE;
 	}

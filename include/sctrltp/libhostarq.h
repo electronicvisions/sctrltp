@@ -51,7 +51,8 @@ void hostarq_free_handle(struct hostarq_handle* handle);
  *
  * @return The pid and shm_path are set after this call.
  */
-void hostarq_open(struct hostarq_handle* handle);
+void hostarq_open(
+	struct hostarq_handle* handle, char const* hostarq_daemon_string = "hostarq_daemon");
 
 
 /** `hostarq_close` tries to close the HostARQ connection.

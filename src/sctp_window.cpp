@@ -331,22 +331,19 @@ __s32 resend_frame (sctp_window<P> *win, sctp_internal<P> *resend, __u64 rto, __
 	return ret;
 }
 
-template
-__s8 win_init (struct sctp_window<> *win, __u32 max_fr, __u32 max_ws, __u8 side);
-
-template
-void win_reset (struct sctp_window<> *win);
-
-template
-__s32 new_frame_tx (struct sctp_window<> *win, struct arq_frame<> *new_frame, __u64 currtime);
-
-template
-__s32 new_frame_rx (struct sctp_window<> *win, struct arq_frame<> *in, struct sctp_internal<> *out);
-
-template
-__s32 mark_frame (struct sctp_window<> *win, __u32 rACK, struct sctp_internal<> *out);
-
-template
-__s32 resend_frame (struct sctp_window<> *win, struct sctp_internal<> *resend, __u64 rto, __u64 currtime);
+#define PARAMETERISATION(Name)                                                                     \
+	template __s8 win_init(struct sctp_window<Name>* win, __u32 max_fr, __u32 max_ws, __u8 side);  \
+	template void win_reset(struct sctp_window<Name>* win);                                        \
+	template __s32 new_frame_tx(                                                                   \
+	    struct sctp_window<Name>* win, struct arq_frame<Name>* new_frame, __u64 currtime);         \
+	template __s32 new_frame_rx(                                                                   \
+	    struct sctp_window<Name>* win, struct arq_frame<Name>* in,                                 \
+	    struct sctp_internal<Name>* out);                                                          \
+	template __s32 mark_frame(                                                                     \
+	    struct sctp_window<Name>* win, __u32 rACK, struct sctp_internal<Name>* out);               \
+	template __s32 resend_frame(                                                                   \
+	    struct sctp_window<Name>* win, struct sctp_internal<Name>* resend, __u64 rto,              \
+	    __u64 currtime);
+#include "sctrltp/parameters.def"
 
 } // namespace sctrltp

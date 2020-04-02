@@ -464,8 +464,10 @@ __s32 debug_write (struct sctp_sock *ssock, arq_frame *buf, __u32 len)
 template __s32 debug_write (struct sctp_sock *ssock, struct arq_frame<> *buf, __u32 len);
 #endif
 
-template void print_stats<Parameters<>>();
-template __s32 sock_read (sctp_sock *ssock, arq_frame<> *buf, __u8 filter);
-template __s32 sock_write (sctp_sock *ssock, arq_frame<> *buf, __u32 len);
+#define PARAMETERISATION(Name)                                                                     \
+	template void print_stats<Name>();                                                             \
+	template __s32 sock_read(sctp_sock* ssock, arq_frame<Name>* buf, __u8 filter);                 \
+	template __s32 sock_write(sctp_sock* ssock, arq_frame<Name>* buf, __u32 len);
+#include "sctrltp/parameters.def"
 
 } // namespace sctrltp

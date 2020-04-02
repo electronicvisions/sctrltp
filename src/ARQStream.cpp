@@ -3,10 +3,12 @@
 
 #include <chrono>
 #include <iostream>
-#include <string>
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 #include <thread>
+#include <typeindex>
+#include <unordered_map>
 
 #include "sctrltp/us_sctp_if.h"
 #include "sctrltp/libhostarq.h"
@@ -18,6 +20,12 @@ using namespace std::chrono_literals;
 using namespace std::chrono;
 
 namespace sctrltp {
+
+// Keep in sync with list of names in wscript
+static std::unordered_map<std::type_index, std::string> hostarq_daemon_names = {
+    {std::type_index(typeid(ParametersFcpBss1)), "hostarq_daemon_fcp_bss1"},
+    {std::type_index(typeid(ParametersAnanasBss1)), "hostarq_daemon_ananas_bss1"},
+    {std::type_index(typeid(ParametersFcpBss2Cube)), "hostarq_daemon_fcp_bss2_cube"}};
 
 template<typename P>
 struct ARQStreamImpl {
@@ -31,7 +39,7 @@ struct ARQStreamImpl {
 		// start HostARQ server (and reset link)
 		handle = new hostarq_handle;
 		hostarq_create_handle(handle, name.c_str(), rip.c_str(), reset /*reset HostARQ*/);
-		hostarq_open(handle);
+		hostarq_open(handle, hostarq_daemon_names.at(std::type_index(typeid(P))).c_str());
 		desc = open_conn<P>(name.c_str()); // name of software arq session
 		if (!desc) {
 			std::ostringstream ss;
@@ -332,7 +340,8 @@ bool ARQStream<P>::send_buffer_full() {
 	return static_cast<bool>(tx_queues_full(pimpl->desc));
 }
 
-template class ARQStream<>;
+#define PARAMETERISATION(Name) template class ARQStream<Name>;
+#include "sctrltp/parameters.def"
 
 #endif // !NCSIM
 

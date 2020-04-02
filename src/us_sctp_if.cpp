@@ -654,21 +654,25 @@ __s32 SCTP_Recv (sctp_descr<P> *desc, __u16 *typ, __u16 *num, __u64 *resp)
 	return 0;
 }
 
-template sctp_descr<> *open_conn (const char *corename);
-template __s32 close_conn (sctp_descr<> *desc);
-template __s32 acq_buf (sctp_descr<> *desc, buf_desc<> *acq, const __u8 mode);
-template __s32 rel_buf (sctp_descr<> *desc, buf_desc<> *rel, const __u8 mode);
-template __s32 send_buf (sctp_descr<> *desc, buf_desc<> *buf, const __u8 mode);
-template __s32 recv_buf (sctp_descr<> *desc, buf_desc<> *buf, const __u8 mode);
-template __s32 init_buf (buf_desc<> *buf);
-template __s32 append_words (buf_desc<> *buf, const __u16 ptype, const __u32 num, const __u64 *values);
-template __s32 tx_queues_empty (sctp_descr<> *desc);
-template __s32 tx_queues_full (sctp_descr<> *desc);
-template __s32 rx_queues_empty (sctp_descr<> *desc);
-template __s32 rx_queues_full (sctp_descr<> *desc);
-template sctp_descr<> *SCTP_Open (const char *corename);
-template __s32 SCTP_Close (sctp_descr<> *desc);
-template __s64 SCTP_Send (sctp_descr<> *desc, const __u16 typ, const __u32 num, const __u64 *payload);
-template __s32 SCTP_Recv (sctp_descr<> *desc, __u16 *typ, __u16 *num, __u64 *resp);
+#define PARAMETERISATION(Name)                                                                     \
+	template sctp_descr<Name>* open_conn(const char* corename);                                    \
+	template __s32 close_conn(sctp_descr<Name>* desc);                                             \
+	template __s32 acq_buf(sctp_descr<Name>* desc, buf_desc<Name>* acq, const __u8 mode);          \
+	template __s32 rel_buf(sctp_descr<Name>* desc, buf_desc<Name>* rel, const __u8 mode);          \
+	template __s32 send_buf(sctp_descr<Name>* desc, buf_desc<Name>* buf, const __u8 mode);         \
+	template __s32 recv_buf(sctp_descr<Name>* desc, buf_desc<Name>* buf, const __u8 mode);         \
+	template __s32 init_buf(buf_desc<Name>* buf);                                                  \
+	template __s32 append_words(                                                                   \
+	    buf_desc<Name>* buf, const __u16 ptype, const __u32 num, const __u64* values);             \
+	template __s32 tx_queues_empty(sctp_descr<Name>* desc);                                        \
+	template __s32 tx_queues_full(sctp_descr<Name>* desc);                                         \
+	template __s32 rx_queues_empty(sctp_descr<Name>* desc);                                        \
+	template __s32 rx_queues_full(sctp_descr<Name>* desc);                                         \
+	template sctp_descr<Name>* SCTP_Open(const char* corename);                                    \
+	template __s32 SCTP_Close(sctp_descr<Name>* desc);                                             \
+	template __s64 SCTP_Send(                                                                      \
+	    sctp_descr<Name>* desc, const __u16 typ, const __u32 num, const __u64* payload);           \
+	template __s32 SCTP_Recv(sctp_descr<Name>* desc, __u16* typ, __u16* num, __u64* resp);
+#include "sctrltp/parameters.def"
 
 } // namespace sctrltp

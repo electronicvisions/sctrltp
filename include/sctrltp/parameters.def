@@ -1,0 +1,9 @@
+#ifndef PARAMETERISATION
+#define PARAMETERISATION(Name)
+#endif
+
+PARAMETERISATION(ParametersFcpBss1)
+PARAMETERISATION(ParametersAnanasBss1)
+PARAMETERISATION(ParametersFcpBss2Cube)
+
+#undef PARAMETERISATION
