@@ -7,6 +7,8 @@
 #include <string.h>
 #include <sys/time.h>
 
+#include <gtest/gtest.h>
+
 #include "sctrltp/sctp_atomic.h"
 
 using namespace sctrltp;
@@ -60,8 +62,10 @@ void *thread (void *me) {
 	return NULL;
 }
 
-int main (int argc, char **argv)
+TEST(Locking, all)
 {
+	printf ("Locking method test started\n");
+
 	pthread_t thr[10];
 	__u32 thrvar[10];
 	__u32 i = 0;
@@ -69,14 +73,7 @@ int main (int argc, char **argv)
 	struct timeval last;
 	struct timeval curr;
 
-	printf ("Locking method test started\n");
-
-	if (argc < 2) {
-		printf ("Using 3 threads\n");
-	} else num = (__u32)atoi(argv[1]);
-
-	if (num > 10) num = 10;
-
+	printf ("Using 3 threads\n");
 
 	memset (&shmem, 0, sizeof (struct shared_res));
 	shmem.num = num;
@@ -94,5 +91,4 @@ int main (int argc, char **argv)
 	for (i = 0; i < num; i++) {
 		printf ("Thr %d %u-times in critical section (lock/unlock per second: %e)\n", i, shmem.thrcnt[i], shmem.thrcnt[i] / get_elapsed_time(last,curr));
 	}
-	return 0;
 }

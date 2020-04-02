@@ -120,6 +120,15 @@ def build(bld):
         install_path = '${PREFIX}/bin',
     )
 
+    bld.program (
+        features     = 'cxx cxxprogram gtest',
+        target       = 'hostarq_test_locking',
+        source       = ['tests/test-locking.cpp', 'src/us_sctp_atomic.cpp'],
+        use          = ['PTHREAD', 'sctrltp_inc'],
+        skip_run     = True,
+        install_path = '${PREFIX}/bin',
+    )
+
     bld.recurse('pysctrltp')
 
     bld.add_post_fun(summary)

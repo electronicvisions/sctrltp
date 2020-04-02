@@ -78,15 +78,6 @@ bld(
 # (unit?) tests
 bld(
     features='cxx cxxprogram',
-    target='locktest',
-    source='locktest.cpp us_sctp_atomic.cpp',
-    use='PTHREAD sctrltp_inc',
-    includes = '.',
-    install_path='bin',
-)
-
-bld(
-    features='cxx cxxprogram',
     target='fifotest',
     source='fifotest.cpp us_sctp_atomic.cpp sctp_fifo.cpp',
     use=['PTHREAD','RT', 'sctrltp_inc'],
