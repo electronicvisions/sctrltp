@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 	    "Runtime of the test in 'h'ours, 'm'inutes or 's'econds")(
 	    "timeout",
 	    bpo::value<bpo_parser_helper::duration>(&timeout)->default_value(
-	        bpo_parser_helper::duration{5s}),
+	        bpo_parser_helper::duration{1s}),
 	    "Time to wait for last response after sending in 'h'ours, 'm'inutes or 's'econds")(
 	    "payload_mode", bpo::value<LoopbackTest<>::PayloadMode>(&payload_mode),
 	    "Type of test, includes: \n 's'equencial_increase, seqiuncial_'d'ecrese, 'r'andom")(
@@ -89,7 +89,8 @@ int main(int argc, char** argv)
 	std::cout << "received " << stats.received_payload_counter << " payloads in "
 	          << stats.received_packet_counter << " packets" << std::endl;
 	std::cout << stats.error_counter << " payloads were wrong" << std::endl;
-	std::cout << stats.sent_payload_counter - stats.received_payload_counter
+	std::cout << static_cast<long>(stats.sent_payload_counter) -
+	                 static_cast<long>(stats.received_payload_counter)
 	          << " payloads went missing" << std::endl;
 
 	std::cout << "approximate bandwidth was " << std::setprecision(3) << stats.approx_bandwidth

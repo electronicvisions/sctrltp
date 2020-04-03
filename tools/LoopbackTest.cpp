@@ -222,21 +222,28 @@ void LoopbackTest<P>::check_random_payload()
 	size_t tries = 0;
 	for (size_t i = 0; i < received_packet.len; i++) {
 		// try to catch up by keep generating numbers and fail if this does not succeed
-		while (received_packet.pdu[i] != receiving_dist(m_receiving_engine)) {
+
+		auto check_vs = receiving_dist(m_receiving_engine);
+		size_t const check_first = check_vs;
+		while (received_packet.pdu[i] != check_vs) {
 			tries++;
+			check_vs = receiving_dist(m_receiving_engine);
 			if (tries > m_settings.max_retries) {
 				// if we skipped more than 1000 packets something went wrong kill the program
 				std::cerr << "[ERROR] receiving random packets failed lost more than "
 				          << m_settings.max_retries << " packets" << std::endl;
 				std::cerr << "lost track at payload " << m_stats.received_payload_counter
 				          << std::endl;
-				std::cerr << "which was in packet " << m_stats.received_payload_counter
-				          << std::endl;
+				std::cerr << std::hex << "expected: " << check_first << " received: " << received_packet.pdu[i]
+				          << std::dec << std::endl;
+				std::cerr << " which was in word " << i << " of packet "
+				          << m_stats.received_packet_counter << std::endl;
 				std::terminate();
 			}
 		}
 		if (tries > 0) {
 			m_stats.error_counter++;
+			tries = 0;
 		}
 		m_stats.received_payload_counter++;
 	}
@@ -249,7 +256,9 @@ void LoopbackTest<P>::check_incremental_sequence_payload()
 		if (received_packet.pdu[i] != m_expected_next_word) {
 			m_stats.error_counter++;
 			std::cerr << "[ERROR] received ascending word: " << received_packet.pdu[i]
-			          << " did not match expected word:" << m_expected_next_word << std::endl;
+			          << " did not match expected word: " << m_expected_next_word
+			          << " in word: " << i
+			          << " of packet: " << m_stats.received_packet_counter << std::endl;
 		}
 		m_expected_next_word = received_packet.pdu[i] + 1;
 		m_stats.received_payload_counter++;
