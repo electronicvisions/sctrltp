@@ -9,6 +9,7 @@ extern "C" {
 #include <unistd.h>
 
 #define HOSTARQ_EXIT_SIGNAL SIGUSR2
+#define HOSTARQ_FAIL_SIGNAL SIGPIPE
 
 
 /** `hostarq_handle` represents a connection to a HostARQ daemon. */

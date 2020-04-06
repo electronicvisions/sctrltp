@@ -28,13 +28,15 @@ void termination_handler(int signum)
 		fprintf(stderr, "Got signal %d but HostARQ init was not completed, "
 				"don't know what to do => aborting\n", signum);
 		/* we're dying illegally => signal to parent... */
-		kill(getppid(), SIGINT);
+		kill(getppid(), HOSTARQ_FAIL_SIGNAL);
 		exit(EXIT_FAILURE);
 	}
 	/* we could see multiple signals during exit => ignore them */
 	if (cmpxchg(&(exiting), 0, 1) == 0)
 		SCTP_CoreDown<P>();
-	exit(EXIT_SUCCESS);
+	if (signum == HOSTARQ_EXIT_SIGNAL)
+		exit(EXIT_SUCCESS);
+	exit(signum);
 }
 
 int main(int argc, const char *argv[])
