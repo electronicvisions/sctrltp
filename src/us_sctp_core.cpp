@@ -112,7 +112,6 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 	if (ret < 0) {
 		LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
 		close(fd);
-		shm_unlink(NAME);
 		return NULL;
 	}
 
@@ -1225,8 +1224,8 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 		return 0;
 	}
 
-	munmap (my_admin->inter, sizeof(struct sctp_interface<P>));
 	shm_unlink (my_admin->NAME);
+	munmap (my_admin->inter, sizeof(struct sctp_interface<P>));
 	free (my_admin->txwin.frames);
 	free (my_admin->rxwin.frames);
 	free (my_admin);

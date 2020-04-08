@@ -20,13 +20,6 @@ static char const* our_shm_name = NULL;
 
 using namespace sctrltp;
 
-void call_exit() {
-	if (our_shm_name != NULL) {
-		/* thread unsafe... but who cares? let's delete it multiple times! */
-		shm_unlink(our_shm_name);
-	}
-}
-
 /* used for abnormal termination triggered by some signal */
 template <typename P>
 void termination_handler(int signum)
@@ -92,9 +85,6 @@ int main(int argc, const char *argv[])
 	/* now our "custom" signal to trigger a shutdown */
 	ADDSIGNALHANDLER(HOSTARQ_EXIT_SIGNAL);
 #undef ADDSIGNALHANDLER
-
-	/* register exit handler (handles shutdown of core) */
-	atexit(call_exit);
 
 	/* child me up */
 	if (SCTP_CoreUp<PARAMETERS>(our_shm_name, remote_ip, init) < 1) {

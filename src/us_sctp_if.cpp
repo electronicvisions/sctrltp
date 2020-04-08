@@ -25,7 +25,6 @@ static void *open_shared_mem (const char *NAME, __u32 size)
 	if (ret < 0) {
 		LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
 		close(fd);
-		shm_unlink (NAME);
 		return NULL;
 	}
 
@@ -34,7 +33,6 @@ static void *open_shared_mem (const char *NAME, __u32 size)
 	{
 		LOG_ERROR("Could not map mem to process space (NAME: %s)", NAME);
 		close (fd);
-		shm_unlink (NAME);
 		return NULL;
 	}
 	assert (((__u64)ptr % 4096) == 0);
