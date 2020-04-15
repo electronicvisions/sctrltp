@@ -28,13 +28,14 @@ namespace sctrltp
 
 // register ARQ instance for simulation -> required for send/receive trigger calls
 #ifdef NCSIM
-ARQStream* arq_stream_ptr = NULL;
+ARQStream<ParametersFcpBss1>* arq_stream_ptr = NULL;
 #endif
 
 
-ARQStream::ARQStream(std::string const name, std::string const source_ip, udpport_t source_port,
+template <typename P>
+ARQStream<P>::ARQStream(std::string const name, std::string const source_ip, udpport_t source_port,
                      std::string const target_ip, udpport_t target_port, bool reset)
-    : name(name), max_wait_for_completion_upon_destruction_in_ms(0), pimpl(new ARQStreamImpl), rip(target_ip)
+    : name(name), max_wait_for_completion_upon_destruction_in_ms(0), pimpl(new ARQStreamImpl<P>), rip(target_ip)
 {
 	pimpl->name = name;
 	pimpl->sender_drop_rate = 0.0;
@@ -54,9 +55,9 @@ ARQStream::ARQStream(std::string const name, std::string const source_ip, udppor
 	// simulator "network" interface
 	pimpl->pEthIf = eth_if::getInstance();
 	// packet buffers
-	pimpl->send_buffers = new ARQStreamImpl::window_buffer<WINDOW_SIZE>;
-	pimpl->receive_buffers = new ARQStreamImpl::window_buffer<RECEIVE_WINDOW_SIZE>;
-	assert((SEQ_MAX + 1) / 2 >= WINDOW_SIZE);
+	pimpl->send_buffers = new typename ARQStreamImpl<P>::template window_buffer<P::MAX_WINSIZ>;
+	pimpl->receive_buffers = new typename ARQStreamImpl<P>::template window_buffer<P::MAX_WINSIZ>;
+	assert((SEQ_MAX + 1) / 2 >= P::MAX_WINSIZ);
 
 // set interface to RGMII for FACETS board
 // (ECM: proudly copied from some other test,
@@ -83,7 +84,8 @@ ARQStream::ARQStream(std::string const name, std::string const source_ip, udppor
 }
 
 
-ARQStream::~ARQStream()
+template <typename P>
+ARQStream<P>::~ARQStream()
 {
 	stop();
 
@@ -93,20 +95,21 @@ ARQStream::~ARQStream()
 }
 
 
-void ARQStream::start()
+template <typename P>
+void ARQStream<P>::start()
 {
 	pimpl->running = true;
 
 	// reset the arq and ram
 	wait(110.0, SC_US); // wait for memory to initialize
 	uint32_t payload = HW_HOSTARQ_MAGICWORD;
-	pimpl->eth_soft.sendUDP(pimpl->target_ip.to_ulong(), UDP_RESET_PORT, &payload, sizeof(payload));
+	pimpl->eth_soft.sendUDP(pimpl->target_ip.to_ulong(), ARQStreamSettings().port_reset, &payload, sizeof(payload));
 	wait(10.0, SC_US); // wait for memory to initialize
 	while (!received_packet_available()) {
 		wait(10.0, SC_US); // wait for reset response packet
 	}
-	packet response;
-	receive(response, ARQStream::Mode::NONBLOCK);
+	packet<P> response;
+	receive(response, ARQStream<P>::Mode::NONBLOCK);
 	if (response.pid != PTYPE_CFG_TYPE) {
 		throw std::runtime_error(
 			"wrong reset response packet type: " + std::to_string(response.pid));
@@ -116,25 +119,26 @@ void ARQStream::start()
 			"reset response packet too short: " + std::to_string(response.len) +
 			", should be at least: 3");
 	}
-	if (response.pdu[0] != MAX_NRFRAMES) {
+	if (response.pdu[0] != P::MAX_NRFRAMES) {
 		throw std::runtime_error(
 			"mismatch between FPGA(" + std::to_string(response.pdu[0]) + ") and host(" +
-			std::to_string(MAX_NRFRAMES) + ") sequence size");
+			std::to_string(P::MAX_NRFRAMES) + ") sequence size");
 	}
-	if (response.pdu[1] != WINDOW_SIZE) {
+	if (response.pdu[1] != P::MAX_WINSIZ) {
 		throw std::runtime_error(
 			"mismatch between FPGA(" + std::to_string(response.pdu[1]) + ") and host(" +
-			std::to_string(WINDOW_SIZE) + ") window size");
+			std::to_string(P::MAX_WINSIZ) + ") window size");
 	}
-	if (response.pdu[2] != MAX_PDUWORDS) {
+	if (response.pdu[2] != P::MAX_PDUWORDS) {
 		throw std::runtime_error(
 			"mismatch between FPGA(" + std::to_string(response.pdu[2]) + ") and host(" +
-			std::to_string(MAX_PDUWORDS) + ") max pdu size");
+			std::to_string(P::MAX_PDUWORDS) + ") max pdu size");
 	}
 }
 
 
-void ARQStream::stop()
+template <typename P>
+void ARQStream<P>::stop()
 {
 	if (!pimpl->running)
 		return;
@@ -143,7 +147,8 @@ void ARQStream::stop()
 
 
 /* send: copy packet to send buffer and return true, else return false to indicate "block" */
-bool ARQStream::send(packet tmp, ARQStream::Mode)
+template <typename P>
+bool ARQStream<P>::send(packet<P> tmp, ARQStream<P>::Mode)
 {
 
 	return pimpl->send(tmp);
@@ -151,44 +156,51 @@ bool ARQStream::send(packet tmp, ARQStream::Mode)
 
 
 /* receive: pop packet from receive buffer and return true, else return false*/
-bool ARQStream::receive(packet& out, ARQStream::Mode mode)
+template <typename P>
+bool ARQStream<P>::receive(packet<P>& out, ARQStream<P>::Mode mode)
 {
-	if (!(mode & ARQStream::NONBLOCK))
+	if (!(mode & ARQStream<P>::NONBLOCK))
 		throw std::runtime_error("only NONBLOCK mode supported");
 	return pimpl->receive(out);
 }
 
 
-bool ARQStream::received_packet_available()
+template <typename P>
+bool ARQStream<P>::received_packet_available() const
 {
 	return (!pimpl->receive_buffers->window_empty());
 }
 
 
-bool ARQStream::all_packets_sent()
+template <typename P>
+bool ARQStream<P>::all_packets_sent()
 {
 	return (pimpl->send_buffers->window_empty());
 }
 
 
-bool ARQStream::send_buffer_full()
+template <typename P>
+bool ARQStream<P>::send_buffer_full()
 {
 	return (pimpl->send_buffers->window_full());
 }
 
 
-void ARQStream::trigger_send()
+template <typename P>
+void ARQStream<P>::trigger_send()
 {
 	pimpl->trigger_send();
 }
 
 
-void ARQStream::trigger_receive()
+template <typename P>
+void ARQStream<P>::trigger_receive()
 {
 	pimpl->trigger_receive();
 }
 
-std::string ARQStream::get_remote_ip() const {
+template <typename P>
+std::string ARQStream<P>::get_remote_ip() const {
 	return rip;
 }
 
@@ -221,14 +233,15 @@ void arq_stream_trigger::trigger_func_rec()
 }
 
 
-bool ARQStreamImpl::send(packet tmp)
+template <typename P>
+bool ARQStreamImpl<P>::send(packet<P> tmp)
 {
 	if (send_buffers->window_full()) {
 		std::cout << name << " window full during send()" << std::endl;
 		return false;
 	}
 
-	packet::seq_t latest = next_seq(last_seq_inserted);
+	typename packet<P>::seq_t latest = next_seq<P>(last_seq_inserted);
 	tmp.seq = latest;
 	send_buffers->push_back(tmp);
 	last_seq_inserted = latest;
@@ -236,7 +249,8 @@ bool ARQStreamImpl::send(packet tmp)
 	return true;
 }
 
-bool ARQStreamImpl::receive(packet& out)
+template <typename P>
+bool ARQStreamImpl<P>::receive(packet<P>& out)
 {
 	if (!running)
 		throw std::runtime_error("not running anymore!");
@@ -248,7 +262,8 @@ bool ARQStreamImpl::receive(packet& out)
 	return false;
 }
 
-void ARQStreamImpl::trigger_send()
+template <typename P>
+void ARQStreamImpl<P>::trigger_send()
 {
 	if (!running)
 		return;
@@ -265,19 +280,19 @@ void ARQStreamImpl::trigger_send()
 		return;
 	}
 
-	static packet::seq_t seq = SEQ_MAX;
-	static packet::seq_t next_seq_to_send = 0;
+	static typename packet<P>::seq_t seq = SEQ_MAX;
+	static typename packet<P>::seq_t next_seq_to_send = 0;
 	static sc_time last_time_sent = SC_ZERO_TIME;
 	static size_t idx = 0;
 
 	// if last received ack is in current send window slide send window
-	if (in_window(rack, seq, seq + send_buffers->window_size())) {
-		std::cout << name << " rack was " << std::dec << rack << " dist " << dist_window(rack, seq)
+	if (in_window<P>(rack, seq, seq + send_buffers->window_size())) {
+		std::cout << name << " rack was " << std::dec << rack << " dist " << dist_window<P>(rack, seq)
 		          << std::endl;
-		assert(dist_window(rack, seq) <= WINDOW_SIZE);
-		std::cout << name << " shifting window by " << dist_window(rack, seq) << std::endl;
-		send_buffers->drop_front(dist_window(rack, seq));
-		idx -= dist_window(rack, seq);
+		assert(dist_window<P>(rack, seq) <= P::MAX_WINSIZ);
+		std::cout << name << " shifting window by " << dist_window<P>(rack, seq) << std::endl;
+		send_buffers->drop_front(dist_window<P>(rack, seq));
+		idx -= dist_window<P>(rack, seq);
 		seq = rack;
 		idx = 0;
 	}
@@ -296,7 +311,7 @@ void ARQStreamImpl::trigger_send()
 		// send all pending packets
 		for (; idx < pending; idx++) {
 
-			packet& pckt = send_buffers->window_at(idx);
+			packet<P>& pckt = send_buffers->window_at(idx);
 			if (!timeouted && pckt.seq != next_seq_to_send) {
 				std::cout << name << " skipping (not sending): " << pckt.seq << ", expected "
 				          << next_seq_to_send << std::endl;
@@ -307,13 +322,13 @@ void ARQStreamImpl::trigger_send()
 			std::cout << name << " sending pending packet (seq: " << pckt.seq
 			          << ", ack: " << pckt.ack << " at buffer " << idx
 			          << "th position, size: " << pckt.size() << ")" << std::endl;
-			next_seq_to_send = next_seq(pckt.seq);
+			next_seq_to_send = next_seq<P>(pckt.seq);
 			if (rand() < RAND_MAX * (1.0 - sender_drop_rate)) { // random dropping ;)
 				std::cout << "called sendUDP with " << target_ip.to_ulong() << " " << target_port
 				          << " size " << pckt.size() << std::endl;
 
 				// copy because of sendUDP fuckup
-				packet pckt_copy((pckt));
+				packet<P> pckt_copy((pckt));
 
 				double start_send_t = sc_simulation_time();
 				std::cout << "sending ARQ packet with seq. " << std::dec << pckt_copy.seq
@@ -359,15 +374,15 @@ void ARQStreamImpl::trigger_send()
 
 	if (last_time_sent + timeout < sc_time_stamp()) {
 		// nothing sent but ack timeout elasped => send ack-only frame
-		packet::seq_t l_rseq = rseq;
+		typename packet<P>::seq_t l_rseq = rseq;
 		if (ack != l_rseq || !acked) {
 			std::cout << name << " acking for " << l_rseq << " (ack was " << ack << ")"
 			          << std::endl;
-			ack_frame tmp;
+			ack_frame<P> tmp;
 			tmp.ack = htonl(l_rseq);
 
 			eth_soft.sendUDP(target_ip.to_ulong(), target_port, reinterpret_cast<void*>(&tmp),
-			                 sizeof(ack_frame));
+			                 sizeof(ack_frame<P>));
 			// update ack
 			ack = l_rseq;
 		}
@@ -380,7 +395,8 @@ void ARQStreamImpl::trigger_send()
 }
 
 
-void ARQStreamImpl::trigger_receive()
+template <typename P>
+void ARQStreamImpl<P>::trigger_receive()
 {
 	if (!eth_soft.hasReceivedUDP()) {
 		return;
@@ -403,7 +419,7 @@ void ARQStreamImpl::trigger_receive()
 
 	bool has_data = rec_data->pData.size() > 4;
 
-	packet p;
+	packet<P> p;
 	char* recv_buf = reinterpret_cast<char*>(&p);
 	memcpy(recv_buf, &(*rec_data->pData.begin()), rec_data->pData.size());
 
@@ -416,14 +432,14 @@ void ARQStreamImpl::trigger_receive()
 
 
 	// received ack -> in current send window?
-	if (in_window(p.ack, rack, rack + WINDOW_SIZE)) {
+	if (in_window<P>(p.ack, rack, rack + P::MAX_WINSIZ)) {
 		// got valid acknowledge, update variable for other thread
 		rack = p.ack;
 		last_time_racked = sc_time_stamp();
 		std::cout << name << " receive got new rack (" << p.ack << ")" << std::endl;
 	} else {
-		std::cout << name << " old ack (" << rack << ", " << (rack + WINDOW_SIZE) % SEQ_MAX
-		          << "): " << rack << " " << p.ack << " " << (rack + WINDOW_SIZE) % SEQ_MAX
+		std::cout << name << " old ack (" << rack << ", " << (rack + P::MAX_WINSIZ) % SEQ_MAX
+		          << "): " << rack << " " << p.ack << " " << (rack + P::MAX_WINSIZ) % SEQ_MAX
 		          << std::endl;
 	}
 
@@ -439,7 +455,7 @@ void ARQStreamImpl::trigger_receive()
 			p.pdu[idx] = be64toh(p.pdu[idx]);
 		std::cout << name << " packet marked as valid with length " << p.len << ", pid " << std::hex << p.pid << ", pdu[0]" << p.pdu[0] << std::endl;
 		// FIXME, for now we just accept sequential packets...
-		packet::seq_t l_rseq = next_seq(rseq);
+		typename packet<P>::seq_t l_rseq = next_seq<P>(rseq);
 		if (p.seq == l_rseq) {
 			double r = 1.0 * rand() / RAND_MAX;
 			if (r < receiver_drop_rate) { // random dropping
@@ -453,8 +469,8 @@ void ARQStreamImpl::trigger_receive()
 			rseq = l_rseq;
 
 			// use data from cache to fill holes
-			for (size_t i = 0; i < WINDOW_SIZE; i++) {
-				l_rseq = next_seq(l_rseq);
+			for (size_t i = 0; i < P::MAX_WINSIZ; i++) {
+				l_rseq = next_seq<P>(l_rseq);
 				if ((*receive_cache.status)[l_rseq]) {
 					std::cout << name << " using cached data: (seq: " << l_rseq << ")" << std::endl;
 					(*receive_cache.status)[l_rseq] = false;
@@ -463,7 +479,7 @@ void ARQStreamImpl::trigger_receive()
 				} else
 					break;
 			}
-		} else if (in_window(p.seq, ack, ack + WINDOW_SIZE)) {
+		} else if (in_window<P>(p.seq, ack, ack + P::MAX_WINSIZ)) {
 			// cache data after gap
 			(*receive_cache.data)[p.seq] = p;
 			(*receive_cache.status)[p.seq] = true;

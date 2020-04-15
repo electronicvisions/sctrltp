@@ -17,30 +17,33 @@
 #endif
 
 /* ack-only packet type: without payload */
+template<typename P>
 struct ack_frame
 {
-	sctrltp::packet::seq_t ack;
+	typename sctrltp::packet<P>::seq_t ack;
 } __attribute__((__packed__));
 
 
 /* next_seq: calculate next sequence number (incl. wrap around at MAX_NRFRAMES) */
-inline sctrltp::packet::seq_t next_seq(sctrltp::packet::seq_t s) __attribute__((always_inline));
-sctrltp::packet::seq_t next_seq(sctrltp::packet::seq_t s)
+template<typename P>
+inline typename sctrltp::packet<P>::seq_t next_seq(typename sctrltp::packet<P>::seq_t s) __attribute__((always_inline));
+template<typename P>
+typename sctrltp::packet<P>::seq_t next_seq(typename sctrltp::packet<P>::seq_t s)
 {
-#if MAX_NRFRAMES > UINT_MAX
-	return s + 1;
-#else
-	return (s + 1) % MAX_NRFRAMES;
-#endif
+	static_assert(P::MAX_NRFRAMES < UINT_MAX, "We do not support crazily large windows");
+
+	return (s + 1) % P::MAX_NRFRAMES;
 }
 
 
 /* in_window: check if sequence number x is in window (interval [a, b]) */
-inline bool in_window(sctrltp::packet::seq_t x, sctrltp::packet::seq_t a, sctrltp::packet::seq_t b)
+template<typename P>
+inline bool in_window(typename sctrltp::packet<P>::seq_t x, typename sctrltp::packet<P>::seq_t a, typename sctrltp::packet<P>::seq_t b)
     __attribute__((always_inline));
-bool in_window(sctrltp::packet::seq_t x, sctrltp::packet::seq_t a, sctrltp::packet::seq_t b)
+template<typename P>
+bool in_window(typename sctrltp::packet<P>::seq_t x, typename sctrltp::packet<P>::seq_t a, typename sctrltp::packet<P>::seq_t b)
 {
-	sctrltp::packet::seq_t bc = b % MAX_NRFRAMES; // constrained seq numbers
+	typename sctrltp::packet<P>::seq_t bc = b % P::MAX_NRFRAMES; // constrained seq numbers
 	if (a == bc) {                            // window empty
 		return false;
 	} else if (a < bc) { // typical
@@ -54,13 +57,14 @@ bool in_window(sctrltp::packet::seq_t x, sctrltp::packet::seq_t a, sctrltp::pack
 
 
 /* dist_window: calculate distance between start of window a and sequence number x */
-size_t dist_window(sctrltp::packet::seq_t x, sctrltp::packet::seq_t a)
+template<typename P>
+size_t dist_window(typename sctrltp::packet<P>::seq_t x, typename sctrltp::packet<P>::seq_t a)
 {
 	size_t ret = 0;
 	if (a < x)
 		ret = x - a;
 	else // x wrapped around
-		ret = x + (MAX_NRFRAMES - a);
+		ret = x + (P::MAX_NRFRAMES - a);
 	return ret;
 }
 

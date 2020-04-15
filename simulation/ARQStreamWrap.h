@@ -4,11 +4,7 @@
 #include "systemc.h"
 #include "sctrltp/sctrltp_defines.h"
 
-// and we have to use HW toolset... gcc 4.1 :)
-#define WINDOW_SIZE 128
-#define RECEIVE_WINDOW_SIZE WINDOW_SIZE
-
-#define SEQ_MAX (MAX_NRFRAMES - 1)
+#define SEQ_MAX (P::MAX_NRFRAMES - 1)
 
 // 14 + 20 + 8; // size of header... just for calculating waiting time for sendUDP
 #define WAIT_SENDUDP 42
@@ -41,7 +37,7 @@ SC_MODULE(arq_stream_trigger)
 	void trigger_func_rec();
 };
 
-
+template<typename P>
 struct ARQStreamImpl
 {
 	std::string name;
@@ -49,10 +45,10 @@ struct ARQStreamImpl
 	double receiver_drop_rate;
 
 	// connection props
-	ARQStream::ip_t source_ip;
-	ARQStream::udpport_t source_port;
-	ARQStream::ip_t target_ip;
-	ARQStream::udpport_t target_port;
+	typename ARQStream<P>::ip_t source_ip;
+	udpport_t source_port;
+	typename ARQStream<P>::ip_t target_ip;
+	udpport_t target_port;
 
 	EthernetSoftwareIF eth_soft;
 
@@ -61,11 +57,11 @@ struct ARQStreamImpl
 
 	bool trigger_send_running;
 
-	packet::seq_t ack;               // last packt we acked (window start position)
-	packet::seq_t rack;              // max packet acknowledged by remote
-	packet::seq_t rseq;              // last received sequence number
+	typename packet<P>::seq_t ack;               // last packt we acked (window start position)
+	typename packet<P>::seq_t rack;              // max packet acknowledged by remote
+	typename packet<P>::seq_t rseq;              // last received sequence number
 	bool acked;                      // last received sequence number was in-window?
-	packet::seq_t last_seq_inserted; // last pushed packet into send queue
+	typename packet<P>::seq_t last_seq_inserted; // last pushed packet into send queue
 	sc_time last_time_racked;
 
 	sc_time timeout;
@@ -75,8 +71,8 @@ struct ARQStreamImpl
 	eth_if* pEthIf;
 
 	// window buffers, declare struct and defines below
-	template <size_t WS = WINDOW_SIZE>
-	struct window_buffer : boost::array<packet, WS>
+	template <size_t WS = P::MAX_WINSIZ>
+	struct window_buffer : boost::array<packet<P>, WS>
 	{
 		size_t first_idx;
 		size_t size_valid;
@@ -93,7 +89,7 @@ struct ARQStreamImpl
 
 		bool window_notfull() const { return size_valid < WS; }
 
-		packet& window_at(size_t ii)
+		packet<P>& window_at(size_t ii)
 		{
 			if ((ii >= window_size()) || (first_idx > WS))
 				throw std::runtime_error("access to out-of-window element");
@@ -101,7 +97,7 @@ struct ARQStreamImpl
 		}
 
 		// returns copy of first element, then drops in window
-		packet pop_front()
+		packet<P> pop_front()
 		{
 			if (window_empty())
 				throw std::runtime_error("nothing to pop");
@@ -117,7 +113,7 @@ struct ARQStreamImpl
 				pop_front();
 		}
 
-		void push_back(packet p)
+		void push_back(packet<P> p)
 		{
 			if (window_full())
 				throw std::runtime_error("window full, can't push");
@@ -127,30 +123,30 @@ struct ARQStreamImpl
 		}
 
 		window_buffer()
-		    : boost::array<packet, WS>(),
+		    : boost::array<packet<P>, WS>(),
 		      // no valid data upon creation
 		      first_idx(0),
 		      size_valid(0)
 		{
 		}
 	};
-	window_buffer<WINDOW_SIZE>* send_buffers;
-	window_buffer<RECEIVE_WINDOW_SIZE>* receive_buffers;
+	window_buffer<P::MAX_WINSIZ>* send_buffers;
+	window_buffer<P::MAX_WINSIZ>* receive_buffers;
 
 
 	struct cache
 	{
-		boost::array<bool, MAX_NRFRAMES>* status;
-		boost::array<packet, MAX_NRFRAMES>* data;
-		cache() : status(new boost::array<bool, MAX_NRFRAMES>), data(new boost::array<packet, MAX_NRFRAMES>)
+		boost::array<bool, P::MAX_NRFRAMES>* status;
+		boost::array<packet<P>, P::MAX_NRFRAMES>* data;
+		cache() : status(new boost::array<bool, P::MAX_NRFRAMES>), data(new boost::array<packet<P>, P::MAX_NRFRAMES>)
 		{
-			for (size_t i = 0; i < MAX_NRFRAMES; i++)
+			for (size_t i = 0; i < P::MAX_NRFRAMES; i++)
 				(*status)[i] = false;
 		}
 	} receive_cache;
 
-	bool send(packet tmp);
-	bool receive(packet& out);
+	bool send(packet<P> tmp);
+	bool receive(packet<P>& out);
 	void trigger_send();
 	void trigger_receive();
 };
