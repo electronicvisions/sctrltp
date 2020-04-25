@@ -331,7 +331,7 @@ __s32 resend_frame (sctp_window<P> *win, sctp_internal<P> *resend, __u64 rto, __
 	return ret;
 }
 
-#define PARAMETERISATION(Name)                                                                     \
+#define PARAMETERISATION(Name, name)                                                               \
 	template __s8 win_init(struct sctp_window<Name>* win, __u32 max_fr, __u32 max_ws, __u8 side);  \
 	template void win_reset(struct sctp_window<Name>* win);                                        \
 	template __s32 new_frame_tx(                                                                   \

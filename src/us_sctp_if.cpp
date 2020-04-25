@@ -652,7 +652,7 @@ __s32 SCTP_Recv (sctp_descr<P> *desc, __u16 *typ, __u16 *num, __u64 *resp)
 	return 0;
 }
 
-#define PARAMETERISATION(Name)                                                                     \
+#define PARAMETERISATION(Name, name)                                                               \
 	template sctp_descr<Name>* open_conn(const char* corename);                                    \
 	template __s32 close_conn(sctp_descr<Name>* desc);                                             \
 	template __s32 acq_buf(sctp_descr<Name>* desc, buf_desc<Name>* acq, const __u8 mode);          \

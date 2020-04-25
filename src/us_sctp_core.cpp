@@ -1270,8 +1270,8 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 
 #undef HOSTARQ_RESET_WAIT_SLEEP_INTERVAL
 
-#define PARAMETERISATION(Name)                                                                     \
-	template __s8 SCTP_CoreUp<Name>(char const*, char const*, __u16, __u16, __u16,  __s8);         \
+#define PARAMETERISATION(Name, name)                                                               \
+	template __s8 SCTP_CoreUp<Name>(char const*, char const*, __u16, __u16, __u16, __s8);          \
 	template __s8 SCTP_CoreDown<Name>(void);                                                       \
 	template struct sctp_core<Name>* SCTP_debugcore<Name>(void);
 #include "sctrltp/parameters.def"

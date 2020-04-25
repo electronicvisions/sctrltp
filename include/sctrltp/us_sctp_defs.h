@@ -111,7 +111,7 @@ struct sctp_internal {
 	__u8    pad[L1D_CLS-2*PTR_SIZE-13];
 };
 
-#define PARAMETERISATION(Name) static_assert(sizeof(sctp_internal<Name>) == L1D_CLS, "");
+#define PARAMETERISATION(Name, name) static_assert(sizeof(sctp_internal<Name>) == L1D_CLS, "");
 #include "sctrltp/parameters.def"
 
 template<typename P>
@@ -122,7 +122,7 @@ struct sctp_alloc {
 	__u8 pad[L1D_CLS-8];                        /*We want Cachelinesize alignment*/
 };
 
-#define PARAMETERISATION(Name) static_assert((sizeof(sctp_alloc<Name>) % L1D_CLS) == 0, "");
+#define PARAMETERISATION(Name, name) static_assert((sizeof(sctp_alloc<Name>) % L1D_CLS) == 0, "");
 #include "sctrltp/parameters.def"
 
 template<typename P>
@@ -152,7 +152,7 @@ struct sctp_interface {                 /*Bidirectional interface between layers
 };
 // TODO: check for more?
 
-#define PARAMETERISATION(Name)                                                                     \
+#define PARAMETERISATION(Name, name)                                                               \
 	static_assert(                                                                                 \
 	    offsetof(sctp_interface<Name>, alloctx) == 4096,                                           \
 	    ""); // TODO: page size should be configurable

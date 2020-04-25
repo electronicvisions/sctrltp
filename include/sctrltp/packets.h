@@ -68,7 +68,7 @@ struct arq_frame {
 	__u16   LEN;                /*Length (64-bit words)*/
 	__u64   COMMANDS[P::MAX_PDUWORDS];
 }__attribute__ ((packed));
-#define PARAMETERISATION(Name)                                                                     \
+#define PARAMETERISATION(Name, name)                                                               \
 	static_assert(                                                                                 \
 	    offsetof(arq_frame<Name>, COMMANDS) == (sizeof(__u32) * 2 + sizeof(__u16) * 2), "");
 #include "sctrltp/parameters.def"

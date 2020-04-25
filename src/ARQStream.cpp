@@ -52,11 +52,10 @@ std::string create_name(sctrltp::ARQStreamSettings const s)
 
 namespace sctrltp {
 
-// Keep in sync with list of names in wscript
 static std::unordered_map<std::type_index, std::string> hostarq_daemon_names = {
-    {std::type_index(typeid(ParametersFcpBss1)), "hostarq_daemon_fcp_bss1"},
-    {std::type_index(typeid(ParametersAnanasBss1)), "hostarq_daemon_ananas_bss1"},
-    {std::type_index(typeid(ParametersFcpBss2Cube)), "hostarq_daemon_fcp_bss2_cube"}};
+#define PARAMETERISATION(Name, name) {std::type_index(typeid(Name)), "hostarq_daemon_" #name},
+#include "sctrltp/parameters.def"
+};
 
 template<typename P>
 struct ARQStreamImpl {
@@ -383,7 +382,7 @@ std::string ARQStream<P>::get_name() {
 	return name;
 }
 
-#define PARAMETERISATION(Name) template class ARQStream<Name>;
+#define PARAMETERISATION(Name, name) template class ARQStream<Name>;
 #include "sctrltp/parameters.def"
 
 #endif // !NCSIM

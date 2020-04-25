@@ -35,7 +35,7 @@ struct sctp_window {
 	__u32   pad2[L1D_CLS/4-6-PTR_SIZE/4-1]; /* ptr alignment requires 64 bits */
 
 };
-#define PARAMETERISATION(Name)                                                                     \
+#define PARAMETERISATION(Name, name)                                                               \
 	static_assert(offsetof(sctp_window<Name>, high_seq) == (2 * L1D_CLS), "");                     \
 	static_assert(offsetof(sctp_window<Name>, flag) == (3 * L1D_CLS), "");                         \
 	static_assert(sizeof(sctp_window<Name>) == (4 * L1D_CLS), "");
