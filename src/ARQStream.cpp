@@ -378,6 +378,11 @@ bool ARQStream<P>::send_buffer_full() {
 	return static_cast<bool>(tx_queues_full(pimpl->desc));
 }
 
+template<typename P>
+std::string ARQStream<P>::get_name() {
+	return name;
+}
+
 #define PARAMETERISATION(Name) template class ARQStream<Name>;
 #include "sctrltp/parameters.def"
 

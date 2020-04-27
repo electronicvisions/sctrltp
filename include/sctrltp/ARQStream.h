@@ -96,6 +96,9 @@ public:
 	// notify that send buffer is full
 	bool send_buffer_full();
 
+	// returns name of ARQStream
+	std::string get_name();
+
 
 private:
 	std::string name;
