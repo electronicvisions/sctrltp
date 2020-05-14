@@ -203,7 +203,6 @@ __s32 close_conn (sctp_descr<P> *desc)
 	close_shared_mem (desc->trans, sizeof(sctp_interface<P>));
 	/*free descr*/
 	free(desc);
-	desc = NULL;
 	return 0;
 }
 

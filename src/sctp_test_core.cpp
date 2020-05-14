@@ -61,7 +61,9 @@ double mydev(double vals[], size_t len) {
 	return sqrt(sum_deviation/len);
 }
 
-void get_intr_cnt(size_t * net, size_t * timer) {
+std::pair<size_t, size_t> get_intr_cnt() {
+	size_t net = 0;
+	size_t timer = 0;
 	FILE *fp;
 	char path[35];
 
@@ -75,12 +77,13 @@ void get_intr_cnt(size_t * net, size_t * timer) {
 
 	/* Read the output a line at a time - output it. */
 	if (fgets(path, sizeof(path), fp) != NULL)
-		sscanf(path, "%zu\n", timer);
+		sscanf(path, "%zu\n", &timer);
 	if (fgets(path, sizeof(path), fp) != NULL)
-		sscanf(path, "%zu\n", net);
+		sscanf(path, "%zu\n", &net);
 
 	/* close */
 	pclose(fp);
+	return {net, timer};
 }
 
 template <typename P>
@@ -96,8 +99,7 @@ void *sending (void *ret)
 	double pspeeds[MAX_NO_PRINTS];
 	double interrupts[MAX_NO_PRINTS];
 	double interrupts2[MAX_NO_PRINTS];
-	size_t last_interrupts, last_interrupts2;
-	get_intr_cnt(&last_interrupts, &last_interrupts2);
+	auto [last_interrupts, last_interrupts2] = get_intr_cnt();
 
 	struct sctp_descr<P> *desc = (struct sctp_descr<P> *)ret;
 	struct buf_desc<P> buffer;
@@ -191,8 +193,7 @@ void *sending (void *ret)
 		double diff_time_start = mytime() - starttime;
 		if (diff_time > PLOT_TIME) {
 			double rate = 1.0 * (i-last_i) * WORD_SIZE / diff_time;
-			size_t new_interrupts, new_interrupts2;
-			get_intr_cnt(&new_interrupts, &new_interrupts2);
+			auto [new_interrupts, new_interrupts2] = get_intr_cnt();
 			if (new_interrupts < last_interrupts) // wrapped around!
 				new_interrupts += UINT32_MAX;
 			if (new_interrupts2 < last_interrupts2) // wrapped around!
@@ -290,8 +291,7 @@ int main (int argc, char **argv)
 	double pspeeds[MAX_NO_PRINTS];
 	double interrupts[MAX_NO_PRINTS];
 	double interrupts2[MAX_NO_PRINTS];
-	size_t last_interrupts, last_interrupts2;
-	get_intr_cnt(&last_interrupts, &last_interrupts2);
+	auto [last_interrupts, last_interrupts2] = get_intr_cnt();
 
 	double starttime = mytime();
 	double last_print = starttime;
@@ -369,8 +369,7 @@ int main (int argc, char **argv)
 				printf("rx_cnt %lld, rx_drop %lld, rx_abort %lld, al_word %lld, rx_corrupt %d, udp_corrupt %d, rx_corrupt_idx %lld\n", rx_cnt, rx_drop, rx_abort, al_word, rx_corrupt, udp_corrupt, rx_corrupt_idx);
 			last_sum = sum;
 
-			size_t new_interrupts, new_interrupts2;
-			get_intr_cnt(&new_interrupts, &new_interrupts2);
+			auto [new_interrupts, new_interrupts2] = get_intr_cnt();
 			if (new_interrupts < last_interrupts) // wrapped around!
 				new_interrupts += UINT32_MAX;
 			if (new_interrupts2 < last_interrupts2) // wrapped around!

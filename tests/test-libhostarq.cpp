@@ -16,7 +16,7 @@ int check_file(char const* filename, bool exists) {
 	if(snprintf(command, sizeof(command), "test -e /dev/shm/%s", filename) >= (int)sizeof(command)) {
 			fprintf(stderr, "filename %s too long\n", filename);
 	} else {
-		if (system(command) == exists) {
+		if (system(command) == static_cast<int>(exists)) {
 			fprintf(stderr, "%s does %sexist\n", filename, exists ? "not " : "");
 			fail = true;
 			return 1; // fail
