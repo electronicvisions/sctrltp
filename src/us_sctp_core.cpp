@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <memory>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <pthread.h>
@@ -33,6 +34,18 @@ double shitmytime() {
 	return 1.0 * now.tv_sec + now.tv_usec / 1e6;
 }
 
+/** Print additional information about a shared memory file (needs fuser and
+ *  only works for own files).
+ *  @param NAME The name of the shared memory file.
+ */
+void try_print_fuser(char const* NAME) {
+	LOG_ERROR("Trying to display processes accessing "
+	          "the corresponding shared memory file (on stdout):");
+	auto const len = strlen("fuser -uv /dev/shm/") + strlen(NAME) + 1;
+	std::unique_ptr<char[]> cmd{new char[len]};
+	snprintf(cmd.get(), len, "fuser -uv /dev/shm/%s", NAME);
+	system(cmd.get());
+}
 
 /** Try to unlink shared memory file.
  *  @return true if removal worked out, false otherwise.
@@ -45,12 +58,14 @@ static bool try_unlink_shmfile (const char *NAME)
 	fd = shm_open(NAME, O_CREAT | O_RDWR, 0666);
 	if (fd < 0) {
 		LOG_ERROR("Cannot non-exclusively open shared memory file (NAME: %s)", NAME);
+		try_print_fuser(NAME);
 		return false;
 	}
 
 	ret = flock(fd, LOCK_EX | LOCK_NB);
 	if (ret < 0) {
 		LOG_ERROR("Shared memory file is locked by running process (NAME: %s)", NAME);
+		try_print_fuser(NAME);
 		close(fd);
 		return false;
 	}
@@ -59,6 +74,7 @@ static bool try_unlink_shmfile (const char *NAME)
 	ret = shm_unlink(NAME);
 	if (ret < 0) {
 		LOG_ERROR("Could not unlink shared memory file (NAME: %s)", NAME);
+		try_print_fuser(NAME);
 		return false;
 	}
 
@@ -73,8 +89,6 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 	void *ptr = NULL;
 	__s32 fd;
 	__s32 ret;
-	int len;
-	char *cmd;
 
 	mode_t prev = umask(0000);
 
@@ -94,15 +108,7 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 	{
 		perror ("ERROR: Failed to create new shared mem object");
 		printf ("Please check if %s exists in shared memory (e.g. /dev/shm/%s)\n", NAME, NAME);
-
-		/* This is very un-portable, Linux 2.6 stuff */
-		printf ("Trying to display processes accessing the corresponding shared memory segment...\n");
-		len = sizeof(char) * (strlen("fuser -uv /dev/shm/") + strlen(NAME) + 1);
-		cmd = (char*) malloc(len);
-		snprintf (cmd, len, "fuser -uv /dev/shm/%s", NAME);
-		system (cmd);
-		free ((void*) cmd);
-
+		try_print_fuser(NAME);
 		return NULL;
 	}
 
@@ -111,6 +117,7 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 	ret = flock(fd, LOCK_SH);
 	if (ret < 0) {
 		LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
+		try_print_fuser(NAME);
 		close(fd);
 		return NULL;
 	}
