@@ -226,7 +226,14 @@ __s32 cond_wait (volatile struct semaphore *cond_var, __s32 sig_mask)
 
 	spin_lock (lock);
 	while (((c = cond_var->semval) & sig_mask) == 0) {
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 		cond_var->waiter++;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 		spin_unlock (lock);
 
 		futex_wait (&(cond_var->semval), c);
@@ -236,12 +243,26 @@ __s32 cond_wait (volatile struct semaphore *cond_var, __s32 sig_mask)
 		}
 
 		spin_lock (lock);
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 		cond_var->waiter--;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 	}
 	/*At least one bit in sig_mask was set in cond_var*/
 	c = cond_var->semval & sig_mask;
 	/*Reset those bits which were set before and we waited on*/
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 	cond_var->semval ^= c;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 	spin_unlock (lock);
 	/*Return bits which were observed*/
 	return c;
@@ -258,7 +279,14 @@ __s32 cond_test (volatile struct semaphore *cond_var, __s32 sig_mask)
 	spin_lock (lock);
 	c = cond_var->semval & sig_mask;
 	/*Reset those bits which were set before*/
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 	cond_var->semval ^= c;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 	spin_unlock(lock);
 	return c;
 }
@@ -271,7 +299,14 @@ void cond_signal (volatile struct semaphore *cond_var, __s32 sig_mask,  __u32 ho
 	assert (cond_var->type == SYNC_TYPE_CONDVAR);
 
 	spin_lock (lock);
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 	cond_var->semval |= sig_mask;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 	if (cond_var->waiter) {
 		spin_unlock (lock);
 		futex_wake (&(cond_var->semval), howmany);
@@ -410,7 +445,14 @@ void semaph_up (volatile struct semaphore *sem)
 	__vs32 *lock = &(sem->lock);
 
 	spin_lock (lock);
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 	c = ++sem->semval;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 	if ((sem->waiter)&&(c > 0)) {
 		spin_unlock (lock);
 		futex_wake (&(sem->semval), c);
@@ -427,15 +469,36 @@ void semaph_down (volatile struct semaphore *sem)
 
 	spin_lock (lock);
 	while ((c = sem->semval) <= 0) {
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 		sem->waiter++;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 		spin_unlock (lock);
 
 		futex_wait (&(sem->semval), c);
 
 		spin_lock (lock);
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 		sem->waiter--;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 	}
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 	sem->semval--;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 	spin_unlock (lock);
 }
 

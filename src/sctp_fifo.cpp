@@ -119,7 +119,14 @@ __s8 fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 		memcpy (absptr+(offset * fifo->elem_size), elem, fifo->elem_size);
 
 		/*Signal, that there is a new full element*/
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 		fifo->nr_full.semval++;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 		spin_unlock (&(fifo->nr_full.lock));
 
 		/*Wake at least one consumer*/
@@ -157,7 +164,14 @@ __s8 fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 		memcpy (elem, absptr+(offset *fifo->elem_size), fifo->elem_size);
 
 		/*Signal, that there is a new empty element*/
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 		fifo->nr_full.semval--;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 		spin_unlock (&(fifo->nr_full.lock));
 
 		/*Wake at least one producer*/
@@ -207,7 +221,14 @@ __s8 try_fif_push (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 		memcpy (absptr+(offset * fifo->elem_size), elem, fifo->elem_size);
 
 		/*Signal, that there is a new full element*/
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 		fifo->nr_full.semval++;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 		spin_unlock (&(fifo->nr_full.lock));
 
 		/*Wake at least one consumer*/
@@ -240,7 +261,14 @@ __s8 try_fif_pop (struct sctp_fifo *fifo, __u8 *elem, void *baseptr)
 		/*We are safe to put element from buffer*/
 		memcpy (elem, absptr+(offset *fifo->elem_size), fifo->elem_size);
 
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
+#endif
 		fifo->nr_full.semval--;
+#if (__GNUC__ >= 10)
+#pragma GCC diagnostic pop
+#endif
 		spin_unlock (&(fifo->nr_full.lock));
 
 		/*Wake at least one producer*/
