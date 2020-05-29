@@ -87,7 +87,9 @@ int main(int argc, const char *argv[])
 		*(unique_queues + i) = atoi(argv[9 + i]);
 		printf("%d;", *(unique_queues + i));
 	}
-	printf("\n");
+	if (unique_queues_size) {
+		printf("\n");
+	}
 
 	if (fd <= 2) {
 		fprintf(stderr, "Descriptor for lockfile seems broken: %d\n", fd);
