@@ -23,7 +23,7 @@ void ARQStream<P>::send(
 	packet<P> t;
 	t.pid = pid;
 
-	if constexpr (std::is_base_of_v<
+	if (std::is_base_of_v<
 	                  std::random_access_iterator_tag,
 	                  typename iterator_traits::iterator_category>) {
 		size_t const num_full_packets = std::distance(begin, end) / P::MAX_PDUWORDS;
@@ -57,7 +57,7 @@ void ARQStream<P>::send(
 
 		// first fill and send all full packets
 		for (; iterator != end; ++iterator) {
-			if (packed_index == P::MAX_PDU_WORDS) {
+			if (packed_index == P::MAX_PDUWORDS) {
 				t.len = P::MAX_PDUWORDS;
 				send_direct(t, Mode::NOTHING);
 				packed_index = 0;

@@ -6,6 +6,17 @@
 
 #include "sctrltp/sctrltp_defines.h"
 
+#if __cplusplus < 201703L
+// this is especially required for compatibility with the xcelium-included
+// gcc version(s) that do not (yet) speak c++17
+namespace std {
+template<class Base, class Derived>
+
+constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
+}
+#endif
+
+
 namespace sctrltp {
 
 // fwd decls
