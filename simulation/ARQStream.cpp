@@ -495,6 +495,8 @@ void ARQStreamImpl<P>::trigger_receive()
 
 NCSC_MODULE_EXPORT(arq_stream_trigger)
 
+// Instantiate ARQStream for the supported template type parameter(s)
+template class ARQStream<ParametersFcpBss1>;
 
 #endif
 } // namespace
