@@ -1,5 +1,20 @@
 #pragma once
 
+#include <iterator>
+#include <stdexcept>
+#include <type_traits>
+
+#if __cplusplus < 201703L
+// AG: this is especially required for compatibility with the xcelium-included
+// gcc version(s) that do not (yet) speak c++17
+namespace std {
+template <class Base, class Derived>
+constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
+}
+#endif
+
+namespace sctrltp {
+
 template <typename P>
 template <typename InputIterator>
 void ARQStream<P>::send(
@@ -23,9 +38,13 @@ void ARQStream<P>::send(
 	packet<P> t;
 	t.pid = pid;
 
-	if (std::is_base_of_v<
-	                  std::random_access_iterator_tag,
-	                  typename iterator_traits::iterator_category>) {
+	if
+#ifdef __cpp_if_constexpr
+	    // cf. AG's comment regarding C++17 and xcelium's gcc
+	    constexpr
+#endif
+	    (std::is_base_of_v<
+	         std::random_access_iterator_tag, typename iterator_traits::iterator_category>) {
 		size_t const num_full_packets = std::distance(begin, end) / P::MAX_PDUWORDS;
 		size_t const num_rest_words = std::distance(begin, end) % P::MAX_PDUWORDS;
 
@@ -76,3 +95,5 @@ void ARQStream<P>::send(
 		}
 	}
 }
+
+} // namespace sctrltp
