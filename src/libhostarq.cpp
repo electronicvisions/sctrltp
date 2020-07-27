@@ -1,18 +1,20 @@
-#include <assert.h>
-#include <errno.h>
+#include <cassert>
+#include <cerrno>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <fcntl.h>
+#include <iostream>
 #include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdexcept>
 #include <string>
-#include <string.h>
+#include <unistd.h>
+#include <vector>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <unistd.h>
-#include <vector>
 
 #include "sctrltp/libhostarq.h"
 #include "sctrltp/us_sctp_defs.h"
@@ -245,15 +247,22 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 		perror("libhostarq tried to spawn HostARQ daemon");
 		abort();
 	} else if (handle->pid > 0 /* parent */) {
+		int tmp;
 		/* wait for child to change fd flag on finished init */
 		for (i = 0; i < RESET_TIMEOUT; i += HOSTARQ_PARENT_SLEEP_INTERVAL) {
 			usleep(HOSTARQ_PARENT_SLEEP_INTERVAL);
-			if (fcntl(fd, F_GETFL) != flag) {
+			if (((tmp = fcntl(fd, F_GETFL)) == -1) && (errno == EAGAIN)) {
+				continue;
+			}
+			if (tmp != flag) {
 				/*flag was changed by child*/
 				break;
 			}
 		}
 		close(fd);
+		if ((tmp == -1) || (tmp == flag)) {
+			throw std::runtime_error("HostARQ daemon startup timed out.");
+		}
 	} else {
 		perror("Could not fork HostARQ processes");
 		abort();
