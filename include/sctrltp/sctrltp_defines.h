@@ -44,7 +44,8 @@ template<
 	size_t I_MAX_PDUWORDS = 180, /* could be (PDU_SIZE/8)? */
 	size_t I_HW_MASTER_TIMEOUT = 0x000fffff, /* 3000*125 , 3000us is too large! */
 	size_t I_HW_DELAY_ACK = 1023,            /* maximum (was 100*125 = 100us */
-	size_t I_HW_FLUSH_COUNT = 0x0000ffff     /*  all bits on :) */
+	size_t I_HW_FLUSH_COUNT = 0x0000ffff,    /*  all bits on :) */
+	size_t I_ALLOC_BUF_FACTOR = 4 /* heuristic factor for tx and rc buffer size  */
 >
 struct Parameters
 {
@@ -61,7 +62,7 @@ struct Parameters
 	/* queue 0 is reserved for all non-unique packet types */
 	constexpr static size_t MAX_NUM_QUEUES = MAX_UNIQUE_QUEUES + 1;
 
-	constexpr static size_t ALLOCTX_BUFSIZE = I_MAX_WINSIZ * 4;
+	constexpr static size_t ALLOCTX_BUFSIZE = I_MAX_WINSIZ * I_ALLOC_BUF_FACTOR;
 	constexpr static size_t ALLOCRX_BUFSIZE = ALLOCTX_BUFSIZE * MAX_NUM_QUEUES * 2;
 	constexpr static size_t TX_BUFSIZE = ALLOCTX_BUFSIZE;
 	constexpr static size_t RX_BUFSIZE = ALLOCRX_BUFSIZE;
@@ -76,7 +77,7 @@ struct Parameters
 };
 
 typedef Parameters<> ParametersFcpBss1;
-typedef Parameters<16384, 65536, 125, 180, 0x000fffff, 1023, 0x0000ffff> ParametersFcpBss2Cube;
-typedef Parameters<32, 512, 125, 126, 0x000ffff, 1023, 0x0000ffff> ParametersAnanasBss1;
+typedef Parameters<16384, 65536, 125, 180, 0x000fffff, 1023, 0x0000ffff, 1> ParametersFcpBss2Cube;
+typedef Parameters<32, 512, 125, 126, 0x000ffff, 1023, 0x0000ffff, 4> ParametersAnanasBss1;
 
 } // namespace sctrltp
