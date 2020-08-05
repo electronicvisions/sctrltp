@@ -26,7 +26,7 @@
 #endif
 
 /* Time interval in us for the parent processes when waiting for init
- * completion. The total time (RESET_TIMEOUT) is defined in a header file. */
+ * completion. The total time (P::RESET_TIMEOUT) is defined in a header file. */
 #define HOSTARQ_PARENT_SLEEP_INTERVAL 10000
 
 /* 20 bytes for integers-to-char-string conversion should be enough... */
@@ -117,7 +117,7 @@ hostarq_free_handle(struct hostarq_handle* handle)
 template<typename P>
 void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemon_string)
 {
-	int ret, ret2, i, fd, flag;
+	int ret, ret2, fd, flag;
 	char fd_string[MAX_INT_STRING_SIZE], init_string[MAX_INT_STRING_SIZE];
 	char const lockdir[] = "/var/run/lock/hicann";
 	char lockdir_startupfile[] = "/var/run/lock/hicann/hostarq_startup_XXXXXX";
@@ -249,7 +249,7 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 	} else if (handle->pid > 0 /* parent */) {
 		int tmp;
 		/* wait for child to change fd flag on finished init */
-		for (i = 0; i < RESET_TIMEOUT; i += HOSTARQ_PARENT_SLEEP_INTERVAL) {
+		for (size_t i = 0; i < P::RESET_TIMEOUT; i += HOSTARQ_PARENT_SLEEP_INTERVAL) {
 			usleep(HOSTARQ_PARENT_SLEEP_INTERVAL);
 			if (((tmp = fcntl(fd, F_GETFL)) == -1) && (errno == EAGAIN)) {
 				continue;

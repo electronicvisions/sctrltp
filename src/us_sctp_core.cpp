@@ -254,7 +254,7 @@ static void do_hard_exit() {
 	/* ignore aborting/failing threads */
 	SCTP_CoreDown<P>();
 	/* signal the user-facing software */
-	kill(getppid(), SIGHUP);
+	kill(getppid(), HOSTARQ_FAIL_SIGNAL);
 	exit(EXIT_FAILURE);
 }
 
@@ -262,7 +262,7 @@ static void do_hard_exit() {
 template <typename P>
 static void *fpga_reset_timeout(void*) {
 	LOG_INFO("Start new reset timer (NAME: %s)", get_admin<P>()->NAME);
-	usleep(RESET_TIMEOUT);
+	usleep(P::RESET_TIMEOUT);
 	if (get_admin<P>()->STATUS.empty[0] == STAT_NORMAL) {
 		pthread_exit(NULL);
 	} else {
@@ -1255,18 +1255,18 @@ __s8 SCTP_CoreUp(
 	LOG_INFO ("> Threads up");
 
 	/* Check if FPGA reset was succsessful */
-	for (k = 0; k < RESET_TIMEOUT; k += HOSTARQ_RESET_WAIT_SLEEP_INTERVAL) {
+	for (k = 0; k < P::RESET_TIMEOUT; k += HOSTARQ_RESET_WAIT_SLEEP_INTERVAL) {
 		if (get_admin<P>()->STATUS.empty[0] == STAT_NORMAL)
 			break;
 		usleep(HOSTARQ_RESET_WAIT_SLEEP_INTERVAL); // sleep a bit
 	}
 
-	if (k >= RESET_TIMEOUT) {
+	if (k >= P::RESET_TIMEOUT) {
 		deallocate(15);
 		return -4;
 	}
 
-	LOG_INFO ("SCTP CORE OPEN SUCCESSFUL (max pdu words: %lu, window size: %lu, HW_DELAY_ACK: %lu, DELAY_ACK: %lu)", P::MAX_PDUWORDS, P::MAX_WINSIZ, P::HW_DELAY_ACK, P::DELAY_ACK);
+	LOG_INFO ("SCTP CORE OPEN SUCCESSFUL (max pdu words: %lu, window size: %lu, DELAY_ACK: %lu)", P::MAX_PDUWORDS, P::MAX_WINSIZ, P::DELAY_ACK);
 
 	/*TODO: Update mem counter in stats*/
 

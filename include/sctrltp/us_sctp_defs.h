@@ -23,6 +23,9 @@
 	#define PTR_SIZE sizeof (void *)
 #endif
 
+#define HOSTARQ_EXIT_SIGNAL SIGUSR2
+#define HOSTARQ_FAIL_SIGNAL SIGHUP
+
 /*Helper macros*/
 #define likely(x)       __builtin_expect(!!(x), 1)
 #define unlikely(x)     __builtin_expect(!!(x), 0)
@@ -34,29 +37,7 @@
 #define CFG_STATUS_CRCERR   0x04
 #define CFG_STATUS_STARTUP  0x05
 
-/* DELAY = MAX_WINSIZ * PDU_SIZE / WIRESPEED */
-
-//#define WIRESPEED          125 /* in 10^6 bytes/sec (because we calculate in us) */
-//#define MAX_WINSIZ         128 /* Can be specified in the range of 1 till (MAX_NRFRAMES-1)/2 (compile-time check exists) */
-//#define PDU_SIZE          (MTU - ETH_HEADER_SIZE - ARQ_HEADER_SIZE)
-
-// (128  * 1500b) / 125 = 1536
-// 1536/2 = 768 us
-
-//#define MIN_RTO    ((MAX_WINSIZ * PDU_SIZE) / WIRESPEED) / 2 /* us */
-//#define MAX_RTO    MIN_RTO
-////#define DELAY_ACK  ((MAX_WINSIZ * PDU_SIZE) / WIRESPEED / 3) /*maximum number of microseconds an ACK signal will be delayed*/
-//#define DELAY_ACK  500
-
-/*Core constraints*/
-// #define TO_RES            100    /*Timeout resolution in microseconds*/
-// #define MAX_TRANS       10000   /*maximum number of transmission till warning!!!*/
-#define RESET_TIMEOUT 2000*1000 /*in us*/
-
-//#if DELAY_ACK < TO_RES
-//#error DELAY_ACK is smaller than TO_RES
-//#endif
-
+/*States*/
 #define STAT_NORMAL         0
 #define STAT_RESET          1   /*Disables all threads to let do_reset make its work without disturbance*/
 #define STAT_WAITRESET      2   /*Disables all threads excpt rx to fetch reset signal from FPGA*/

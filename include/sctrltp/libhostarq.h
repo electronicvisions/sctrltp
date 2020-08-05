@@ -7,9 +7,6 @@
 
 #include "sctrltp/sctrltp_defines.h"
 
-#define HOSTARQ_EXIT_SIGNAL SIGUSR2
-#define HOSTARQ_FAIL_SIGNAL SIGPIPE
-
 
 namespace sctrltp {
 
