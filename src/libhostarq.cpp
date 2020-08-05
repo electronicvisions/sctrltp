@@ -249,8 +249,7 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 	} else if (handle->pid > 0 /* parent */) {
 		int tmp;
 		/* wait for child to change fd flag on finished init */
-		for (size_t i = 0; i < P::RESET_TIMEOUT; i += HOSTARQ_PARENT_SLEEP_INTERVAL) {
-			usleep(HOSTARQ_PARENT_SLEEP_INTERVAL);
+		while (true) {
 			if (((tmp = fcntl(fd, F_GETFL)) == -1) && (errno == EAGAIN)) {
 				continue;
 			}
@@ -258,11 +257,12 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 				/*flag was changed by child*/
 				break;
 			}
-		}
+			if (waitpid(handle->pid, NULL, WNOHANG) != 0) {
+				throw std::runtime_error("HostARQ daemon terminated unexpectedly.");
+			}
+			usleep(HOSTARQ_PARENT_SLEEP_INTERVAL);
+		};
 		close(fd);
-		if ((tmp == -1) || (tmp == flag)) {
-			throw std::runtime_error("HostARQ daemon startup timed out.");
-		}
 	} else {
 		perror("Could not fork HostARQ processes");
 		abort();
