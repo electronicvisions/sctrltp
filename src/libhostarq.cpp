@@ -223,6 +223,11 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 		abort();
 	}
 
+	//ignore signals from hostarq daemon during startup
+	struct sigaction old_action, tmp_action;
+	tmp_action.sa_handler = SIG_IGN;
+	sigaction(HOSTARQ_FAIL_SIGNAL, &tmp_action, &old_action);
+
 	handle->pid = fork();
 	/* the child shares the same set of file descriptors (except for those with O_CLOEXEC) */
 	if (handle->pid == 0 /* child */) {
@@ -257,12 +262,44 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 				/*flag was changed by child*/
 				break;
 			}
-			if (waitpid(handle->pid, NULL, WNOHANG) != 0) {
-				throw std::runtime_error("HostARQ daemon terminated unexpectedly.");
+			int status;
+			if (waitpid(handle->pid, &status, WNOHANG) != 0) {
+				if (WIFEXITED(status)) {
+					auto returncode = static_cast<ExitCode>(WEXITSTATUS(status));
+					std::string fail_reason;
+					switch(returncode) {
+						case ExitCode::UNSPECIFIED_FAILURE :
+							fail_reason = "Unspecified error";
+							break;
+						case ExitCode::RESET_TIMEOUT :
+							fail_reason = "FPGA reset timeout reached";
+							break;
+						case ExitCode::FPGA_SETTINGS_MISMATCH :
+							fail_reason = "Settings mismatch between Host and FPGA";
+							break;
+						case ExitCode::MAX_RESENDS :
+							fail_reason = "Maximum number of resends reached";
+							break;
+						case ExitCode::SUCCESS :
+							fail_reason = "Success. oO?";
+							break;
+						default :
+							fail_reason = "Unknown return code";
+							break;
+					}
+					throw std::runtime_error("HostARQ daemon terminated unexpectedly. Reason: " + fail_reason);
+				} else if (WIFSIGNALED(status)) {
+					int termsignal = WTERMSIG(status);
+					throw std::runtime_error("HostARQ daemon terminated due to signal: " + std::to_string(termsignal));
+				} else {
+					throw std::runtime_error("HostARQ daemon terminated for unknown reason");
+				}
 			}
 			usleep(HOSTARQ_PARENT_SLEEP_INTERVAL);
 		};
 		close(fd);
+		//restore previous signal handler
+		sigaction(HOSTARQ_FAIL_SIGNAL, &old_action, NULL);
 	} else {
 		perror("Could not fork HostARQ processes");
 		abort();

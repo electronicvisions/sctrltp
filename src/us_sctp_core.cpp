@@ -1,6 +1,7 @@
 /*Implementation of the SCTP Userspace core
  *Compile with -lpthread and -lrt*/
 
+#include <atomic>
 #include <assert.h>
 #include <errno.h>
 #include <memory>
@@ -14,6 +15,8 @@
 #include "sctrltp/us_sctp_core.h"
 
 #define HOSTARQ_RESET_WAIT_SLEEP_INTERVAL 1000 /*in us*/
+
+static std::atomic<bool> init_done = false;
 
 namespace sctrltp {
 
@@ -250,12 +253,12 @@ static __s32 do_startup (bool fpga_reset){
  */
 
 template <typename P>
-static void do_hard_exit() {
+static void do_hard_exit(ExitCode exitcode = ExitCode::UNSPECIFIED_FAILURE) {
 	/* ignore aborting/failing threads */
 	SCTP_CoreDown<P>();
 	/* signal the user-facing software */
 	kill(getppid(), HOSTARQ_FAIL_SIGNAL);
-	exit(EXIT_FAILURE);
+	exit(static_cast<int>(exitcode));
 }
 
 /*timeout for fpga +reset response*/
@@ -267,7 +270,7 @@ static void *fpga_reset_timeout(void*) {
 		pthread_exit(NULL);
 	} else {
 		LOG_ERROR("No reset response from FPGA (NAME: %s)", get_admin<P>()->NAME);
-		do_hard_exit<P>();
+		do_hard_exit<P>(ExitCode::RESET_TIMEOUT);
 	}
 	return NULL;
 }
@@ -637,7 +640,7 @@ void *SCTP_RX (void *core)
 										fprintf (stderr, "ERROR: Mismatch of software and FPGA hardware settings, maybe old or experimental FPGA Bitfile\n"\
 												"If you are sure that the bitfile is correct change values in sctrltp/userspace/packets.h\n"\
 												"if not please contact a FPGA person of your choice (Vitali Karasenko, Christian Mauch, Eric Mueller)\n");
-										do_hard_exit<P>();
+										do_hard_exit<P>(ExitCode::FPGA_SETTINGS_MISMATCH);
 									}
 									/*drop the answer packet*/
 									a++;
@@ -1015,7 +1018,7 @@ void *SCTP_RESEND (void *core)
 				}
 				if (ret == -1)
 					//resend timeout
-					do_hard_exit<P>();
+					do_hard_exit<P>(ExitCode::MAX_RESENDS);
 				spin_unlock (wlock);
 			}
 		}
@@ -1065,6 +1068,9 @@ __s8 SCTP_CoreUp(
 
 	if (!rip)
 		return -1;
+
+	if(init_done)
+		return 1;
 
 	if (get_admin<P>())
 		return 1;
@@ -1268,6 +1274,8 @@ __s8 SCTP_CoreUp(
 
 	LOG_INFO ("SCTP CORE OPEN SUCCESSFUL (max pdu words: %lu, window size: %lu, DELAY_ACK: %lu)", P::MAX_PDUWORDS, P::MAX_WINSIZ, P::DELAY_ACK);
 
+	init_done = true;
+
 	/*TODO: Update mem counter in stats*/
 
 	return 1;
@@ -1277,6 +1285,11 @@ __s8 SCTP_CoreUp(
 template <typename P>
 __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 {
+	if (!init_done) {
+		LOG_INFO ("%s: Init still in process -> do nothing\n", __FUNCTION__);
+		return -1;
+	}
+
 	memfence();
 	if (get_admin<P>() == NULL) {
 #pragma GCC diagnostic push
@@ -1308,6 +1321,7 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 	free (my_admin->txwin.frames);
 	free (my_admin->rxwin.frames);
 	free (my_admin);
+	init_done = false;
 	return 1;
 	/*In Userspace we will do nothing here ... who cares, I care (ECM!) */
 

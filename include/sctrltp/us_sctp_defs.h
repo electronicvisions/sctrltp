@@ -59,6 +59,14 @@
 
 namespace sctrltp {
 
+enum class ExitCode {
+	SUCCESS = EXIT_SUCCESS,
+	UNSPECIFIED_FAILURE = EXIT_FAILURE,
+	RESET_TIMEOUT = 10,
+	FPGA_SETTINGS_MISMATCH = 11,
+	MAX_RESENDS = 12
+};
+
 struct sctp_stats {
 	__u64	nr_received;    /*Number of packets received (total)*/
 	__u64	nr_received_payload;    /*Number of packets with payload received*/

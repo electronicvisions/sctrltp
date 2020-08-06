@@ -14,7 +14,6 @@
 #define PARAMETERS Parameters<>
 #endif
 
-volatile sig_atomic_t post_init = 0;
 static __s32 exiting = 0;
 static char const* our_shm_name = NULL;
 
@@ -24,13 +23,6 @@ using namespace sctrltp;
 template <typename P>
 void termination_handler(int signum)
 {
-	if (!post_init) {
-		fprintf(stderr, "Got signal %d but HostARQ init was not completed, "
-				"don't know what to do => aborting\n", signum);
-		/* we're dying illegally => signal to parent... */
-		kill(getppid(), HOSTARQ_FAIL_SIGNAL);
-		exit(EXIT_FAILURE);
-	}
 	/* we could see multiple signals during exit => ignore them */
 	if (cmpxchg(&(exiting), 0, 1) == 0)
 		SCTP_CoreDown<P>();
@@ -128,9 +120,6 @@ int main(int argc, const char *argv[])
 		fprintf(stderr, "Error occurred when starting up HostARQ software\n");
 		return EXIT_FAILURE;
 	}
-
-	/* we're done */
-	post_init = 1;
 
 	/* Signal parent that core is up, by changing file status flag */
 	fcntl(fd, F_SETFL, O_NONBLOCK);
