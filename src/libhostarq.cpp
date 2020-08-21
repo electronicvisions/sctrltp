@@ -231,6 +231,13 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 	handle->pid = fork();
 	/* the child shares the same set of file descriptors (except for those with O_CLOEXEC) */
 	if (handle->pid == 0 /* child */) {
+		{
+			// set signal mask to a known state, because it might have been altered in parent
+			sigset_t sigset;
+			sigfillset(&sigset);
+			sigprocmask(SIG_UNBLOCK, &sigset, NULL);
+		}
+
 		/* execvp's params are `char * const *`, so we have to provide non-const parameters */
 		char** params = static_cast<char**>(malloc(sizeof(char*) * (10 + handle->unique_queues.size())));
 		params[0] = const_cast<char*>(hostarq_daemon_string);
