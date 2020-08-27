@@ -421,12 +421,43 @@ __s32 tx_queue_full (sctp_descr<P> *desc)
 }
 
 template<typename P>
+__s32 rx_recv_buf_empty (sctp_descr<P> *desc)
+{
+    if (desc->recv_buf.in[0].next < desc->recv_buf.in[0].num) {
+        return 0;
+    } else {
+        return 1; // true
+    }
+}
+
+template<typename P>
+__s32 rx_recv_buf_empty (sctp_descr<P> *desc, __u64 idx)
+{
+    __u64 queue = 1 + idx;
+    if (desc->recv_buf.in[queue].next < desc->recv_buf.in[queue].num) {
+        return 0;
+    } else {
+        return 1; // true
+    }
+}
+
+template<typename P>
 __s32 rx_queue_empty (sctp_descr<P> *desc)
 {
 	assert (desc != NULL);
 	if (desc->trans->rx_queues[0].nr_full.semval != 0)
 		return 0;
 	return 1; // true
+}
+
+template<typename P>
+__s32 rx_queue_empty (sctp_descr<P> *desc, __u64 idx)
+{
+    assert (desc != NULL);
+    assert (idx < desc->trans->unique_queue_map.size);
+    if (desc->trans->rx_queues[idx + 1].nr_full.semval != 0)
+        return 0;
+    return 1; // true
 }
 
 template<typename P>
@@ -437,18 +468,6 @@ __s32 rx_queue_full (struct sctp_descr<P> *desc)
 		return 0;
 	return 1; // true
 }
-
-
-template<typename P>
-__s32 rx_queue_empty (sctp_descr<P> *desc, __u64 idx)
-{
-	assert (desc != NULL);
-	assert (idx < desc->trans->unique_queue_map.size);
-	if (desc->trans->rx_queues[idx + 1].nr_full.semval != 0)
-		return 0;
-	return 1; // true
-}
-
 
 template<typename P>
 __s32 rx_queue_full (sctp_descr<P> *desc, __u64 idx)
@@ -477,7 +496,8 @@ __s32 recv_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 	}
 	/*critical section*/
 
-	if ((i = desc->recv_buf.in[0].next) < desc->recv_buf.in[0].num) {
+	i = desc->recv_buf.in[0].next;
+	if (!rx_recv_buf_empty(desc)) {
 		desc->recv_buf.in[0].next++;
 		ptr_to_frame = desc->recv_buf.in[0].fptr[i];
 	} else {
@@ -557,7 +577,8 @@ __s32 recv_buf(sctp_descr<P>* desc, buf_desc<P>* buf, const __u8 mode, __u64 idx
 	}
 	/*critical section*/
 
-	if ((i = desc->recv_buf.in[queue].next) < desc->recv_buf.in[queue].num) {
+	i = desc->recv_buf.in[queue].next;
+	if (!rx_recv_buf_empty(desc, idx)) {
 		desc->recv_buf.in[queue].next++;
 		ptr_to_frame = desc->recv_buf.in[queue].fptr[i];
 	} else {
@@ -751,6 +772,8 @@ __s32 SCTP_Recv (sctp_descr<P> *desc, __u16 *typ, __u16 *num, __u64 *resp)
 	template __s32 init_buf(buf_desc<Name>* buf);                                                  \
 	template __s32 append_words(                                                                   \
 	    buf_desc<Name>* buf, const __u16 ptype, const __u32 num, const __u64* values);             \
+	template __s32 rx_recv_buf_empty(sctp_descr<Name>* desc);                                        \
+	template __s32 rx_recv_buf_empty(sctp_descr<Name>* desc, __u64 idx);                             \
 	template __s32 tx_queue_empty(sctp_descr<Name>* desc);                                         \
 	template __s32 tx_queue_full(sctp_descr<Name>* desc);                                          \
 	template __s32 rx_queue_empty(sctp_descr<Name>* desc);                                         \

@@ -110,6 +110,12 @@ template<typename P>
 __s32 tx_queue_full (struct sctp_descr<P> *desc);
 
 template<typename P>
+__s32 rx_recv_buf_empty (struct sctp_descr<P> *desc);
+
+template<typename P>
+__s32 rx_recv_buf_empty (struct sctp_descr<P> *desc, __u64 idx);
+
+template<typename P>
 __s32 rx_queue_empty (struct sctp_descr<P> *desc);
 
 template<typename P>

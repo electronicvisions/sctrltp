@@ -331,7 +331,8 @@ void ARQStream<P>::flush() {
 template<typename P>
 bool ARQStream<P>::received_packet_available() const
 {
-	return !static_cast<bool>(rx_queue_empty(pimpl->desc));
+	return !static_cast<bool>(rx_queue_empty(pimpl->desc)) ||
+	       !static_cast<bool>(rx_recv_buf_empty(pimpl->desc));
 }
 
 template<typename P>
@@ -342,7 +343,8 @@ bool ARQStream<P>::received_packet_available(packetid_t pid) const
 		    name + ": There exists no unique queue of pid " + std::to_string(pid));
 	}
 	size_t const idx = get_unique_queue_idx(pid);
-	return !static_cast<bool>(rx_queue_empty(pimpl->desc, idx));
+	return !static_cast<bool>(rx_queue_empty(pimpl->desc, idx)) ||
+	       !static_cast<bool>(rx_recv_buf_empty(pimpl->desc, idx));
 }
 
 template<typename P>
