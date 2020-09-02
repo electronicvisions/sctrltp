@@ -11,8 +11,8 @@
 #include <typeindex>
 #include <unordered_map>
 
-#include "sctrltp/us_sctp_if.h"
 #include "sctrltp/libhostarq.h"
+#include "sctrltp/us_sctp_if.h"
 
 #include "sctrltp/ARQFrame.h"
 
@@ -57,9 +57,10 @@ static std::unordered_map<std::type_index, std::string> hostarq_daemon_names = {
 #include "sctrltp/parameters.def"
 };
 
-template<typename P>
-struct ARQStreamImpl {
-	sctp_descr<P> * desc;
+template <typename P>
+struct ARQStreamImpl
+{
+	sctp_descr<P>* desc;
 	hostarq_handle* handle;
 	std::string name;
 	unique_queue_set_t unique_queue_set;
@@ -91,7 +92,8 @@ struct ARQStreamImpl {
 		}
 	}
 
-	~ARQStreamImpl() {
+	~ARQStreamImpl()
+	{
 		close_conn(desc); // TODO: we should check the return value?
 		hostarq_close(handle);
 		hostarq_free_handle(handle);
@@ -166,7 +168,7 @@ ARQStream<P>::ARQStream(std::string const rip, bool const reset) :
 	drop_receive_queue(400ms, true);
 }
 
-template<typename P>
+template <typename P>
 ARQStream<P>::ARQStream(ARQStreamSettings const settings) :
     name(create_name(settings)),
     rip(settings.ip),
@@ -183,8 +185,9 @@ ARQStream<P>::ARQStream(ARQStreamSettings const settings) :
 	drop_receive_queue(settings.init_flush_timeout, settings.init_flush_lb_packet);
 }
 
-template<typename P>
-ARQStream<P>::~ARQStream() {
+template <typename P>
+ARQStream<P>::~ARQStream()
+{
 	static_assert(sizeof(__u64) == sizeof(uint64_t), "Non-matching typedefs");
 
 	// ECM (2018-02-14): send one last packet to flush (there's no dedicated tear down)
@@ -204,7 +207,8 @@ ARQStream<P>::~ARQStream() {
 		auto start_of_flush = std::chrono::steady_clock::now();
 		while (!all_packets_sent()) {
 			auto waited_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-					std::chrono::steady_clock::now() - start_of_flush).count();
+			                        std::chrono::steady_clock::now() - start_of_flush)
+			                        .count();
 			if (waited_in_ms > max_wait_for_completion_upon_destruction_in_ms) {
 				throw std::runtime_error("Wait for completion of transfer timed out");
 			} else {
@@ -227,20 +231,25 @@ ARQStream<P>::~ARQStream() {
 }
 
 
-template<typename P>
-void ARQStream<P>::start() {}
+template <typename P>
+void ARQStream<P>::start()
+{}
 
-template<typename P>
-void ARQStream<P>::stop() {}
+template <typename P>
+void ARQStream<P>::stop()
+{}
 
-template<typename P>
-void ARQStream<P>::trigger_send() {}
+template <typename P>
+void ARQStream<P>::trigger_send()
+{}
 
-template<typename P>
-void ARQStream<P>::trigger_receive() {}
+template <typename P>
+void ARQStream<P>::trigger_receive()
+{}
 
-template<typename P>
-std::string ARQStream<P>::get_remote_ip() const {
+template <typename P>
+std::string ARQStream<P>::get_remote_ip() const
+{
 	return rip;
 }
 
@@ -262,8 +271,9 @@ bool ARQStream<P>::send(packet<P> t, Mode const mode)
 	return true;
 }
 
-template<typename P>
-bool ARQStream<P>::receive(packet<P>& t, Mode mode) {
+template <typename P>
+bool ARQStream<P>::receive(packet<P>& t, Mode mode)
+{
 	__s32 ret;
 	buf_desc<P> buffer;
 
@@ -287,7 +297,7 @@ bool ARQStream<P>::receive(packet<P>& t, Mode mode) {
 	return true;
 }
 
-template<typename P>
+template <typename P>
 bool ARQStream<P>::receive(packet<P>& t, packetid_t pid, Mode mode)
 {
 	__s32 ret;
@@ -320,22 +330,23 @@ bool ARQStream<P>::receive(packet<P>& t, packetid_t pid, Mode mode)
 	return true;
 }
 
-template<typename P>
-void ARQStream<P>::flush() {
+template <typename P>
+void ARQStream<P>::flush()
+{
 	// clear TX cache
 	__s32 ret = send_buf<P>(pimpl->desc, NULL, MODE_FLUSH);
 	if (ret < 0)
 		throw std::runtime_error(name + ": flushing error");
 }
 
-template<typename P>
+template <typename P>
 bool ARQStream<P>::received_packet_available() const
 {
 	return !static_cast<bool>(rx_queue_empty(pimpl->desc)) ||
 	       !static_cast<bool>(rx_recv_buf_empty(pimpl->desc));
 }
 
-template<typename P>
+template <typename P>
 bool ARQStream<P>::received_packet_available(packetid_t pid) const
 {
 	if (!has_unique_queue(pid)) {
@@ -347,7 +358,7 @@ bool ARQStream<P>::received_packet_available(packetid_t pid) const
 	       !static_cast<bool>(rx_recv_buf_empty(pimpl->desc, idx));
 }
 
-template<typename P>
+template <typename P>
 size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_packet)
 {
 	size_t dropped_words = 0;
@@ -359,9 +370,7 @@ size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_
 	                                                   1000us, 5000us, 10000us, 50000us, 100000us};
 	packet<P> my_packet;
 	// we need a random seed that differs between each experiment run
-	size_t const seed = duration_cast<milliseconds>(
-							system_clock::now().time_since_epoch())
-							.count();
+	size_t const seed = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 	std::srand(seed);
 	size_t const magic_number = std::rand();
 
@@ -384,8 +393,8 @@ size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_
 		}
 		if (!all_packets_sent()) {
 			throw std::runtime_error(
-				name + ": not all packets send after timeout of " +
-				std::to_string(duration_cast<milliseconds>(timeout).count()) + "ms");
+			    name + ": not all packets send after timeout of " +
+			    std::to_string(duration_cast<milliseconds>(timeout).count()) + "ms");
 		}
 	}
 
@@ -434,23 +443,25 @@ size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_
 	return dropped_words;
 }
 
-template<typename P>
-bool ARQStream<P>::all_packets_sent() {
+template <typename P>
+bool ARQStream<P>::all_packets_sent()
+{
 	return static_cast<bool>(tx_queue_empty<P>(pimpl->desc));
 }
 
-template<typename P>
-bool ARQStream<P>::send_buffer_full() {
+template <typename P>
+bool ARQStream<P>::send_buffer_full()
+{
 	return static_cast<bool>(tx_queue_full<P>(pimpl->desc));
 }
 
-template<typename P>
+template <typename P>
 bool ARQStream<P>::has_unique_queue(packetid_t pid) const
 {
 	return (pimpl->unique_queue_set.count(pid) > 0);
 }
 
-template<typename P>
+template <typename P>
 size_t ARQStream<P>::get_unique_queue_idx(packetid_t pid) const
 {
 	assert(pimpl->unique_queue_set.count(pid) > 0);
@@ -462,8 +473,9 @@ size_t ARQStream<P>::get_unique_queue_idx(packetid_t pid) const
 	throw std::runtime_error("Queue definitions of ARQStream and sctp_core do not match.");
 }
 
-template<typename P>
-std::string ARQStream<P>::get_name() {
+template <typename P>
+std::string ARQStream<P>::get_name()
+{
 	return name;
 }
 
