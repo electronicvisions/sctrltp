@@ -402,6 +402,17 @@ __s32 send_buf (sctp_descr<P> *desc, buf_desc<P> *buf, const __u8 mode)
 }
 
 template<typename P>
+__s32 tx_send_buf_empty (sctp_descr<P> *desc)
+{
+	/* Is there something in the send cache? */
+	if (desc->send_buf.out.next > 0) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+template<typename P>
 __s32 tx_queue_empty (sctp_descr<P> *desc)
 {
 	assert (desc != NULL);
@@ -772,10 +783,11 @@ __s32 SCTP_Recv (sctp_descr<P> *desc, __u16 *typ, __u16 *num, __u64 *resp)
 	template __s32 init_buf(buf_desc<Name>* buf);                                                  \
 	template __s32 append_words(                                                                   \
 	    buf_desc<Name>* buf, const __u16 ptype, const __u32 num, const __u64* values);             \
-	template __s32 rx_recv_buf_empty(sctp_descr<Name>* desc);                                        \
-	template __s32 rx_recv_buf_empty(sctp_descr<Name>* desc, __u64 idx);                             \
+	template __s32 rx_recv_buf_empty(sctp_descr<Name>* desc);                                      \
+	template __s32 rx_recv_buf_empty(sctp_descr<Name>* desc, __u64 idx);                           \
 	template __s32 tx_queue_empty(sctp_descr<Name>* desc);                                         \
 	template __s32 tx_queue_full(sctp_descr<Name>* desc);                                          \
+	template __s32 tx_send_buf_empty(sctp_descr<Name>* desc);                                      \
 	template __s32 rx_queue_empty(sctp_descr<Name>* desc);                                         \
 	template __s32 rx_queue_full(sctp_descr<Name>* desc);                                          \
 	template __s32 rx_queue_empty(sctp_descr<Name>* desc, __u64 idx);                              \

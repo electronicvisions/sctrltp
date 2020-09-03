@@ -455,7 +455,8 @@ size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_
 template <typename P>
 bool ARQStream<P>::all_packets_sent()
 {
-	return static_cast<bool>(tx_queue_empty<P>(pimpl->desc));
+	return static_cast<bool>(tx_queue_empty<P>(pimpl->desc)) &&
+	       static_cast<bool>(tx_send_buf_empty(pimpl->desc));
 }
 
 template <typename P>

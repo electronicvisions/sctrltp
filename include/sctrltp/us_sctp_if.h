@@ -104,6 +104,9 @@ template<typename P>
 __s32 append_words (buf_desc<P> *buf, const __u16 ptype, const __u32 num, const __u64 *values);
 
 template<typename P>
+__s32 tx_send_buf_empty (struct sctp_descr<P> *desc);
+
+template<typename P>
 __s32 tx_queue_empty (struct sctp_descr<P> *desc);
 
 template<typename P>
