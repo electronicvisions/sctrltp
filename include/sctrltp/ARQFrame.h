@@ -1,10 +1,7 @@
 #pragma once
 // payload is counted in quadwords (64-bit)
 
-#include "sctrltp/packets.h"
 #include "sctrltp_defines.h"
-
-#include <type_traits>
 
 namespace sctrltp {
 
@@ -12,32 +9,13 @@ namespace sctrltp {
 template <typename P>
 struct packet
 {
-	// lock the used types together
-	using arq_frame_t = arq_frame<P>;
-	using seq_t = decltype(std::declval<arq_frame_t>().SEQ);
-	// NOTE: We cannot use the following statement to derive entry_t:
-	//
-	// `using entry_t = std::decay_t<decltype(std::declval<arq_frame_t&>().COMMANDS[0])>;`
-	//
-	// Because entry_t is __u64, an alias to `long long unsigned int`,
-	// which a distinct type from uint64_t which is what checks in fisch
-	// expect.
-	using entry_t = uint64_t;
+	typedef uint32_t seq_t;
+	typedef uint64_t entry_t;
 
-	// -> Solution: We check the correct length
-	static_assert(
-	    sizeof(std::decay_t<decltype(std::declval<arq_frame_t&>().COMMANDS[0])>) == sizeof(entry_t),
-	    "entry_t has wrong length");
-
-	// NOTE: Correct alignment is ensured by test/test-alignment.cpp
-	decltype(std::declval<arq_frame_t&>().ACK) ack;
-	decltype(std::declval<arq_frame_t&>().SEQ) seq;
-	decltype(std::declval<arq_frame_t&>().PTYPE) pid;
-	decltype(std::declval<arq_frame_t&>().LEN) len;
-
-	// Compute size of header.
-	// This will be used to copy the whole packet header at once.
-	constexpr static size_t size_header = sizeof(ack) + sizeof(seq) + sizeof(pid) + sizeof(len);
+	seq_t ack;
+	seq_t seq;
+	packetid_t pid;
+	uint16_t len;
 
 	union
 	{

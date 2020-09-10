@@ -122,15 +122,6 @@ def build(bld):
 
     bld.program (
         features     = 'cxx cxxprogram gtest',
-        target       = 'hostarq_test_alignment',
-        source       = ['tests/test-alignment.cpp'],
-        use          = ['sctrltp_inc'],
-        skip_run     = True,  # if it compiles the checks are completed
-        install_path = '${PREFIX}/bin',
-    )
-
-    bld.program (
-        features     = 'cxx cxxprogram gtest',
         target       = 'hostarq_test_locking',
         source       = ['tests/test-locking.cpp', 'src/us_sctp_atomic.cpp'],
         use          = ['PTHREAD', 'sctrltp_inc'],
