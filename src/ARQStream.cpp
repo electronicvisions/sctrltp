@@ -125,6 +125,17 @@ struct ARQStreamImpl
 		if (ret < 0)
 			throw std::runtime_error(name + ": send error");
 	}
+
+	/**
+	 * Copy header from buffer to packet.
+	 */
+	static inline void copy_header(packet<P>& packet, buf_desc<P>& buffer)
+	{
+		packet.ack = sctpreq_get_ack(buffer.arq_sctrl);
+		packet.seq = sctpreq_get_seq(buffer.arq_sctrl);
+		packet.pid = sctpreq_get_typ(buffer.arq_sctrl);
+		packet.len = sctpreq_get_len(buffer.arq_sctrl);
+	}
 };
 
 
@@ -283,8 +294,7 @@ bool ARQStream<P>::receive(packet<P>& t, Mode mode)
 	else if (ret < 0)
 		throw std::runtime_error(name + ": receive error");
 
-	t.pid = sctpreq_get_typ(buffer.arq_sctrl);
-	t.len = sctpreq_get_len(buffer.arq_sctrl);
+	ARQStreamImpl<P>::copy_header(t, buffer);
 
 	// copy and change to host byte order (like ARQStream does)
 	for (size_t i = 0; i < t.len; i++)
@@ -316,8 +326,7 @@ bool ARQStream<P>::receive(packet<P>& t, packetid_t pid, Mode mode)
 		throw std::runtime_error(
 		    name + ": receive error for unique queue of pid " + std::to_string(pid));
 
-	t.pid = sctpreq_get_typ(buffer.arq_sctrl);
-	t.len = sctpreq_get_len(buffer.arq_sctrl);
+	ARQStreamImpl<P>::copy_header(t, buffer);
 
 	// copy and change to host byte order (like ARQStream does)
 	for (size_t i = 0; i < t.len; i++)

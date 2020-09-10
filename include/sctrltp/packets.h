@@ -62,11 +62,15 @@ namespace sctrltp {
 
 template<typename P>
 struct arq_frame {
-	__u32   ACK;                /*Acknowledge to packet with sequenceno = ACK (other direction)*/
-	__u32   SEQ;                /*Sequencenumber*/
+	using ack_t = __u32;
+	using seq_t = __u32;
+	using len_t = __u16;
+	using command_t = __u64;
+	ack_t   ACK;                /*Acknowledge to packet with sequenceno = ACK (other direction)*/
+	seq_t   SEQ;                /*Sequencenumber*/
 	packetid_t PTYPE;           /*Type of packet (called "packet id" in docs)*/
-	__u16   LEN;                /*Length (64-bit words)*/
-	__u64   COMMANDS[P::MAX_PDUWORDS];
+	len_t   LEN;                /*Length (64-bit words)*/
+	command_t COMMANDS[P::MAX_PDUWORDS];
 }__attribute__ ((packed));
 #define PARAMETERISATION(Name, name)                                                               \
 	static_assert(                                                                                 \
