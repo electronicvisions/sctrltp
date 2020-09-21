@@ -3,6 +3,7 @@
 // this is NOT for NCSIM
 
 #include <chrono>
+#include <condition_variable>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -64,6 +65,23 @@ struct ARQStreamImpl
 	hostarq_handle* handle;
 	std::string name;
 	unique_queue_set_t unique_queue_set;
+	/**
+	 * The hostarq_daemon sets a parent-death-signal that unfortunately gets
+	 * triggered on parent-thread death (NOT parent-process death). If the
+	 * ARQStream is used in a different thread from where it was created, this
+	 * can cause the hostarq daemon to terminate early (when its creating
+	 * thread dies).
+	 * Best case: libhostarq's cleanup gets disturbed.
+	 * Worst case: ARQStream becomes unusable if created in a temporary
+	 * creator-thread.
+	 *
+	 * Since we still want to have the hostarq daemon terminate if the parent
+	 * dies, we perform the fork in a special jthread that auto-joins on
+	 * termination of ARQStream (and triggers the parent-death signal).
+	 *
+	 * -> ARQStream becomes independent from the thread it was created in.
+	 */
+	std::jthread hostarq_daemon_parent;
 
 	ARQStreamImpl(
 	    std::string name,
@@ -83,7 +101,32 @@ struct ARQStreamImpl
 		hostarq_create_handle(
 		    handle, name.c_str(), rip.c_str(), port_data, port_reset, local_port_data, reset,
 		    unique_queue_set);
-		hostarq_open<P>(handle, hostarq_daemon_names.at(std::type_index(typeid(P))).c_str());
+
+		std::mutex hostarq_open_mtx;
+		std::unique_lock lk{hostarq_open_mtx};
+		bool hostarq_open_done = false;
+		std::condition_variable hostarq_open_cv;
+
+		hostarq_daemon_parent = std::jthread{[this, &hostarq_open_mtx, &hostarq_open_cv,
+		                                      &hostarq_open_done](std::stop_token st) {
+			// hostarq_open returns or emits SIGABRT
+			hostarq_open<P>(handle, hostarq_daemon_names.at(std::type_index(typeid(P))).c_str());
+
+			{
+				std::lock_guard lk{hostarq_open_mtx};
+				hostarq_open_done = true;
+			}
+			// signal successful startup to parent
+			hostarq_open_cv.notify_all();
+
+			// wait until stop requested, i.e. ARQStream is being deleted
+			std::mutex mutex;
+			std::unique_lock lk{mutex};
+			std::condition_variable_any{}.wait(lk, st, [&st] { return st.stop_requested(); });
+		}};
+		// block until startup finished
+		hostarq_open_cv.wait(lk, [&hostarq_open_done] { return hostarq_open_done; });
+
 		desc = open_conn<P>(name.c_str()); // name of software arq session
 		if (!desc) {
 			std::ostringstream ss;
