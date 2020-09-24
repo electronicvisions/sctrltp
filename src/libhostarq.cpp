@@ -272,7 +272,8 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 			int status;
 			if (waitpid(handle->pid, &status, WNOHANG) != 0) {
 				if (WIFEXITED(status)) {
-					auto returncode = static_cast<ExitCode>(WEXITSTATUS(status));
+					auto const returncode_raw = WEXITSTATUS(status);
+					ExitCode const returncode{returncode_raw};
 					std::string fail_reason;
 					switch(returncode) {
 						case ExitCode::UNSPECIFIED_FAILURE :
@@ -291,7 +292,7 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 							fail_reason = "Success. oO?";
 							break;
 						default :
-							fail_reason = "Unknown return code";
+							fail_reason = "Unknown return code: " + std::to_string(returncode_raw);
 							break;
 					}
 					throw std::runtime_error("HostARQ daemon terminated unexpectedly. Reason: " + fail_reason);
