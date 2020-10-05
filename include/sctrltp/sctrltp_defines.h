@@ -71,8 +71,9 @@ struct Parameters
 	static_assert(DELAY_ACK > TO_RES);
 };
 
-typedef Parameters<> ParametersFcpBss1;
-typedef Parameters<16384, 65536, 125, 180, 1> ParametersFcpBss2Cube;
+typedef Parameters<> ParametersFcp;
+typedef ParametersFcp ParametersFcpBss1;
+typedef ParametersFcp ParametersFcpBss2Cube;
 typedef Parameters<32, 512, 125, 126, 4> ParametersAnanasBss1;
 
 } // namespace sctrltp

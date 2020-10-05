@@ -2,8 +2,7 @@
 #define PARAMETERISATION(Name, name)
 #endif
 
-PARAMETERISATION(ParametersFcpBss1, fcp_bss1)
+PARAMETERISATION(ParametersFcp, fcp)
 PARAMETERISATION(ParametersAnanasBss1, ananas_bss1)
-PARAMETERISATION(ParametersFcpBss2Cube, fcp_bss2_cube)
 
 #undef PARAMETERISATION

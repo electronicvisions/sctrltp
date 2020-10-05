@@ -31,8 +31,7 @@ bld(
     defines = 'LOGLEVEL=9'
 )
 
-hostarq_daemons = {'_fcp_bss1': 'ParametersFcpBss1',
-                   '_fcp_bss2_cube': 'ParametersFcpBss2Cube',
+hostarq_daemons = {'_fcp': 'ParametersFcp',
                    '_ananas_bss1': 'ParametersAnanasBss1'}
 
 # SHMEM server (library-version)

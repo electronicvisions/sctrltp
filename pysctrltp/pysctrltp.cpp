@@ -134,8 +134,8 @@ PYBIND11_PLUGIN(pysctrltp) {
 	    .def_readwrite("destruction_timeout", &ARQStreamSettings::destruction_timeout);
 
 	add_all_parameterizations(m);
-	m.attr("ARQStream") = m.attr("fcp_bss1").attr("ARQStream");
-	m.attr("packet") = m.attr("fcp_bss1").attr("packet");
+	m.attr("ARQStream") = m.attr("fcp").attr("ARQStream");
+	m.attr("packet") = m.attr("fcp").attr("packet");
 
 	return m.ptr();
 }
