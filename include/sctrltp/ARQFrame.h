@@ -48,6 +48,9 @@ struct packet
 	};
 	static_assert(sizeof(pdu) == sizeof(rawpdu), "");
 
+	inline uint64_t* begin();
+	inline uint64_t* end();
+
 	size_t size() const
 	{
 		size_t tmp = 0;
@@ -62,5 +65,24 @@ struct packet
 	packet() : pid(0xDEAD), len(1) // minimum length
 	{}
 } __attribute__((__packed__));
+
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
+template <typename P>
+uint64_t* packet<P>::begin()
+{
+	return &(pdu[0]);
+}
+
+template <typename P>
+uint64_t* packet<P>::end()
+{
+	return &(pdu[0]) + len;
+}
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
 
 } // namespace sctrltp
