@@ -22,6 +22,8 @@ def options(opt):
     sopts.add_withoption('routing',     default=False, help='Queue/nathan mapping and nathan locking')
     sopts.add_withoption('packet-mmap', default=False, help='Memory mapped I/O (syscall free) with kernel')
     sopts.add_withoption('onelockfifo', default=True, help='Shared FIFOs with only one instead of two locks')
+    sopts.add_withoption('sctrltp-python-bindings', default=True,
+                         help='Toggle the generation and build of sctrltp python bindings')
 
     opt.recurse('pysctrltp')
 
@@ -72,7 +74,8 @@ def configure(conf):
     conf.check_boost(lib='system', uselib_store='BOOST4SCTRLTPARQSTREAM')
     conf.check_boost(lib='system program_options', uselib_store='BOOST4SCTRLTPTESTS')
 
-    conf.recurse('pysctrltp')
+    if getattr(conf.options, 'with_sctrltp_python_bindings', True):
+        conf.recurse('pysctrltp')
 
 
 def build(bld):
@@ -138,7 +141,8 @@ def build(bld):
         install_path = '${PREFIX}/bin',
     )
 
-    bld.recurse('pysctrltp')
+    if getattr(bld.options, 'with_sctrltp_python_bindings', True):
+        bld.recurse('pysctrltp')
 
     bld.add_post_fun(summary)
 
