@@ -202,6 +202,7 @@ ARQStream<P>::ARQStream(
         unique_queue_set_t(),
         reset))
 {
+	parse_response();
 	drop_receive_queue(400ms, true);
 }
 
@@ -219,6 +220,7 @@ ARQStream<P>::ARQStream(std::string const rip, bool const reset) :
         unique_queue_set_t(),
         reset))
 {
+	parse_response();
 	drop_receive_queue(400ms, true);
 }
 
@@ -236,6 +238,7 @@ ARQStream<P>::ARQStream(ARQStreamSettings const settings) :
         settings.unique_queues,
         settings.reset))
 {
+	parse_response();
 	drop_receive_queue(settings.init_flush_timeout, settings.init_flush_lb_packet);
 }
 
@@ -530,6 +533,72 @@ template <typename P>
 std::string ARQStream<P>::get_name()
 {
 	return name;
+}
+
+template <typename P>
+ARQStream<P>::Response ARQStream<P>::get_response()
+{
+	return response;
+}
+
+template <typename P>
+void ARQStream<P>::parse_response()
+{
+	if (!received_packet_available()) {
+		throw std::runtime_error("No bitfile info packets available");
+	}
+
+	packet<P> my_packet;
+	receive(my_packet);
+	if (my_packet.pid != PTYPE_CFG_TYPE) {
+		throw std::runtime_error("Response packet has wrong packet type");
+	}
+
+	size_t constexpr num_required_words = 4;
+	if (my_packet.len < num_required_words) {
+		throw std::runtime_error("Response packet length too small");
+	}
+
+	response.max_nrframes = my_packet.pdu[0];
+	response.max_winsiz = my_packet.pdu[1];
+	response.max_pduwords = my_packet.pdu[2];
+
+	// bitfile info can stretch over multiple packets
+	// extract all info words from current packet then if still info remaining continue
+	// with next packet
+	size_t const info_length = my_packet.pdu[3];
+	if (info_length == 0) {
+		response.bitfile_info = "";
+		return;
+	}
+	std::vector<char> info_c_str;
+	size_t payload_start_index = num_required_words;
+	size_t remainder = info_length;
+	while (remainder > 0) {
+		if (remainder < (my_packet.len - payload_start_index)) {
+			throw std::runtime_error("More words in response packet than expected");
+		}
+		for (size_t i = payload_start_index; i < my_packet.len; ++i) {
+			auto const word = be64toh(my_packet.pdu[i]);
+			for (size_t j = 0; j < WORD_SIZE; j++) {
+				char const my_char = (word >> (j * WORD_SIZE)) & 0xff;
+				info_c_str.push_back(my_char);
+			}
+		}
+		remainder -= my_packet.len - payload_start_index;
+		if (remainder > 0) {
+			// end of current packet but still info remaining -> next packet
+			if (!received_packet_available()) {
+				throw std::runtime_error("No packets available");
+			}
+			receive(my_packet);
+			if (my_packet.pid != PTYPE_CFG_TYPE) {
+				throw std::runtime_error("Response packet has wrong packet type");
+			}
+			payload_start_index = 0;
+		}
+	}
+	response.bitfile_info = std::string(info_c_str.data());
 }
 
 #define PARAMETERISATION(Name, name) template class ARQStream<Name>;

@@ -615,23 +615,29 @@ void *SCTP_RX (void *core)
 								/* Check if Packet is reset answer from FPGA*/
 								if (unlikely(sctpreq_get_typ(curr_packet) == PTYPE_CFG_TYPE)) {
 									/* Fromating variables */
-									LOG_INFO("Got reset answer, dropping data (NAME: %s)", get_admin<P>()->NAME);
-									const char *resetframe_var_names[] = {"MAX_NRFRAMES\t","MAX_WINSIZ\t","MAX_PDUWORDS\t"};
+									LOG_INFO("Got reset answer (NAME: %s)", get_admin<P>()->NAME);
+									std::array<std::string, 3> const resetframe_var_names = {
+									    "MAX_NRFRAMES\t", "MAX_WINSIZ\t", "MAX_PDUWORDS\t"};
+									std::array<uint64_t, 3> const resetframe_var_values_check = {
+									    P::MAX_NRFRAMES,
+									    P::MAX_WINSIZ,
+									    P::MAX_PDUWORDS,
+									};
 									bool wrong_hw_settings = false;
 
-									for (j = 0; j < sctpreq_get_len(curr_packet); j++){
+									if (sctpreq_get_len(curr_packet) <
+										resetframe_var_values_check.size()) {
+										fprintf(stderr, "Reset frame packet size to small");
+										do_hard_exit<P>(ExitCode::FPGA_SETTINGS_MISMATCH);
+									}
+									for (j = 0; j < resetframe_var_values_check.size(); j++) {
 										data = be64toh(sctpreq_get_pload(curr_packet)[j]);
-										uint64_t const resetframe_var_values_check[] = {
-											P::MAX_NRFRAMES,
-											P::MAX_WINSIZ,
-											P::MAX_PDUWORDS,
-										};
 
 										if (data == resetframe_var_values_check[j])
-											LOG_INFO("\t%s\t%llu\t OK!", resetframe_var_names[j], data);
+											LOG_INFO("\t%s\t%llu\t OK!", resetframe_var_names[j].c_str(), data);
 										else {
 											LOG_ERROR("\t%s\t Sent by FPGA: %llu\t Expected by Host: %lu (NAME: %s)",
-												resetframe_var_names[j], data, resetframe_var_values_check[j],
+												resetframe_var_names[j].c_str(), data, resetframe_var_values_check[j],
 												get_admin<P>()->NAME);
 											wrong_hw_settings = true;
 										}
@@ -642,9 +648,6 @@ void *SCTP_RX (void *core)
 												"if not please contact a FPGA person of your choice (Vitali Karasenko, Christian Mauch, Eric Mueller)\n");
 										do_hard_exit<P>(ExitCode::FPGA_SETTINGS_MISMATCH);
 									}
-									/*drop the answer packet*/
-									a++;
-									break;
 								}
 
 								/*get the right queue according to packet type*/

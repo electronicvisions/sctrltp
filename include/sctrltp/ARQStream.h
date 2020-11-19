@@ -1,8 +1,8 @@
 #pragma once
 
+#include "sctrltp/ARQFrame.h"
 #include <chrono>
 #include <boost/asio/ip/address_v4.hpp>
-#include "sctrltp/ARQFrame.h"
 
 #include "sctrltp/sctrltp_defines.h"
 
@@ -47,6 +47,14 @@ public:
 		NOTHING = 0x00,
 		NONBLOCK = 0x02,
 		FLUSH = 0x04
+	};
+
+	struct Response
+	{
+		size_t max_nrframes;
+		size_t max_winsiz;
+		size_t max_pduwords;
+		std::string bitfile_info;
 	};
 
 	ARQStream(
@@ -119,6 +127,9 @@ public:
 	// returns name of ARQStream
 	std::string get_name();
 
+	// returns init response
+	Response get_response();
+
 	// check if a certain pid has a unique queue
 	bool has_unique_queue(packetid_t pid) const;
 
@@ -126,6 +137,10 @@ private:
 	std::string name;
 	std::string rip;
 	int const max_wait_for_completion_upon_destruction_in_ms;
+	Response response;
+
+	// extract information from ARQ init response
+	void parse_response();
 
 	size_t get_unique_queue_idx(packetid_t pid) const;
 
