@@ -97,7 +97,7 @@ int main(int argc, const char *argv[])
 	/* activate signal (termination) handler for some standard signals:
 	 * SIGINT, SIGHUP, SIGTERM, SIGQUIT, SIGCHLD
 	 * but if top-level ignores, we also ignore */
-	struct sigaction new_action, old_action;
+	struct sigaction new_action{}, old_action{};
 	new_action.sa_handler = termination_handler<PARAMETERS>;
 	sigfillset(&new_action.sa_mask); /* ignore all signals during signal handling */
 	new_action.sa_flags = 0;

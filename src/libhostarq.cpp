@@ -224,7 +224,7 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 	}
 
 	//ignore signals from hostarq daemon during startup
-	struct sigaction old_action, tmp_action;
+	struct sigaction old_action{}, tmp_action{};
 	tmp_action.sa_handler = SIG_IGN;
 	sigaction(HOSTARQ_FAIL_SIGNAL, &tmp_action, &old_action);
 
