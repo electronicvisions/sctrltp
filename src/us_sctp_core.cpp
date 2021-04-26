@@ -612,8 +612,9 @@ void *SCTP_RX (void *core)
 						if (b > 0) {
 							/*There are new frames in order from remote to pass back to user*/
 							while (a < b) {
-								/* Check if Packet is reset answer from FPGA*/
-								if (unlikely(sctpreq_get_typ(curr_packet) == PTYPE_CFG_TYPE)) {
+								/* Handle first reset response packet. Check for matching protocol settings.
+								 * Signal init done after successful check*/
+								if (unlikely((sctpreq_get_typ(curr_packet) == PTYPE_CFG_TYPE) && !init_done)) {
 									/* Fromating variables */
 									LOG_INFO("Got reset answer (NAME: %s)", get_admin<P>()->NAME);
 									std::array<std::string, 3> const resetframe_var_names = {
@@ -648,6 +649,8 @@ void *SCTP_RX (void *core)
 												"if not please contact a FPGA person of your choice (Vitali Karasenko, Christian Mauch, Eric Mueller)\n");
 										do_hard_exit<P>(ExitCode::FPGA_SETTINGS_MISMATCH);
 									}
+									// first reset answer packet handled, possible remaining packets handled normally
+									init_done = true;
 								}
 
 								/*get the right queue according to packet type*/
@@ -1265,7 +1268,7 @@ __s8 SCTP_CoreUp(
 
 	/* Check if FPGA reset was succsessful */
 	for (k = 0; k < P::RESET_TIMEOUT; k += HOSTARQ_RESET_WAIT_SLEEP_INTERVAL) {
-		if (get_admin<P>()->STATUS.empty[0] == STAT_NORMAL)
+		if ((get_admin<P>()->STATUS.empty[0] == STAT_NORMAL) && init_done)
 			break;
 		usleep(HOSTARQ_RESET_WAIT_SLEEP_INTERVAL); // sleep a bit
 	}
@@ -1276,8 +1279,6 @@ __s8 SCTP_CoreUp(
 	}
 
 	LOG_INFO ("SCTP CORE OPEN SUCCESSFUL (max pdu words: %lu, window size: %lu, DELAY_ACK: %lu)", P::MAX_PDUWORDS, P::MAX_WINSIZ, P::DELAY_ACK);
-
-	init_done = true;
 
 	/*TODO: Update mem counter in stats*/
 
