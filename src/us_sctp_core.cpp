@@ -379,7 +379,15 @@ static void do_reset (bool fpga_reset) {
 		b = sendto(get_admin<P>()->sock.sd, &resetframe, sizeof(struct arq_resetframe), /*flags*/ 0,
 		           (struct sockaddr *)&reset_addr, sizeof(reset_addr));
 		if (b <= 0) {
-			LOG_ERROR("Could not send reset frame (write to socket failed for NAME: %s); error %s", get_admin<P>()->NAME, strerror(errno));
+			// EPERM happens if firewall rule exception is not set
+			if(errno == EPERM) {
+				LOG_ERROR(
+				    "Could not send reset frame (write to socket failed for NAME: %s); error %s. "
+				    "Did you specify the correct hardware resources in your slurm call?",
+				    get_admin<P>()->NAME, strerror(errno));
+			} else {
+				LOG_ERROR("Could not send reset frame (write to socket failed for NAME: %s); error %s", get_admin<P>()->NAME, strerror(errno));
+			}
 			pthread_exit(NULL);
 		} else {
 			LOG_INFO("Sent reset frame. Waiting for response... (NAME: %s)", get_admin<P>()->NAME);
