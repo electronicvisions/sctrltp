@@ -318,7 +318,7 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 int
 hostarq_close(struct hostarq_handle* handle)
 {
-	int i, ret;
+	int ret_waitpid = 0, ret_access = 0;
 
 	if (handle->pid == 0) {
 		LOG_ERROR("pid isn't set");
@@ -336,37 +336,42 @@ hostarq_close(struct hostarq_handle* handle)
 		return -1;
 	}
 
-	/* let's wait 1s max */
-	ret = 0;
-	for (i = 0; i < 1000 * 1000 / HOSTARQ_PARENT_SLEEP_INTERVAL; i++) {
-		/* if child didn't change state until now:
+	/* request child process termination and wait 1s max */
+	for (int i = 0; i < 1000 * 1000 / HOSTARQ_PARENT_SLEEP_INTERVAL; i++) {
+		/* if child process didn't change state until now:
 		 *   - send kill signal (could get lost)
-		 *   - check for state change
-		 */
-		if (ret == 0) {
+		 *   - check for state change */
+		if (ret_waitpid == 0) {
 			kill(handle->pid, HOSTARQ_EXIT_SIGNAL);
-			ret = waitpid(handle->pid, NULL, WNOHANG);
+			ret_waitpid = waitpid(handle->pid, NULL, WNOHANG);
+			if (ret_waitpid < 0) {
+				LOG_ERROR("Unexpected error checking process state: \"%i\"", errno);
+				return -1;
+			}
+		}
+		/* check shm file. It should be deleted under normal process termination */
+		ret_access = access(handle->shm_path, F_OK);
+		if ((ret_access < 0) && (errno != ENOENT)) {
+			LOG_ERROR("Unexpected access error to shm file: \"%i\"", errno);
+			return -1;
 		}
 		/* check for correct shutdown (i.e. process and shm file both gone) */
-		if ((ret > 0) && (access(handle->shm_path, F_OK) < 0))
-			return ret;
-		/* bail out if the shm file was deleted but the process still exists */
-		if (access(handle->shm_path, F_OK) < 0)
-			return 0;
-		/* if process state check failed and file still there retry kill/check */
-		if ((ret == -1) && (errno == EINTR))
-			ret = 0;
-		/* shm file still there => wait for a bit longer */
+		if ((ret_waitpid > 0) && ((ret_access < 0) && (errno == ENOENT)))
+			return ret_waitpid;
+		/* if the process still exists, or if
+		 * shm file still there => wait for a bit longer*/
 		usleep(HOSTARQ_PARENT_SLEEP_INTERVAL);
 	}
-	LOG_WARN("Shared memory file %s still existing after 1s wait; "
-	         "unlinking anyways...",
-	         handle->shm_path);
-	if (unlink(handle->shm_path) < 0) {
-		perror("Failed to unlink shared mem file");
-		return -1;
+	if (ret_waitpid > 0) {
+		LOG_ERROR("Shared memory file %s still existing after 1s wait; "
+			"unlinking anyways...",
+			handle->shm_path);
+		if (unlink(handle->shm_path) < 0)
+			perror("Failed to unlink shared mem file");
+	} else {
+		perror("Failed to kill hostarq process");
 	}
-	return 0;
+	return -1;
 }
 
 #define PARAMETERISATION(Name, name)                                                               \
