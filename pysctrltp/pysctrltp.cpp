@@ -103,9 +103,7 @@ void add_all_parameterizations(py::module& m)
 #include "sctrltp/parameters.def"
 }
 
-PYBIND11_PLUGIN(pysctrltp) {
-	py::module m("pysctrltp", "pysctrltp plugin");
-
+PYBIND11_MODULE(pysctrltp, m) {
 	using namespace sctrltp;
 	using namespace pybind11::literals;
 
@@ -136,6 +134,4 @@ PYBIND11_PLUGIN(pysctrltp) {
 	add_all_parameterizations(m);
 	m.attr("ARQStream") = m.attr("fcp").attr("ARQStream");
 	m.attr("packet") = m.attr("fcp").attr("packet");
-
-	return m.ptr();
 }
