@@ -3,9 +3,11 @@
 wafDefaultPipeline(projects: ["sctrltp"],
                    container: [app: "wafer"],
                    notificationChannel: "#softies",
-                   enableClangFormat: false)
+                   enableClangFormat: false,
+                   configureInstallOptions: "--build-profile=ci")
 
 wafDefaultPipeline(projects: ["sctrltp"],
                    container: [app: "dls-core"],
                    notificationChannel: "#dls-software",
-                   enableClangFormat: false)
+                   enableClangFormat: false,
+                   configureInstallOptions: "--build-profile=ci")
