@@ -33,10 +33,9 @@ def build(bld):
     bld.shlib(
         target = 'pysctrltp',
         source = 'pysctrltp.cpp',
-        features = 'cxx pyext pyembed',
+        features = 'cxx pyext',
         use = ['hostarq', 'arqstream_obj', 'pybind11'],
         install_path = 'lib',
-        linkflags = '-Wl,-z,defs',
     )
 
     bld(
