@@ -456,7 +456,7 @@ size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_
 	sleep_interval_idx = 0;
 	accumulated_sleep = 0ms;
 	bool loopback_found = false;
-	while (!loopback_found && accumulated_sleep < timeout) {
+	while (accumulated_sleep < timeout) {
 		if (received_packet_available()) {
 			// fetch packet, analyse if loopback else drop
 			sleep_interval_idx = 0;
@@ -472,12 +472,11 @@ size_t ARQStream<P>::drop_receive_queue(microseconds timeout, bool with_control_
 					    name + ": received magic word " + std::to_string(my_packet.pdu[0]) +
 					    " differs from sent word " + std::to_string(magic_number));
 				}
-				if (received_packet_available()) {
-					throw std::runtime_error(
-					    name + ": still packets available after loopback received");
-				}
 				loopback_found = true;
-				break;
+				// if no further packets available exit else continue dropping until timeout
+				if (!received_packet_available()) {
+					break;
+				}
 			}
 			dropped_words += my_packet.len;
 		} else {
@@ -588,12 +587,17 @@ void ARQStream<P>::parse_response()
 		remainder -= my_packet.len - payload_start_index;
 		if (remainder > 0) {
 			// end of current packet but still info remaining -> next packet
-			if (!received_packet_available()) {
-				throw std::runtime_error("No packets available");
-			}
-			receive(my_packet);
-			if (my_packet.pid != PTYPE_CFG_TYPE) {
-				throw std::runtime_error("Response packet has wrong packet type");
+			// other packets from previous experiments could still be buffered, need to drop them
+			// run until next remainder of response packet is found or no packets available anymore
+			bool got_remainder = false;
+			while (!got_remainder) {
+				if (!received_packet_available()) {
+					throw std::runtime_error("No reset response remainder packets available");
+				}
+				receive(my_packet);
+				if (my_packet.pid == PTYPE_CFG_TYPE) {
+					got_remainder = true;
+				}
 			}
 			payload_start_index = 0;
 		}

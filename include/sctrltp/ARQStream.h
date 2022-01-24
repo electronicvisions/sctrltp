@@ -110,10 +110,11 @@ public:
 	// throws if no unique queue present for given pid
 	bool received_packet_available(packetid_t pid) const;
 
-	// drops all incoming packets. Returns when timeout since last received packet is reached
-	// returned value is number of dropped words
-	// if control packet is set, a loopback packet will be sent to FPGA and checked if packet is
-	// received
+	// Blocks until we don't receive any more data within a `timeout` time frame while the data
+	// received is discarded. The `timeout` restarts for every packet received.
+	// When `with_control_packet` is set, we send a loopback packet to the FPGA and wait for it to
+	// be received again; if we still see traffic we continue to drop data until timeout is
+	// reached. Returns the number of dropped words.
 	size_t drop_receive_queue(
 	    std::chrono::microseconds timeout = std::chrono::microseconds(10000),
 	    bool with_control_packet = false);
