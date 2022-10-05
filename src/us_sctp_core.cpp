@@ -653,8 +653,8 @@ void *SCTP_RX (void *core)
 									}
 									if (wrong_hw_settings) {
 										fprintf (stderr, "ERROR: Mismatch of software and FPGA hardware settings, maybe old or experimental FPGA Bitfile\n"\
-												"If you are sure that the bitfile is correct change values in sctrltp/userspace/packets.h\n"\
-												"if not please contact a FPGA person of your choice (Vitali Karasenko, Christian Mauch, Eric Mueller)\n");
+												"If you are sure that the bitfile is correct change values in include/sctrltp/sctrltp_defines.h\n"\
+												"if not please contact a FPGA person of your choice (Christian Mauch, Eric Mueller)\n");
 										do_hard_exit<P>(ExitCode::FPGA_SETTINGS_MISMATCH);
 									}
 									// first reset answer packet handled, possible remaining packets handled normally
