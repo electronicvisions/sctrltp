@@ -21,11 +21,12 @@ def configure(conf):
     conf.check_python_headers()
     conf.load('pytest')
 
-    conf.check_cxx(
+    conf.check(
         uselib_store='PYBIND11',
         mandatory = True,
+        compiler='cxx',
+        features='cxx pyext',
         header_name='pybind11/pybind11.h',
-        use = 'PYEXT',
     )
 
 
