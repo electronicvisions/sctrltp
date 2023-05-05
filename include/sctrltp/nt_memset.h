@@ -43,6 +43,7 @@ void* malloc_safe (size_t size)
 	{
 		while (nr-bytes_written >= CLS)
 		{
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 		/*We want to use Write combining so lets write a whole cache line*/
 		__asm__ __volatile__(	"movnti %1, 0(%0); \n"	/*non-temporal mov instruction*/
 								"movnti %1, 8(%0); \n"
@@ -56,18 +57,24 @@ void* malloc_safe (size_t size)
 							:	"rc"(tmp),"ra"(dummy)	/*input values*/
 							:	"rcx","rax","memory"	/*clobbered regs/mem*/ 
 							);
+#else
+#warning "Unknown arch, nt_memset64 isn't doing the right thing."
+#endif
 		tmp += CLS;
 		bytes_written += CLS;
 		}
 	
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	/* We need to make sure, that all movnti are finished, so lets implement an sfence */
-	
 		__asm__ __volatile__(	"sfence"
 							:
 							:
 							:	"memory"
 							);
 	}
+#else
+#warning "Unknown arch, nt_memset64 isn't doing the right thing."
+#endif
 	
 	/* There could be unwritten bytes (<CLS) now and we will write them with normal movs.
 	   Here we would make at least one cache-line dirty, but its ok :)*/

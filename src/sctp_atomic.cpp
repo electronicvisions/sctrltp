@@ -5,19 +5,27 @@ namespace sctrltp {
 
 void memfence (void)
 {
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__    ("mfence;"
 							:
 							:
 							:"memory");
+#else
+#warning "Unknown arch, memfence doesn't do anything."
+#endif
 }
 
 __s64 cmpxchg64 (struct atomic_var64 *ptr, __s64 cmp_val, __s64 new_val)
 {
 	__s64 before;
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__	("lock; cmpxchgq %1,%2;"
 							:"=a"(before)
 							:"r"(new_val), "m"(ptr->val), "0"(cmp_val)
 							:"memory");
+#else
+#warning "Unknown arch, cmpxchg64 doesn't do anything."
+#endif
 	return before;
 }
 
@@ -25,10 +33,14 @@ __s64 cmpxchg64 (struct atomic_var64 *ptr, __s64 cmp_val, __s64 new_val)
 __s32 cmpxchg (struct atomic_var *ptr, __s32 cmp_val, __s32 new_val)
 {
 	__s32 before;
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__ 	("lock; cmpxchgl %1,%2;"
 		     	     		:"=a"(before)
 		     	     		:"q"(new_val), "m"(ptr->val), "a"(cmp_val)
 		             		:"memory");
+#else
+#warning "Unknown arch, cmpxchg doesn't do anything."
+#endif
 	return before;
 }
 
@@ -36,10 +48,14 @@ __s32 cmpxchg (struct atomic_var *ptr, __s32 cmp_val, __s32 new_val)
 __s32 xchg (struct atomic_var *ptr, __s32 new_val)
 {
 	__s32 old;
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__	("xchgl %1,%2;"
 							:"=a"(old)
 							:"a"(new_val), "m"(ptr->val)
 							:"memory");
+#else
+#warning "Unknown arch, xchgl doesn't do anything."
+#endif
 	return old;
 }
 

@@ -20,26 +20,38 @@ namespace sctrltp {
 
 void memfence (void)
 {
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__    ("mfence;"
 							:
 							:
 							:"memory");
+#else
+#warning "Unknown arch, memfence doesn't do anything."
+#endif
 }
 
 void storefence (void)
 {
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__    ("sfence;"
 							:
 							:
 							:"memory");
+#else
+#warning "Unknown arch, storefence doesn't do anything."
+#endif
 }
 
 void loadfence (void)
 {
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__    ("lfence;"
 							:
 							:
 							:"memory");
+#else
+#warning "Unknown arch, lfence doesn't do anything."
+#endif
 }
 
 static void barrier(void)
@@ -52,10 +64,14 @@ static void barrier(void)
 __s32 cmpxchg (volatile __s32 *ptr, __s32 cmp_val, __s32 new_val)
 {
 	__s32 before;
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__	("lock; cmpxchgl %1,%2;"
 							:"=a"(before)
 							:"q"(new_val), "m"(*ptr), "a"(cmp_val)
 							:"memory");
+#else
+#warning "Unknown arch, cmpxchg doesn't do anything."
+#endif
 	return before;
 }
 
@@ -63,10 +79,14 @@ __s32 cmpxchg (volatile __s32 *ptr, __s32 cmp_val, __s32 new_val)
 __s32 xchg (volatile __s32 *ptr, __s32 new_val)
 {
 	__s32 old;
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__	("xchgl %1,%2;"
 							:"=a"(old)
 							:"a"(new_val), "m"(*ptr)
 							:"memory");
+#else
+#warning "Unknown arch, xchg doesn't do anything."
+#endif
 	return old;
 }
 
@@ -93,7 +113,11 @@ __s32 atomic_inc (volatile __s32 *ptr)
 /*Important for busy waiting loops (IN KERNEL THERE IS CPU_RELAX())*/
 void cpu_relax (void)
 {
+#if defined(__x86_64__) || defined(_M_X64) || defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 	__asm__ __volatile__ ( "rep;nop" : : : "memory" );
+#else
+#warning "Unknown arch, cpu_relax doesn't do anything."
+#endif
 }
 
 __s32 atomic_read (volatile __s32 *ptr)
