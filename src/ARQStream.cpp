@@ -591,9 +591,27 @@ void ARQStream<P>::parse_response()
 			// run until next remainder of response packet is found or no packets available anymore
 			bool got_remainder = false;
 			while (!got_remainder) {
-				if (!received_packet_available()) {
+				// sleep timings in us (back-off to longer times; don't use >= 1s!)
+				std::vector<microseconds> const sleep_intervals = {
+				    5us, 10us, 50us, 100us, 500us, 1000us, 5000us, 10000us, 50000us, 100000us};
+				microseconds accumulated_sleep(0);
+				microseconds timeout(1000000);
+				size_t sleep_interval_idx = 0;
+				while (accumulated_sleep < timeout) {
+					if (!received_packet_available()) {
+						sleep(name, sleep_intervals[sleep_interval_idx]);
+						accumulated_sleep += sleep_intervals[sleep_interval_idx];
+						if (sleep_interval_idx + 1 < sleep_intervals.size()) {
+							sleep_interval_idx++;
+						}
+					} else {
+						break;
+					}
+				}
+				if (accumulated_sleep >= timeout) {
 					throw std::runtime_error("No reset response remainder packets available");
 				}
+
 				receive(my_packet);
 				if (my_packet.pid == PTYPE_CFG_TYPE) {
 					got_remainder = true;
