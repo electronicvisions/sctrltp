@@ -17,13 +17,13 @@ static void *open_shared_mem (const char *NAME, __u32 size)
 	fd = shm_open (NAME, O_RDWR, 0666);
 	if (fd < 0)
 	{
-		LOG_ERROR("Failed to open shared mem object (NAME: %s)", NAME);
+		SCTRL_LOG_ERROR("Failed to open shared mem object (NAME: %s)", NAME);
 		return NULL;
 	}
 
 	ret = flock(fd, LOCK_SH);
 	if (ret < 0) {
-		LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
+		SCTRL_LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
 		close(fd);
 		return NULL;
 	}
@@ -31,7 +31,7 @@ static void *open_shared_mem (const char *NAME, __u32 size)
 	ptr = mmap (NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 	if (ptr == MAP_FAILED)
 	{
-		LOG_ERROR("Could not map mem to process space (NAME: %s)", NAME);
+		SCTRL_LOG_ERROR("Could not map mem to process space (NAME: %s)", NAME);
 		close (fd);
 		return NULL;
 	}
@@ -47,7 +47,7 @@ static void close_shared_mem (void *shared_mem, __u32 size)
 	ret = munmap (shared_mem, size);
 	if (ret < 0)
 	{
-		LOG_ERROR("Unmapping of shared mem region failed!");
+		SCTRL_LOG_ERROR("Unmapping of shared mem region failed!");
 	}
 	return;
 }
@@ -661,7 +661,7 @@ __s32 append_words (buf_desc<P> *buf, const __u16 ptype, const __u32 num, const 
 	
 	/* can only append if packet type matches */
 	if (curr_typ != ptype) {
-		LOG_ERROR("Cannot append to frame; ptype changed!");
+		SCTRL_LOG_ERROR("Cannot append to frame; ptype changed!");
 		return SC_CORRUPT;
 	}
 

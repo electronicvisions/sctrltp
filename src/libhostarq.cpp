@@ -51,20 +51,20 @@ void hostarq_create_handle(
 
 	/* parameter checking */
 	if (handle == NULL) {
-		LOG_ERROR("handle parameter is unset");
+		SCTRL_LOG_ERROR("handle parameter is unset");
 		abort();
 	}
 
 	if (shm_name == NULL) {
-		LOG_ERROR("shm_name parameter is unset");
+		SCTRL_LOG_ERROR("shm_name parameter is unset");
 		abort();
 	} else if (strlen(shm_name) >= NAME_MAX) {
-		LOG_ERROR("Filename for shared-memory communication is too long");
+		SCTRL_LOG_ERROR("Filename for shared-memory communication is too long");
 		abort();
 	}
 
 	if (remote_ip == NULL) {
-		LOG_ERROR("remote_ip parameter is unset");
+		SCTRL_LOG_ERROR("remote_ip parameter is unset");
 		abort();
 	}
 
@@ -128,22 +128,22 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 
 	/* parameter checking */
 	if (handle->pid != 0) {
-		LOG_ERROR("pid is already set");
+		SCTRL_LOG_ERROR("pid is already set");
 		abort();
 	}
 
 	if (handle->shm_name == NULL) {
-		LOG_ERROR("shm_name is unset");
+		SCTRL_LOG_ERROR("shm_name is unset");
 		abort();
 	}
 
 	if (handle->shm_path == NULL) {
-		LOG_ERROR("shm_path is unset");
+		SCTRL_LOG_ERROR("shm_path is unset");
 		abort();
 	}
 
 	if (handle->remote_ip == NULL) {
-		LOG_ERROR("remote_ip is unset");
+		SCTRL_LOG_ERROR("remote_ip is unset");
 		abort();
 	}
 
@@ -153,28 +153,28 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 		/* path already exists */
 		ret2 = stat(lockdir, &lockdir_stat);
 		if (ret2 < 0) {
-			LOG_ERROR("Could not perform stat() on lockdir (%s): %s\n",
+			SCTRL_LOG_ERROR("Could not perform stat() on lockdir (%s): %s\n",
 			          lockdir, strerror(errno));
 			abort();
 		} else if (!S_ISDIR(lockdir_stat.st_mode)) {
-			LOG_ERROR("lockdir (%s) exists but is not a directory!\n",
+			SCTRL_LOG_ERROR("lockdir (%s) exists but is not a directory!\n",
 			          lockdir);
 			abort();
 		} else if (!(lockdir_stat.st_mode  & (S_IRWXU | S_IRWXG | S_IRWXO))) {
-			LOG_ERROR("lockdir (%s) exists but has wrong mode\n",
+			SCTRL_LOG_ERROR("lockdir (%s) exists but has wrong mode\n",
 			          lockdir);
 			abort();
 		}
 	} else if (ret < 0) {
 		/* unknown error */
-		LOG_ERROR("Failed to create lockdir (%s): %s\n",
+		SCTRL_LOG_ERROR("Failed to create lockdir (%s): %s\n",
 		          lockdir, strerror(errno));
 		abort();
 	} else {
 		/* created directory; now set mode */
 		ret2 = chmod(lockdir, 0777);
 		if (ret2 != 0) {
-			LOG_ERROR("Could not set lockdir (%s) mode: %s\n",
+			SCTRL_LOG_ERROR("Could not set lockdir (%s) mode: %s\n",
 			          lockdir, strerror(errno));
 			abort();
 		}
@@ -183,7 +183,7 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 
 	fd = mkstemp(lockdir_startupfile);
 	if (fd < 0) {
-		LOG_ERROR("Could not create/open startup lockfile (template: %s): %s\n",
+		SCTRL_LOG_ERROR("Could not create/open startup lockfile (template: %s): %s\n",
 		          lockdir_startupfile, strerror(errno));
 		abort();
 	}
@@ -251,7 +251,7 @@ void hostarq_open(struct hostarq_handle* handle, char const* const hostarq_daemo
 		params[8] = const_cast<char*>(std::to_string(handle->unique_queues.size()).c_str());
 		for (__u64 i = 0; i < handle->unique_queues.size(); ++i) {
 			params[9 + i] = const_cast<char*>(queue_string.at(i).c_str());
-			LOG_INFO("unique queue pid %s specified", queue_string.at(i).c_str());
+			SCTRL_LOG_INFO("unique queue pid %s specified", queue_string.at(i).c_str());
 		}
 		params[9 + handle->unique_queues.size()] = NULL;
 		execvp(params[0], params);
@@ -321,18 +321,18 @@ hostarq_close(struct hostarq_handle* handle)
 	int ret_waitpid = 0, ret_access = 0;
 
 	if (handle->pid == 0) {
-		LOG_ERROR("pid isn't set");
+		SCTRL_LOG_ERROR("pid isn't set");
 		abort();
 	}
 
 	if (handle->shm_path == NULL) {
-		LOG_ERROR("shm_path isn't set");
+		SCTRL_LOG_ERROR("shm_path isn't set");
 		abort();
 	}
 
 	/* check if shared memory file exists */
 	if (access(handle->shm_path, F_OK) < 0) {
-		LOG_ERROR("shm_path invalid: \"%s\"?", handle->shm_path);
+		SCTRL_LOG_ERROR("shm_path invalid: \"%s\"?", handle->shm_path);
 		return -1;
 	}
 
@@ -345,14 +345,14 @@ hostarq_close(struct hostarq_handle* handle)
 			kill(handle->pid, HOSTARQ_EXIT_SIGNAL);
 			ret_waitpid = waitpid(handle->pid, NULL, WNOHANG);
 			if (ret_waitpid < 0) {
-				LOG_ERROR("Unexpected error checking process state: \"%i\"", errno);
+				SCTRL_LOG_ERROR("Unexpected error checking process state: \"%i\"", errno);
 				return -1;
 			}
 		}
 		/* check shm file. It should be deleted under normal process termination */
 		ret_access = access(handle->shm_path, F_OK);
 		if ((ret_access < 0) && (errno != ENOENT)) {
-			LOG_ERROR("Unexpected access error to shm file: \"%i\"", errno);
+			SCTRL_LOG_ERROR("Unexpected access error to shm file: \"%i\"", errno);
 			return -1;
 		}
 		/* check for correct shutdown (i.e. process and shm file both gone) */
@@ -363,7 +363,7 @@ hostarq_close(struct hostarq_handle* handle)
 		usleep(HOSTARQ_PARENT_SLEEP_INTERVAL);
 	}
 	if (ret_waitpid > 0) {
-		LOG_ERROR("Shared memory file %s still existing after 1s wait; "
+		SCTRL_LOG_ERROR("Shared memory file %s still existing after 1s wait; "
 			"unlinking anyways...",
 			handle->shm_path);
 		if (unlink(handle->shm_path) < 0)

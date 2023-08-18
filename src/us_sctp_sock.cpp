@@ -260,10 +260,10 @@ check_rx_ring:
 		nread = read (ssock->sd, tmp, sizeof(arq_frame));
 	} while ((nread < 0) && (errno == EINTR));
 	if (nread < 0) {
-		LOG_ERROR("Failed to read from socket: %s\n", strerror(errno));
+		SCTRL_LOG_ERROR("Failed to read from socket: %s\n", strerror(errno));
 		return SC_ABORT;
 	} else if (nread == 0) {
-		LOG_ERROR("Read 0 bytes from socket!?\n");
+		SCTRL_LOG_ERROR("Read 0 bytes from socket!?\n");
 		return SC_ABORT;
 	}
 #endif

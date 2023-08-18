@@ -42,7 +42,7 @@ double shitmytime() {
  *  @param NAME The name of the shared memory file.
  */
 void try_print_fuser(char const* NAME) {
-	LOG_ERROR("Trying to display processes accessing "
+	SCTRL_LOG_ERROR("Trying to display processes accessing "
 	          "the corresponding shared memory file (on stdout):");
 	auto const len = strlen("fuser -uv /dev/shm/") + strlen(NAME) + 1;
 	std::unique_ptr<char[]> cmd{new char[len]};
@@ -60,14 +60,14 @@ static bool try_unlink_shmfile (const char *NAME)
 
 	fd = shm_open(NAME, O_CREAT | O_RDWR, 0666);
 	if (fd < 0) {
-		LOG_ERROR("Cannot non-exclusively open shared memory file (NAME: %s)", NAME);
+		SCTRL_LOG_ERROR("Cannot non-exclusively open shared memory file (NAME: %s)", NAME);
 		try_print_fuser(NAME);
 		return false;
 	}
 
 	ret = flock(fd, LOCK_EX | LOCK_NB);
 	if (ret < 0) {
-		LOG_ERROR("Shared memory file is locked by running process (NAME: %s)", NAME);
+		SCTRL_LOG_ERROR("Shared memory file is locked by running process (NAME: %s)", NAME);
 		try_print_fuser(NAME);
 		close(fd);
 		return false;
@@ -76,7 +76,7 @@ static bool try_unlink_shmfile (const char *NAME)
 	/* we are the only lock-holder of the shared memory file, we may delete it */
 	ret = shm_unlink(NAME);
 	if (ret < 0) {
-		LOG_ERROR("Could not unlink shared memory file (NAME: %s)", NAME);
+		SCTRL_LOG_ERROR("Could not unlink shared memory file (NAME: %s)", NAME);
 		try_print_fuser(NAME);
 		return false;
 	}
@@ -119,7 +119,7 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 	 * it's racy but does not trigger illegal behavior */
 	ret = flock(fd, LOCK_SH);
 	if (ret < 0) {
-		LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
+		SCTRL_LOG_ERROR("Could not get shared lock on shared memory file (NAME: %s)", NAME);
 		try_print_fuser(NAME);
 		close(fd);
 		return NULL;
@@ -128,7 +128,7 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 	ret = ftruncate (fd, size);
 	if (ret < 0)
 	{
-		LOG_ERROR("Failed to allocate mem for shared mem object (NAME: %s)", NAME);
+		SCTRL_LOG_ERROR("Failed to allocate mem for shared mem object (NAME: %s)", NAME);
 		close (fd);
 		ret = shm_unlink (NAME);
 		return NULL;
@@ -140,22 +140,22 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 		ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 		if (ptr == MAP_FAILED) {
 			/* total fail */
-			LOG_ERROR("Could not map mem to process space (NAME: %s)", NAME);
+			SCTRL_LOG_ERROR("Could not map mem to process space (NAME: %s)", NAME);
 			close(fd);
 			ret = shm_unlink(NAME);
 			return NULL;
 		} else {
 			/* continue with pageable shmem, but warn the user */
-			LOG_WARN("Could not lock shared mem to process space "
+			SCTRL_LOG_WARN("Could not lock shared mem to process space "
 			         "(maybe max memlock too small? `ulimit -l` should return at "
 			         "least %d blocks! NAME: %s)",
 			         (size + 512 - 1) / 512, NAME);
 		}
 	}
 #ifdef __i386__
-	if ((((__u32)ptr)%4) != 0) LOG_WARN("Address not int aligned");
+	if ((((__u32)ptr)%4) != 0) SCTRL_LOG_WARN("Address not int aligned");
 #else
-	if ((((__u64)ptr)%4) != 0) LOG_WARN("Address not int aligned");
+	if ((((__u64)ptr)%4) != 0) SCTRL_LOG_WARN("Address not int aligned");
 #endif
 	close(fd);
 	return ptr;
@@ -164,7 +164,7 @@ static void *create_shared_mem (const char *NAME, __u32 size)
 static void deallocate (__u8 state)
 {
 	(void)state;
-	LOG_DEBUG ("> deallocating sub structures (level %d)\n", state);
+	SCTRL_LOG_DEBUG ("> deallocating sub structures (level %d)\n", state);
 	/*No need to deallocate in Userspace*/
 }
 
@@ -264,12 +264,12 @@ static void do_hard_exit(ExitCode exitcode = ExitCode::UNSPECIFIED_FAILURE) {
 /*timeout for fpga +reset response*/
 template <typename P>
 static void *fpga_reset_timeout(void*) {
-	LOG_INFO("Start new reset timer (NAME: %s)", get_admin<P>()->NAME);
+	SCTRL_LOG_INFO("Start new reset timer (NAME: %s)", get_admin<P>()->NAME);
 	usleep(P::RESET_TIMEOUT);
 	if (get_admin<P>()->STATUS.empty[0] == STAT_NORMAL) {
 		pthread_exit(NULL);
 	} else {
-		LOG_ERROR("No reset response from FPGA (NAME: %s)", get_admin<P>()->NAME);
+		SCTRL_LOG_ERROR("No reset response from FPGA (NAME: %s)", get_admin<P>()->NAME);
 		do_hard_exit<P>(ExitCode::RESET_TIMEOUT);
 	}
 	return NULL;
@@ -381,27 +381,27 @@ static void do_reset (bool fpga_reset) {
 		if (b <= 0) {
 			// EPERM happens if firewall rule exception is not set
 			if(errno == EPERM) {
-				LOG_ERROR(
+				SCTRL_LOG_ERROR(
 				    "Could not send reset frame (write to socket failed for NAME: %s); error %s. "
 				    "Did you specify the correct hardware resources in your slurm call?",
 				    get_admin<P>()->NAME, strerror(errno));
 			} else {
-				LOG_ERROR("Could not send reset frame (write to socket failed for NAME: %s); error %s", get_admin<P>()->NAME, strerror(errno));
+				SCTRL_LOG_ERROR("Could not send reset frame (write to socket failed for NAME: %s); error %s", get_admin<P>()->NAME, strerror(errno));
 			}
 			pthread_exit(NULL);
 		} else {
-			LOG_INFO("Sent reset frame. Waiting for response... (NAME: %s)", get_admin<P>()->NAME);
+			SCTRL_LOG_INFO("Sent reset frame. Waiting for response... (NAME: %s)", get_admin<P>()->NAME);
 		}
 		/*Signal thread should wait for reset respones*/
 		xchg (&(get_admin<P>()->STATUS.empty[0]), STAT_WAITRESET);
 		ret = pthread_create(&timer, NULL, fpga_reset_timeout<P> , NULL);
 		if (ret != 0) {
-			LOG_ERROR("Could not spawn reset timer thread (for NAME: %s): %s", get_admin<P>()->NAME, strerror(errno));
+			SCTRL_LOG_ERROR("Could not spawn reset timer thread (for NAME: %s): %s", get_admin<P>()->NAME, strerror(errno));
 			pthread_exit(NULL);
 		}
 		ret = pthread_detach(timer);
 		if (ret != 0) {
-			LOG_ERROR("Could not detach reset timer thread (for NAME: %s): %s", get_admin<P>()->NAME, strerror(errno));
+			SCTRL_LOG_ERROR("Could not detach reset timer thread (for NAME: %s): %s", get_admin<P>()->NAME, strerror(errno));
 			pthread_exit(NULL);
 		}
 	} else {
@@ -419,7 +419,7 @@ void *SCTP_PREALLOC (void *core)
 	struct sctp_alloc<P> tmp;
 	struct arq_frame<P> *buf = ad->inter->pool;
 
-	LOG_INFO ("PREALLOC STARTED PREALLOCATION (LOWADDR: %p)", (void *)buf);
+	SCTRL_LOG_INFO ("PREALLOC STARTED PREALLOCATION (LOWADDR: %p)", (void *)buf);
 	memset (&tmp, 0, sizeof (sctp_alloc<P>));
 
 	i = 0;
@@ -453,8 +453,8 @@ void *SCTP_PREALLOC (void *core)
 	}
 
 
-	LOG_INFO ("PREALLOC SUCCESSFULLY EXITS (# %u/%lu)", num, (unsigned long int) (P::ALLOCTX_BUFSIZE + P::ALLOCRX_BUFSIZE));
-	LOG_INFO ("HIGHADDR: %p", (void *)buf);
+	SCTRL_LOG_INFO ("PREALLOC SUCCESSFULLY EXITS (# %u/%lu)", num, (unsigned long int) (P::ALLOCTX_BUFSIZE + P::ALLOCRX_BUFSIZE));
+	SCTRL_LOG_INFO ("HIGHADDR: %p", (void *)buf);
 	pthread_exit(NULL);
 }
 
@@ -514,7 +514,7 @@ void *SCTP_RX (void *core)
 	outfifo = &(inter->rx_queues[0]);
 #endif
 
-	LOG_INFO("RX UP");
+	SCTRL_LOG_INFO("RX UP");
 
 	/*MAIN LOOP*/
 	while (1) {
@@ -548,7 +548,7 @@ void *SCTP_RX (void *core)
 		/*Read packet from socket*/
 		nread = sock_read (sock, curr_packet, 1);
 		if (nread == SC_ABORT) {
-			LOG_ERROR("Read from socket failed! Aborting RX thread... (NAME: %s)", get_admin<P>()->NAME);
+			SCTRL_LOG_ERROR("Read from socket failed! Aborting RX thread... (NAME: %s)", get_admin<P>()->NAME);
 			pthread_exit (NULL);
 		}
 		stats->nr_received++;
@@ -556,7 +556,7 @@ void *SCTP_RX (void *core)
 			stats->nr_protofault++;
 			nread = sock_read (sock, curr_packet, 1);
 			if (nread == SC_ABORT) {
-				LOG_ERROR("Read from socket failed! Aborting RX thread... (NAME: %s)", get_admin<P>()->NAME);
+				SCTRL_LOG_ERROR("Read from socket failed! Aborting RX thread... (NAME: %s)", get_admin<P>()->NAME);
 				pthread_exit (NULL);
 			}
 			stats->nr_received++;
@@ -564,7 +564,7 @@ void *SCTP_RX (void *core)
 
 		size = sctpsomething_get_size(curr_packet, nread);
 		if ((__u32)nread != size) {
-			LOG_WARN("Received bytes on-wire and sctp.size do not match: %d != %d (dropping!) "
+			SCTRL_LOG_WARN("Received bytes on-wire and sctp.size do not match: %d != %d (dropping!) "
 				     "(NAME: %s)", nread, size, get_admin<P>()->NAME);
 			continue;
 		}
@@ -624,7 +624,7 @@ void *SCTP_RX (void *core)
 								 * Signal init done after successful check*/
 								if (unlikely((sctpreq_get_typ(curr_packet) == PTYPE_CFG_TYPE) && !init_done)) {
 									/* Fromating variables */
-									LOG_INFO("Got reset answer (NAME: %s)", get_admin<P>()->NAME);
+									SCTRL_LOG_INFO("Got reset answer (NAME: %s)", get_admin<P>()->NAME);
 									std::array<std::string, 3> const resetframe_var_names = {
 									    "MAX_NRFRAMES\t", "MAX_WINSIZ\t", "MAX_PDUWORDS\t"};
 									std::array<uint64_t, 3> const resetframe_var_values_check = {
@@ -643,9 +643,9 @@ void *SCTP_RX (void *core)
 										data = be64toh(sctpreq_get_pload(curr_packet)[j]);
 
 										if (data == resetframe_var_values_check[j])
-											LOG_INFO("\t%s\t%llu\t OK!", resetframe_var_names[j].c_str(), data);
+											SCTRL_LOG_INFO("\t%s\t%llu\t OK!", resetframe_var_names[j].c_str(), data);
 										else {
-											LOG_ERROR("\t%s\t Sent by FPGA: %llu\t Expected by Host: %lu (NAME: %s)",
+											SCTRL_LOG_ERROR("\t%s\t Sent by FPGA: %llu\t Expected by Host: %lu (NAME: %s)",
 												resetframe_var_names[j].c_str(), data, resetframe_var_values_check[j],
 												get_admin<P>()->NAME);
 											wrong_hw_settings = true;
@@ -779,7 +779,7 @@ void *SCTP_TX (void *core)
 	memset (&ackpacket, 0, sizeof (struct arq_ackframe));
 	acksize = sizeof(struct arq_ackframe);
 
-	LOG_INFO("TX UP");
+	SCTRL_LOG_INFO("TX UP");
 
 	/*MAIN LOOP*/
 	while (1) {
@@ -824,7 +824,7 @@ void *SCTP_TX (void *core)
 					ad->REQ = 0;
 					b = sock_write (sock, (struct arq_frame<P> *)&ackpacket, acksize);
 					if (b<0) {
-						LOG_ERROR("Could not send ack (write to socket failed for NAME: %s)", get_admin<P>()->NAME);
+						SCTRL_LOG_ERROR("Could not send ack (write to socket failed for NAME: %s)", get_admin<P>()->NAME);
 						pthread_exit(NULL);
 					}
 				}
@@ -840,7 +840,7 @@ void *SCTP_TX (void *core)
 						spin_lock (wlock);
 						/* Check for ARQ reset command */
 						if (sctpreq_get_typ(curr_packet) == PTYPE_DO_ARQRESET && sctpreq_get_pload(curr_packet)[0] == htobe64(HW_HOSTARQ_MAGICWORD)) {
-							LOG_INFO("Got reset command, resetting FPGA (NAME: %s)...", get_admin<P>()->NAME);
+							SCTRL_LOG_INFO("Got reset command, resetting FPGA (NAME: %s)...", get_admin<P>()->NAME);
 							curr_packet = NULL;
 							spin_unlock (wlock);
 							do_reset<P>(true);
@@ -857,7 +857,7 @@ void *SCTP_TX (void *core)
 						b = new_frame_tx (outwin, curr_packet, ad->currtime);
 
 						if (unlikely(b == SC_ABORT)) {
-							LOG_ERROR("Could not register frame in window (NAME: %s)", get_admin<P>()->NAME);
+							SCTRL_LOG_ERROR("Could not register frame in window (NAME: %s)", get_admin<P>()->NAME);
 							pthread_exit(NULL);
 						}
 
@@ -875,7 +875,7 @@ void *SCTP_TX (void *core)
 							debug_write (sock, curr_packet, size);
 #endif
 							if (b<0) {
-								LOG_ERROR("Could not write data to socket (NAME: %s)", get_admin<P>()->NAME);
+								SCTRL_LOG_ERROR("Could not write data to socket (NAME: %s)", get_admin<P>()->NAME);
 								pthread_exit(NULL);
 							}
 
@@ -892,7 +892,7 @@ void *SCTP_TX (void *core)
 								ad->REQ = 0;
 								b = sock_write (sock, (struct arq_frame<P> *)&ackpacket, acksize);
 								if (b<0) {
-									LOG_ERROR("Could not send ack (write to socket failed for NAME: %s)", get_admin<P>()->NAME);
+									SCTRL_LOG_ERROR("Could not send ack (write to socket failed for NAME: %s)", get_admin<P>()->NAME);
 									pthread_exit(NULL);
 								}
 							}
@@ -974,7 +974,7 @@ void *SCTP_RESEND (void *core)
 
 	ad->inter->stats.RTT = P::MAX_RTO;
 
-	LOG_INFO ("RESEND UP");
+	SCTRL_LOG_INFO ("RESEND UP");
 
 	/*MAIN LOOP*/
 	/*NOTE: Check state here (if Core is up etc)*/
@@ -1020,7 +1020,7 @@ void *SCTP_RESEND (void *core)
 						b = sock_write (sock, packet, size);
 						assert(b % 4 == 0); // assert on alignment
 						if (b<0) {
-							LOG_ERROR("Could not resend frame (write to socket failed for NAME: %s)", get_admin<P>()->NAME);
+							SCTRL_LOG_ERROR("Could not resend frame (write to socket failed for NAME: %s)", get_admin<P>()->NAME);
 							pthread_exit(NULL);
 						}
 
@@ -1078,7 +1078,7 @@ __s8 SCTP_CoreUp(
 #define TX_BUFSPQ (P::TX_BUFSIZE)
 #define RX_BUFSPQ (P::RX_BUFSIZE/P::MAX_NUM_QUEUES)
 
-	LOG_INFO ("SCTP CORE OPEN CALLED");
+	SCTRL_LOG_INFO ("SCTP CORE OPEN CALLED");
 
 	if (!rip)
 		return -1;
@@ -1097,7 +1097,7 @@ __s8 SCTP_CoreUp(
 		memset (get_admin<P>(), 0, sizeof(struct sctp_core<P>));
 	}
 	get_admin<P>()->NAME = name;
-	LOG_INFO("> main structure allocated successfully");
+	SCTRL_LOG_INFO("> main structure allocated successfully");
 
 	/*Initialize structures (allocating buffers etc.)*/
 
@@ -1110,7 +1110,7 @@ __s8 SCTP_CoreUp(
 	memset (interface, 0, sizeof(struct sctp_interface<P>));
 
 	get_admin<P>()->inter = interface;
-	LOG_INFO ("BASEADDR: %p POOLADDR: %p", (void *)get_admin<P>()->inter, (void *)get_admin<P>()->inter->pool);
+	SCTRL_LOG_INFO ("BASEADDR: %p POOLADDR: %p", (void *)get_admin<P>()->inter, (void *)get_admin<P>()->inter->pool);
 
 	remote_ip = inet_addr(rip);
 
@@ -1147,12 +1147,12 @@ __s8 SCTP_CoreUp(
 
 	/*Initializing fifos*/
 #ifdef WITH_ROUTING
-	LOG_INFO ("> Routing capability enabled. Initializing multiqueues...");
+	SCTRL_LOG_INFO ("> Routing capability enabled. Initializing multiqueues...");
 #endif
 
 	/* TX fifo */
 	txbuf_ptr = interface->txq_buf;
-	LOG_INFO ("> Init TX queue. Buffer: %lu", TX_BUFSPQ);
+	SCTRL_LOG_INFO ("> Init TX queue. Buffer: %lu", TX_BUFSPQ);
 	ret = fif_init_wbuf(&(interface->tx_queue),TX_BUFSPQ,sizeof(struct sctp_alloc<P>),(__u8*)txbuf_ptr,interface);
 	if (ret < 0) {
 		deallocate(3);
@@ -1161,12 +1161,12 @@ __s8 SCTP_CoreUp(
 	txbuf_ptr += TX_BUFSPQ;
 
 	rxbuf_ptr = interface->rxq_buf;
-	LOG_INFO("Number of unique queues %llu", interface->unique_queue_map.size);
+	SCTRL_LOG_INFO("Number of unique queues %llu", interface->unique_queue_map.size);
 	for (i = 0; i < interface->unique_queue_map.size + 1; i++) {
 		if (i == 0) {
-			LOG_INFO("> Init RX default queue %u. Buffer: %lu", i, RX_BUFSPQ);
+			SCTRL_LOG_INFO("> Init RX default queue %u. Buffer: %lu", i, RX_BUFSPQ);
 		} else {
-			LOG_INFO(
+			SCTRL_LOG_INFO(
 			    "> Init RX queue %u for packet type 0x%x. Buffer: %lu", i,
 			    interface->unique_queue_map.type[i - 1], RX_BUFSPQ);
 		}
@@ -1191,7 +1191,7 @@ __s8 SCTP_CoreUp(
 		return -5;
 	}
 
-	LOG_INFO ("> sub structures successfully initialized");
+	SCTRL_LOG_INFO ("> sub structures successfully initialized");
 
 	/*End of allocation, next we have to open the socket*/
 	c = sock_init(&(get_admin<P>()->sock), &remote_ip, data_port, reset_port, data_local_port);
@@ -1200,16 +1200,16 @@ __s8 SCTP_CoreUp(
 		return -4;
 	}
 
-	LOG_INFO ("> socket opened and bound to device");
+	SCTRL_LOG_INFO ("> socket opened and bound to device");
 
 	/*If socket is up, we can finally start the threads*/
 
-	LOG_INFO ("> initializing FPGA...");
+	SCTRL_LOG_INFO ("> initializing FPGA...");
 	if (do_startup<P>(wstartup) < 0) {
 		deallocate(9);
 		return -4;
 	}
-	LOG_INFO ("> backplane initialized");
+	SCTRL_LOG_INFO ("> backplane initialized");
 
 
 	c = pthread_create (&get_admin<P>()->allocthr, NULL, SCTP_PREALLOC<P>, get_admin<P>());
@@ -1243,11 +1243,11 @@ __s8 SCTP_CoreUp(
 #endif
 
 #ifdef WITH_CONGAV
-	LOG_INFO ("Congestion avoidance active");
+	SCTRL_LOG_INFO ("Congestion avoidance active");
 #endif
 
 #ifdef WITH_RTTADJ
-	LOG_INFO ("RTO adjust active");
+	SCTRL_LOG_INFO ("RTO adjust active");
 #endif
 
 	c = pthread_create (&get_admin<P>()->rsthr, NULL, SCTP_RESEND<P>, get_admin<P>());
@@ -1272,7 +1272,7 @@ __s8 SCTP_CoreUp(
 		return -4;
 	}
 
-	LOG_INFO ("> Threads up");
+	SCTRL_LOG_INFO ("> Threads up");
 
 	/* Check if FPGA reset was succsessful */
 	for (k = 0; k < P::RESET_TIMEOUT; k += HOSTARQ_RESET_WAIT_SLEEP_INTERVAL) {
@@ -1286,7 +1286,7 @@ __s8 SCTP_CoreUp(
 		return -4;
 	}
 
-	LOG_INFO ("SCTP CORE OPEN SUCCESSFUL (max pdu words: %lu, window size: %lu, DELAY_ACK: %lu)", P::MAX_PDUWORDS, P::MAX_WINSIZ, P::DELAY_ACK);
+	SCTRL_LOG_INFO ("SCTP CORE OPEN SUCCESSFUL (max pdu words: %lu, window size: %lu, DELAY_ACK: %lu)", P::MAX_PDUWORDS, P::MAX_WINSIZ, P::DELAY_ACK);
 
 	/*TODO: Update mem counter in stats*/
 
@@ -1298,7 +1298,7 @@ template <typename P>
 __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 {
 	if (!init_done) {
-		LOG_INFO ("%s: Init still in process -> do nothing\n", __FUNCTION__);
+		SCTRL_LOG_INFO ("%s: Init still in process -> do nothing\n", __FUNCTION__);
 		return -1;
 	}
 
@@ -1315,7 +1315,7 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 
 	/* use admin pointer locally, but destroy global before finishing */
 	struct sctp_core<P> * my_admin = get_admin<P>();
-	LOG_INFO ("Shutting down SCTP core: %s (pid %u)", my_admin->NAME, getpid());
+	SCTRL_LOG_INFO ("Shutting down SCTP core: %s (pid %u)", my_admin->NAME, getpid());
 
 	get_admin<P>() = NULL;
 	memfence();
@@ -1323,7 +1323,7 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 	if (my_admin == NULL) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-		LOG_ERROR("Lost race, my memory is already gone");
+		SCTRL_LOG_ERROR("Lost race, my memory is already gone");
 #pragma GCC diagnostic pop
 		return 0;
 	}
