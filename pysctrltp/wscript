@@ -36,7 +36,6 @@ def build(bld):
         source = 'pysctrltp.cpp',
         features = 'cxx pyext',
         use = ['hostarq', 'arqstream_obj', 'pybind11'],
-        install_path = 'lib',
     )
 
     bld(
