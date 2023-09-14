@@ -1300,6 +1300,8 @@ __s8 SCTP_CoreUp(
 template <typename P>
 __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 {
+	int ret;
+
 	if (!init_done) {
 		SCTRL_LOG_INFO ("%s: Init still in process -> do nothing\n", __FUNCTION__);
 		return -1;
@@ -1331,8 +1333,13 @@ __s8 SCTP_CoreDown (void /* as long there is only one single core pointer */)
 		return 0;
 	}
 
-	shm_unlink (my_admin->NAME);
-	munmap (my_admin->inter, sizeof(struct sctp_interface<P>));
+	ret = shm_unlink(my_admin->NAME);
+	// ECM (2025-10-31): We don't munmap if shm file deletion failed.
+	if (!ret) {
+		SCTRL_LOG_WARN ("%s: shm_unlink failed; not calling munmap.\n", __FUNCTION__);
+	} else {
+		munmap(my_admin->inter, sizeof(struct sctp_interface<P>));
+	}
 	free (my_admin->txwin.frames);
 	free (my_admin->rxwin.frames);
 	free (my_admin);
