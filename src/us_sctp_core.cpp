@@ -3,6 +3,7 @@
 
 #include <atomic>
 #include <assert.h>
+#include <cstdint>
 #include <errno.h>
 #include <memory>
 #include <stdlib.h>
