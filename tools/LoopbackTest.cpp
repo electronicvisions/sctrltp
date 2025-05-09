@@ -3,8 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <boost/progress.hpp>
-#include <boost/timer.hpp>
+#include <boost/timer/progress_display.hpp>
+#include <boost/timer/timer.hpp>
 
 using namespace std::chrono_literals;
 
@@ -124,7 +124,7 @@ void LoopbackTest<P>::progress()
 	size_t const int_runtime =
 	    std::chrono::duration_cast<std::chrono::seconds>(m_settings.runtime + m_settings.timeout)
 	        .count();
-	boost::progress_display prog(int_runtime);
+	boost::timer::progress_display prog(int_runtime);
 	for (size_t elapsed = 0; elapsed < int_runtime; elapsed++) {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 		++prog;
