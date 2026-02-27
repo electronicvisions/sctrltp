@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <sys/file.h>
 #include "sctrltp/us_sctp_if.h"
+#include "sctrltp/logger.h"
 
 namespace sctrltp {
 

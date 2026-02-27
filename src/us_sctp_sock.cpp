@@ -7,6 +7,7 @@
 
 #include "sctrltp/us_sctp_sock.h"
 #include "sctrltp/us_sctp_core.h"
+#include "sctrltp/logger.h"
 
 namespace sctrltp {
 

@@ -17,6 +17,7 @@
 #include <sys/wait.h>
 
 #include "sctrltp/libhostarq.h"
+#include "sctrltp/logger.h"
 #include "sctrltp/us_sctp_defs.h"
 
 /* We cannot #include <linux/fcntl.h> on Debian Jessie,

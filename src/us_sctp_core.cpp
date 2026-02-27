@@ -15,6 +15,7 @@
 #include <sys/time.h>
 
 #include "sctrltp/us_sctp_core.h"
+#include "sctrltp/logger.h"
 
 #define HOSTARQ_RESET_WAIT_SLEEP_INTERVAL 1000 /*in us*/
 
