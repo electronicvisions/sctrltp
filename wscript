@@ -2,6 +2,7 @@
 from waflib.extras.test_base import summary
 
 def depends(ctx):
+    ctx('logger')
     pass
 
 def options(opt):

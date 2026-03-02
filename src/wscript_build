@@ -2,7 +2,7 @@ bld.objects(
     features = 'cxx',
     source =   'us_sctp_if.cpp',
     target =   'us_sctp_if_obj',
-    use    =   'sctrl_inc',
+    use    =   ['sctrl_inc', 'logger_inc'],
     includes = '.',
     cxxflags = '-fPIC',
 )
@@ -13,7 +13,7 @@ bld(
     features = 'cxx cxxstlib',
     source =   'packets.cpp us_sctp_atomic.cpp sctp_fifo.cpp us_sctp_if.cpp',
     target =   'sctrl',
-    use    =   'sctrl_inc',
+    use    =   ['sctrl_inc', 'logger_inc'],
     includes = '.',
     install_path = 'lib',
     defines = 'LOGLEVEL=9',
@@ -26,7 +26,7 @@ bld(
     source='start_core.cpp us_sctp_core.cpp us_sctp_timer-hpet.cpp sctp_window.cpp us_sctp_sock.cpp packets.cpp',
     target='start_core',
     includes = '.',
-    use=['PTHREAD','RT','sctrl'],
+    use=['PTHREAD','RT','sctrl', 'logger_inc'],
     install_path='bin',
     defines = 'LOGLEVEL=9'
 )
@@ -41,7 +41,7 @@ bld(
     target='hostarq',
     includes = '.',
     export_includes = '.',
-    use = ['PTHREAD', 'RT', 'sctrltp_inc'],
+    use = ['PTHREAD', 'RT', 'sctrltp_inc', 'logger_inc'],
     depends_on = ['hostarq_daemon' + ending for ending in hostarq_daemons.keys()],
     install_path='lib',
     defines = 'LOGLEVEL=1',
@@ -66,7 +66,7 @@ bld(
     source='testbench.cpp us_sctp_if.cpp',
     target='testbench',
     includes = '.',
-    use=['RT','sctrl'],
+    use=['RT','sctrl', 'logger_inc'],
     install_path='bin',
 )
 
@@ -85,6 +85,6 @@ bld(
     source='daemon_user_ctrl.cpp us_sctp_if.cpp',
     target='daemon_user_ctrl',
     includes = '.',
-    use=['RT','sctrl'],
+    use=['RT','sctrl', 'logger_inc'],
     install_path='bin',
 )
