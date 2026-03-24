@@ -21,7 +21,9 @@
 		fprintf(stderr, "ERROR %s:%d: ", __FILE__, __LINE__);                                      \
 		fprintf(stderr, __VA_ARGS__);                                                              \
 		fprintf(stderr, "\n");                                                                     \
-		LOGGER_OPEN_SYSLOG_CLOSE(ERROR, "sctrltp", __VA_ARGS__);                                   \
+		char buffer[256];                                                                          \
+		snprintf(buffer, sizeof(buffer), __VA_ARGS__);                                             \
+		LOGGER_OPEN_SYSLOG_CLOSE(ERROR, "sctrltp", buffer);                                        \
 	} while (0)
 #if LOGLEVEL > 0
 #define SCTRL_LOG_WARN(...)                                                                        \
